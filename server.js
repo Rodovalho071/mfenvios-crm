@@ -5,6 +5,8 @@ const fs = require('fs');
 const app = express();
 app.use(cors());
 app.use(express.json());
+const path = require('path');
+app.get('/', function(req,res){ res.sendFile(path.join(__dirname,'index.html')); });
 
 const DATA_FILE = 'C:/mfcrm/messages.json';
 const KANBAN_FILE = 'C:/mfcrm/kanban.json';
@@ -147,3 +149,4 @@ app.patch('/kanban/:id', (req, res) => {
 
 app.listen(3000, '0.0.0.0', () =>
   console.log('Servidor MF CRM rodando na porta 3000'));
+
