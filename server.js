@@ -1,81 +1,149 @@
 const express = require('express');
 const cors = require('cors');
-const https = require('https');
+const fs = require('fs');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const GROQ_KEY = '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';
-const EVOLUTION_KEY = 'mfenvios2024';
-const INSTANCE = 'mfenvios';
+const DATA_FILE = 'C:/mfcrm/messages.json';
+const KANBAN_FILE = 'C:/mfcrm/kanban.json';
 
-const SYSTEM_PROMPT = 'Voce e um assistente virtual da MF Envios, empresa de transporte e logistica. Responda de forma profissional e objetiva em portugues brasileiro. Quando pedirem cotacao, pergunte: peso, medidas em cm, quantidade de volumes, valor da nota fiscal, CEP de origem, CEP de destino, se precisa de coleta e urgencia. Respostas curtas e sem formatacao markdown.';
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
-var messages = [];
-var botConfig = { botAtivo: true, pausados: {} };
-var conversas = {};
-var kanban = { colunas: ['Novo Lead','Em Contato','Proposta Enviada','Fechado','Perdido'], cards: [] };
-
-function chamarGroq(historico, cb) {
-  var body = JSON.stringify({ model:'llama3-8b-8192', messages:[{role:'system',content:SYSTEM_PROMPT}].concat(historico), max_tokens:300, temperature:0.7 });
-  var opts = { hostname:'api.groq.com', path:'/openai/v1/chat/completions', method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY,'Content-Length':Buffer.byteLength(body)} };
-  var req = https.request(opts, function(res){ var d=''; res.on('data',function(c){d+=c;}); res.on('end',function(){ try{ cb(null,JSON.parse(d).choices[0].message.content.trim()); }catch(e){cb(e,null);} }); });
-  req.on('error',function(e){cb(e,null);});
-  req.write(body); req.end();
+function cleanPhone(jid) {
+  if (!jid) return '';
+  return jid
+    .replace('@s.whatsapp.net', '')
+    .replace('@lid', '')
+    .replace('@g.us', '')
+    .trim();
 }
 
-app.post('/webhook', function(req, res) {
-  try {
-    var b = req.body;
-    var data = b.data || b;
-    var key = data.key || {};
-    if (key.fromMe) return res.json({ok:true});
-    var phone = (key.remoteJid||'').replace('@s.whatsapp.net','').replace('@lid','');
-    var name = data.pushName || 'Desconhecido';
-    var msgObj = data.message || {};
-    var text = msgObj.conversation || (msgObj.extendedTextMessage && msgObj.extendedTextMessage.text) || null;
-    if (!text || !phone) return res.json({ok:true});
-    messages.unshift({id:Date.now().toString(), name:name, phone:phone, text:text, ts:Date.now()});
-    if (messages.length > 500) messages = messages.slice(0,500);
-    console.log('Nova mensagem:', name, '-', text.substring(0,50));
-    if (botConfig.botAtivo && !botConfig.pausados[phone]) {
-      if (!conversas[phone]) conversas[phone] = [];
-      conversas[phone].push({role:'user',content:text});
-      if (conversas[phone].length > 20) conversas[phone] = conversas[phone].slice(-20);
-      chamarGroq(conversas[phone], function(err, resposta) {
-        if (!err && resposta) {
-          conversas[phone].push({role:'assistant',content:resposta});
-          console.log('[BOT] Resposta para', name, ':', resposta.substring(0,60));
-        }
-      });
+function loadMessages() {
+  try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
+  catch (e) { return []; }
+}
+
+function saveMessages(msgs) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(msgs));
+}
+
+function loadKanban() {
+  try { return JSON.parse(fs.readFileSync(KANBAN_FILE, 'utf8')); }
+  catch (e) { return { colunas: ['Novo Lead', 'Em Atendimento', 'Proposta', 'Fechado'] , cards: [] }; }
+}
+
+function saveKanban(data) {
+  fs.writeFileSync(KANBAN_FILE, JSON.stringify(data));
+}
+
+// ─── SSE — clientes conectados para tempo real ───────────────────────────────
+
+const sseClients = [];
+
+function broadcast(event, data) {
+  const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+  sseClients.forEach(res => res.write(payload));
+}
+
+app.get('/events', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+  res.write('event: connected\ndata: ok\n\n');
+  sseClients.push(res);
+  req.on('close', () => {
+    const i = sseClients.indexOf(res);
+    if (i !== -1) sseClients.splice(i, 1);
+  });
+});
+
+// ─── Webhook Evolution API ───────────────────────────────────────────────────
+
+app.post('/webhook', (req, res) => {
+  const b = req.body;
+
+  if (b.event === 'messages.upsert' && b.data) {
+    const m = b.data;
+    if (m.key && !m.key.fromMe) {
+      const messages = loadMessages();
+      const msg = {
+        id: m.key.id,
+        name: m.pushName || 'Desconhecido',
+        phone: cleanPhone(m.key.remoteJid),   // ← limpa @lid e @s.whatsapp.net
+        text: m.message?.conversation
+           || m.message?.extendedTextMessage?.text
+           || '[mídia]',
+        ts: Date.now()
+      };
+      messages.unshift(msg);
+      saveMessages(messages);
+      broadcast('nova-mensagem', msg);         // ← tempo real para o browser
+      console.log('Nova mensagem:', msg.name, '-', msg.text);
     }
-    res.json({ok:true});
-  } catch(e) {
-    console.error('Erro webhook:', e.message);
-    res.status(500).json({error:e.message});
   }
+
+  res.json({ ok: true });
 });
 
-app.get('/messages', function(req,res){ res.json(messages); });
-app.delete('/messages/:id', function(req,res){ messages=messages.filter(function(m){return m.id!==req.params.id;}); res.json({ok:true}); });
-app.get('/bot/status', function(req,res){ res.json(botConfig); });
-app.post('/bot/toggle', function(req,res){ botConfig.botAtivo=!botConfig.botAtivo; res.json(botConfig); });
-app.post('/bot/pausar/:phone', function(req,res){ botConfig.pausados[req.params.phone]=true; res.json({ok:true}); });
-app.post('/bot/retomar/:phone', function(req,res){ delete botConfig.pausados[req.params.phone]; res.json({ok:true}); });
-app.get('/kanban', function(req,res){ res.json(kanban); });
-app.post('/funil', function(req,res){
-  var msg = messages.find(function(m){return m.id===req.body.messageId;});
-  if (!msg) return res.status(404).json({error:'nao encontrado'});
-  if (!kanban.cards.some(function(c){return c.phone===msg.phone;})) {
-    kanban.cards.unshift({id:Date.now().toString(),name:msg.name,phone:msg.phone,coluna:kanban.colunas[0],ts:Date.now()});
-  }
-  res.json({ok:true,kanban:kanban});
-});
-app.patch('/kanban/:id', function(req,res){
-  var card=kanban.cards.find(function(c){return c.id===req.params.id;});
-  if (card) card.coluna=req.body.coluna;
-  res.json({ok:true});
+// ─── Mensagens ───────────────────────────────────────────────────────────────
+
+app.get('/messages', (req, res) => {
+  res.json(loadMessages());
 });
 
-var PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', function(){ console.log('Servidor MF CRM rodando na porta '+PORT); });
+app.delete('/messages/:id', (req, res) => {
+  const msgs = loadMessages().filter(m => m.id !== req.params.id);
+  saveMessages(msgs);
+  res.json({ ok: true });
+});
+
+// ─── Funil / Kanban ──────────────────────────────────────────────────────────
+
+// Adicionar lead ao kanban a partir de uma mensagem
+app.post('/funil', (req, res) => {
+  const { messageId } = req.body;
+  const messages = loadMessages();
+  const msg = messages.find(m => m.id === messageId);
+  if (!msg) return res.status(404).json({ error: 'Mensagem não encontrada' });
+
+  const kanban = loadKanban();
+  const jaExiste = kanban.cards.find(c => c.phone === msg.phone);
+  if (!jaExiste) {
+    kanban.cards.unshift({
+      id: Date.now().toString(),
+      name: msg.name,
+      phone: msg.phone,
+      coluna: kanban.colunas[0],
+      ts: Date.now(),
+      mensagens: [msg.text]
+    });
+    saveKanban(kanban);
+    broadcast('novo-lead', kanban.cards[0]);
+  }
+  res.json({ ok: true, kanban });
+});
+
+// Listar kanban
+app.get('/kanban', (req, res) => {
+  res.json(loadKanban());
+});
+
+// Mover card entre colunas
+app.patch('/kanban/:id', (req, res) => {
+  const { coluna } = req.body;
+  const kanban = loadKanban();
+  const card = kanban.cards.find(c => c.id === req.params.id);
+  if (!card) return res.status(404).json({ error: 'Card não encontrado' });
+  card.coluna = coluna;
+  saveKanban(kanban);
+  broadcast('kanban-update', kanban);
+  res.json({ ok: true });
+});
+
+// ─── Start ───────────────────────────────────────────────────────────────────
+
+app.listen(3000, '0.0.0.0', () =>
+  console.log('Servidor MF CRM rodando na porta 3000'));
