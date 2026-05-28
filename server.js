@@ -147,4 +147,3 @@ app.patch('/kanban/:id', (req, res) => {
 
 app.listen(3000, '0.0.0.0', () =>
   console.log('Servidor MF CRM rodando na porta 3000'));
- 
