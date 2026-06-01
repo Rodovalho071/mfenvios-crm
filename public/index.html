@@ -12,6 +12,42 @@
   --amber:#f59e0b;--amber-bg:rgba(245,158,11,0.2);--purple:#a78bfa;--orange:#f97316;
   --radius:10px;--radius-sm:6px;--shadow:0 4px 12px rgba(0,0,0,.5);--shadow-md:0 8px 24px rgba(0,0,0,.6);
 }
+
+/* ── OPERACIONAL ── */
+.op-tabs{display:flex;gap:4px;padding:12px 20px 0;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.op-tab{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;transition:all .2s}
+.op-tab:hover{color:var(--text2)}.op-tab.active{background:var(--bg);color:var(--text);border-color:var(--border)}
+.op-content{flex:1;overflow-y:auto;padding:16px 20px;background:var(--bg)}
+.op-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.op-title{font-size:14px;font-weight:700;color:var(--text)}
+.frete-kanban{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px}
+.frete-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-width:260px;max-width:260px;display:flex;flex-direction:column}
+.frete-col-header{padding:12px 14px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.frete-col-cards{overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;flex:1;max-height:calc(100vh - 280px)}
+.frete-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all .15s}
+.frete-card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow)}
+.frete-card-title{font-size:13px;font-weight:700;margin-bottom:3px}
+.frete-card-sub{font-size:11px;color:var(--text3);margin-bottom:4px}
+.frete-card-rota{font-size:11px;color:var(--blue);margin-bottom:6px}
+.frete-card-footer{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3)}
+.frete-card-valor{font-size:12px;font-weight:700;color:var(--orange)}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:all .15s}
+.task-item:hover{border-color:var(--border2)}.task-item.done{opacity:.5}
+.task-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.task-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.task-body{flex:1}.task-title{font-size:13px;font-weight:600;margin-bottom:2px}.task-title.done{text-decoration:line-through;color:var(--text3)}
+.task-meta{font-size:11px;color:var(--text3)}.task-priority{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
+.agenda-item{display:flex;gap:12px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px}
+.agenda-hora{font-size:13px;font-weight:700;color:var(--orange);min-width:50px}
+.agenda-body{flex:1}.agenda-title{font-size:13px;font-weight:600;margin-bottom:2px}.agenda-sub{font-size:11px;color:var(--text3)}
+.agenda-tipo{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600}
+.doc-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px}
+.doc-icon{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.doc-body{flex:1}.doc-title{font-size:13px;font-weight:600;margin-bottom:2px}.doc-sub{font-size:11px;color:var(--text3)}
+.doc-status{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
+.empty-state div:first-child{font-size:32px;margin-bottom:8px}
+
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
 .topbar{display:flex;align-items:center;gap:16px;padding:0 24px;height:56px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
@@ -93,6 +129,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 .followup-check{width:16px;height:16px;accent-color:var(--orange);cursor:pointer}.followup-text{flex:1;font-size:13px}.followup-date{font-size:11px;color:var(--text3)}.followup-done{text-decoration:line-through;color:var(--text3)}
 .frete-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px}
 .frete-field label{font-size:11px;color:var(--text3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}.frete-field span{font-size:13px;color:var(--text)}
+.dash-f-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}.dash-f-btn:hover{background:var(--surface2)}.dash-f-btn.active{background:#0a1931;color:#fff;border-color:var(--border2)}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none}.toast.show{opacity:1}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 </style>
@@ -121,7 +158,8 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">📊 Dashboard</div>
   <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
   <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
-  <div class="tabs-right"><button class="btn btn-primary btn-sm" onclick="openNewLead()">+ Novo Lead</button></div>
+  <div class="tab" onclick="showView('operacional')" id="tab-operacional">🔧 Operacional</div>
+  <div class="tabs-right"><button class="btn btn-sm" onclick="abrirRelatorioMensal()" style="background:var(--orange);color:#fff;border-color:var(--orange)">📊 Relatório Mensal</button> <button class="btn btn-primary btn-sm" onclick="openNewLead()">+ Novo Lead</button></div>
 </div>
 
 <div class="view active" id="view-kanban">
@@ -140,31 +178,107 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="leads-count"></span>
   </div>
   <div class="leads-content">
-    <table><thead><tr><th>Nome</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>Responsável</th><th>Horário</th><th>Follow-up</th></tr></thead><tbody id="leads-tbody"></tbody></table>
+    <table><thead><tr><th>Nome</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>Valor Frete</th><th>Responsável</th><th>Horário</th><th>Follow-up</th></tr></thead><tbody id="leads-tbody"></tbody></table>
   </div>
 </div>
 
 <div class="view" id="view-dashboard">
-  <div class="dash-content">
-    <div class="dash-grid" id="dash-metrics"></div>
-    <div class="dash-row">
-      <div class="dash-card"><div class="dash-card-title">Funil por etapa</div><div id="dash-funnel"></div></div>
-      <div class="dash-card"><div class="dash-card-title">Atividade recente</div><div id="dash-activity"></div></div>
+  <div style="flex-shrink:0;display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap">
+    <button class="dash-f-btn active" onclick="dashFiltro(this,'hoje')">Hoje</button>
+    <button class="dash-f-btn" onclick="dashFiltro(this,'ontem')">Ontem</button>
+    <button class="dash-f-btn" onclick="dashFiltro(this,'semana')">Semana</button>
+    <button class="dash-f-btn" onclick="dashFiltro(this,'mes')">Mês</button>
+    <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="dash-periodo-label">Hoje</span>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 20px">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+      <div class="dash-card">
+        <div class="dash-card-title">Mensagens recebidas</div>
+        <div style="font-size:32px;font-weight:600;color:var(--text);margin-bottom:4px" id="d-msgs">0</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">no período</div>
+        <div id="d-canais"></div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-msgs-delta"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Conversas ativas</div>
+        <div style="font-size:32px;font-weight:600;color:#a78bfa;margin-bottom:4px" id="d-conv">0</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">leads em andamento</div>
+        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--green)" id="d-conv-delta"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Sem follow-up</div>
+        <div style="font-size:32px;font-weight:600;color:#f97316;margin-bottom:4px" id="d-semfu">0</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">leads sem tarefa</div>
+        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-semfu-delta"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Taxa de conversão</div>
+        <div style="font-size:32px;font-weight:600;color:#22c55e;margin-bottom:4px" id="d-taxa">0%</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">fechados / total</div>
+        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-taxa-sub"></div>
+      </div>
     </div>
-    <div class="dash-row">
-      <div class="dash-card"><div class="dash-card-title">Por responsável</div><div id="dash-agents"></div></div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px">
+      <div class="dash-card">
+        <div class="dash-card-title">Leads</div>
+        <div style="font-size:28px;font-weight:600;color:#a78bfa" id="d-leads">0</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-leads-val">R$ 0</div>
+        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--green)" id="d-leads-hoje">0 hoje</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Leads ativos</div>
+        <div style="font-size:28px;font-weight:600;color:#a78bfa" id="d-ativos">0</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-ativos-val">R$ 0</div>
+        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--green)" id="d-ativos-hoje">0 hoje</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Leads perdidos</div>
+        <div style="font-size:28px;font-weight:600;color:var(--red)" id="d-perdidos">0</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-perdidos-val">R$ 0</div>
+        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--text3)" id="d-perdidos-hoje">0 hoje</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="dash-card"><div class="dash-card-title">Funil por etapa</div><div id="dash-funnel"></div></div>
       <div class="dash-card"><div class="dash-card-title">Follow-ups pendentes</div><div id="dash-followups"></div></div>
     </div>
   </div>
 </div>
 
 <div class="view" id="view-wpp">
-  <div class="wpp-toolbar">
-    <span style="font-size:13px;font-weight:600">💬 Mensagens recebidas no WhatsApp</span>
-    <button class="btn btn-sm" onclick="loadWppMessages()" style="margin-left:12px">↻ Atualizar</button>
-    <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="wpp-count"></span>
+  <div style="display:flex;flex:1;overflow:hidden;height:100%">
+
+    <!-- LISTA DE CONVERSAS -->
+    <div style="width:320px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--surface)">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+        <div style="flex:1;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="wpp-search" placeholder="Buscar conversa..." style="border:none;background:none;outline:none;font-size:13px;color:var(--text);width:100%" oninput="filtrarConversas()"/>
+        </div>
+        <button class="btn btn-sm" onclick="loadWppMessages()" title="Atualizar">↻</button>
+      </div>
+      <div style="padding:8px 12px;display:flex;gap:6px;border-bottom:1px solid var(--border)">
+        <span style="font-size:11px;background:rgba(249,115,22,.2);color:var(--orange);padding:2px 8px;border-radius:20px;font-weight:600">● Novos leads</span>
+        <span style="font-size:11px;background:rgba(59,130,246,.2);color:var(--blue);padding:2px 8px;border-radius:20px;font-weight:600">● Clientes MF</span>
+      </div>
+      <div style="flex:1;overflow-y:auto" id="wpp-conv-list">
+        <div style="text-align:center;padding:40px;color:var(--text3);font-size:13px">Carregando...</div>
+      </div>
+      <div style="padding:10px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);text-align:center" id="wpp-count">0 conversas</div>
+    </div>
+
+    <!-- ÁREA DO CHAT -->
+    <div style="flex:1;display:flex;flex-direction:column;background:var(--bg)" id="wpp-chat-area">
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3)">
+        <div style="font-size:40px">💬</div>
+        <div style="font-size:14px">Selecione uma conversa para começar</div>
+        <div style="font-size:12px">As mensagens aparecem aqui automaticamente</div>
+      </div>
+    </div>
+
   </div>
-  <div class="wpp-content" id="wpp-list"><div style="text-align:center;padding:40px;color:var(--text3)">Carregando...</div></div>
 </div>
 
 <div class="view" id="view-ia">
@@ -184,6 +298,79 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
       <div class="ia-card"><div class="ia-card-title">Como usar</div><div style="font-size:13px;color:var(--text2);line-height:1.7"><p style="margin-bottom:10px">1. Cole a mensagem do WhatsApp.</p><p style="margin-bottom:10px">2. A IA extrai nome, telefone, produto, etapa e observações.</p><p>3. Revise e clique em Adicionar ao funil.</p></div></div>
       <div class="ia-card" style="margin-top:12px"><div class="ia-card-title">Últimas análises</div><div id="ia-history"></div></div>
     </div>
+  </div>
+</div>
+
+
+<div class="view" id="view-operacional">
+  <div class="op-tabs">
+    <div class="op-tab active" onclick="showOpTab('fretes')" id="optab-fretes">🚚 Fretes</div>
+    <div class="op-tab" onclick="showOpTab('tarefas')" id="optab-tarefas">✅ Tarefas</div>
+    <div class="op-tab" onclick="showOpTab('agenda')" id="optab-agenda">📅 Agenda</div>
+    <div class="op-tab" onclick="showOpTab('documentos')" id="optab-documentos">📄 Documentos</div>
+  </div>
+  <div class="op-content">
+
+    <!-- FRETES -->
+    <div id="op-fretes">
+      <div class="op-header">
+        <span class="op-title">Fretes em andamento</span>
+        <button class="btn btn-primary btn-sm" onclick="openNovoFrete()">+ Novo Frete</button>
+      </div>
+      <div class="frete-kanban" id="frete-kanban"></div>
+    </div>
+
+    <!-- TAREFAS -->
+    <div id="op-tarefas" style="display:none">
+      <div class="op-header">
+        <span class="op-title">Tarefas da equipe</span>
+        <button class="btn btn-primary btn-sm" onclick="openNovaTarefa()">+ Nova Tarefa</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="btn btn-sm" onclick="filtrarTarefas('todas')" id="tf-todas" style="background:var(--surface2)">Todas</button>
+        <button class="btn btn-sm" onclick="filtrarTarefas('pendentes')" id="tf-pendentes">Pendentes</button>
+        <button class="btn btn-sm" onclick="filtrarTarefas('concluidas')" id="tf-concluidas">Concluídas</button>
+      </div>
+      <div id="tarefas-list"></div>
+    </div>
+
+    <!-- AGENDA -->
+    <div id="op-agenda" style="display:none">
+      <div class="op-header">
+        <span class="op-title">Coletas e Entregas</span>
+        <button class="btn btn-primary btn-sm" onclick="openNovoAgendamento()">+ Agendar</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <input type="date" id="agenda-data" onchange="renderAgenda()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px"/>
+        <span style="font-size:13px;color:var(--text3)" id="agenda-dia-label"></span>
+      </div>
+      <div id="agenda-list"></div>
+    </div>
+
+    <!-- DOCUMENTOS -->
+    <div id="op-documentos" style="display:none">
+      <div class="op-header">
+        <span class="op-title">Documentos</span>
+        <button class="btn btn-primary btn-sm" onclick="openNovoDoc()">+ Novo Documento</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <select id="doc-filtro-tipo" onchange="renderDocs()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px">
+          <option value="">Todos os tipos</option>
+          <option value="CTE">CT-e</option>
+          <option value="NF">Nota Fiscal</option>
+          <option value="Minuta">Minuta</option>
+          <option value="Outro">Outro</option>
+        </select>
+        <select id="doc-filtro-status" onchange="renderDocs()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px">
+          <option value="">Todos os status</option>
+          <option value="Pendente">Pendente</option>
+          <option value="Emitido">Emitido</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+      </div>
+      <div id="docs-list"></div>
+    </div>
+
   </div>
 </div>
 
@@ -251,7 +438,7 @@ function renderKanban(){
         <div class="card-name">${lead.name}</div>
         <div class="card-phone">${lead.tel||'Sem telefone'}</div>
         ${lead.rota?`<div class="card-route">📦 ${lead.rota}</div>`:''}
-        ${lead.obs?`<div class="card-msg">${lead.obs.slice(0,55)}</div>`:''}
+        ${lead.valorFrete?`<div class="card-msg" style="color:var(--green);font-weight:700">💰 Frete: R$ ${lead.valorFrete}</div>`:lead.obs?`<div class="card-msg">${lead.obs.slice(0,55)}</div>`:''}
         <div class="card-tags">
           ${lead.source==='whatsapp'?'<span class="tag tag-wpp">WhatsApp</span>':''}
           ${hasFu?'<span class="tag tag-followup">Follow-up</span>':''}
@@ -285,6 +472,7 @@ function renderLeads(){
       <td style="color:var(--blue);font-size:12px">${l.rota||l.prod||'—'}</td>
       <td><span class="stage-pill" style="${STAGE_PILL[l.stage]||''}">${l.stage}</span></td>
       <td style="color:var(--green)">${l.valorNF?'R$ '+l.valorNF:'—'}</td>
+      <td style="color:var(--orange);font-weight:600">${l.valorFrete?'R$ '+l.valorFrete:'—'}</td>
       <td style="color:var(--text2)">${l.agent||'—'}</td>
       <td style="color:var(--text3)">${fmtTime(l.ts)}</td>
       <td style="color:${fu?'var(--amber)':'var(--text3)'}">${fu?fu.text:'—'}</td>
@@ -292,14 +480,76 @@ function renderLeads(){
   }).join(''):`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text3)">Nenhum lead encontrado.</td></tr>`;
 }
 
+let dashPeriodo='hoje';
+function dashFiltro(btn,periodo){
+  document.querySelectorAll('.dash-f-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');dashPeriodo=periodo;renderDashboard();
+}
+function getLeadsPeriodo(){
+  const agora=Date.now();
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const hojets=hoje.getTime();
+  const ontemI=hojets-86400000,ontemF=hojets;
+  const semanaI=hojets-7*86400000;
+  const mesI=new Date(hoje.getFullYear(),hoje.getMonth(),1).getTime();
+  if(dashPeriodo==='hoje') return leads.filter(l=>l.ts>=hojets);
+  if(dashPeriodo==='ontem') return leads.filter(l=>l.ts>=ontemI&&l.ts<ontemF);
+  if(dashPeriodo==='semana') return leads.filter(l=>l.ts>=semanaI);
+  if(dashPeriodo==='mes') return leads.filter(l=>l.ts>=mesI);
+  return leads;
+}
+function somaValorNF(arr){
+  return arr.reduce((s,l)=>{const v=parseFloat((l.valorNF||'0').replace(/\./g,'').replace(',','.'));return s+(isNaN(v)?0:v);},0);
+}
+function fmtValor(v){return v>=1000000?'R$ '+(v/1000000).toFixed(1)+'M':v>=1000?'R$ '+(v/1000).toFixed(0)+'k':'R$ '+Math.round(v);}
 function renderDashboard(){
-  const total=leads.length,fechados=leads.filter(l=>l.stage==='Fechado / Ganho').length,perdidos=leads.filter(l=>l.stage==='Perdido').length,ativos=leads.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length,taxa=total?Math.round(fechados/total*100):0;
-  document.getElementById('dash-metrics').innerHTML=[{l:'Total de leads',v:total,s:''},{l:'Em andamento',v:ativos,s:'ativos no funil'},{l:'Fechados',v:fechados,s:taxa+'% conversão'},{l:'Perdidos',v:perdidos,s:''}].map(m=>`<div class="metric-card"><div class="metric-label">${m.l}</div><div class="metric-val">${m.v}</div>${m.s?`<div class="metric-sub">${m.s}</div>`:''}</div>`).join('');
-  const max=Math.max(1,...STAGES.map(s=>leads.filter(l=>l.stage===s).length));
-  document.getElementById('dash-funnel').innerHTML=STAGES.map(s=>{const n=leads.filter(l=>l.stage===s).length,pct=Math.round(n/max*100);return `<div class="funnel-row"><div class="funnel-label">${s}</div><div class="funnel-bar-bg"><div class="funnel-bar" style="width:${pct}%;background:${STAGE_COLORS[s]}">${n>0?n:''}</div></div><div class="funnel-count">${n}</div></div>`;}).join('');
-  document.getElementById('dash-activity').innerHTML=activity.slice(0,8).length?activity.slice(0,8).map(a=>`<div class="activity-item"><div class="activity-dot" style="background:var(--border2)"></div><div><div class="activity-text">${a.msg}</div><div class="activity-time">${fmtDate(a.ts)}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhuma atividade.</div>';
-  const agentMap={};leads.forEach(l=>{if(l.agent)agentMap[l.agent]=(agentMap[l.agent]||0)+1;});
-  document.getElementById('dash-agents').innerHTML=Object.entries(agentMap).sort((a,b)=>b[1]-a[1]).length?Object.entries(agentMap).sort((a,b)=>b[1]-a[1]).map(([a,n])=>`<div class="funnel-row"><div class="funnel-label">${a}</div><div class="funnel-bar-bg"><div class="funnel-bar" style="width:${Math.round(n/Math.max(1,total)*100)}%;background:var(--orange)">${n}</div></div><div class="funnel-count">${n}</div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhum responsável.</div>';
+  const periodo=getLeadsPeriodo();
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const leadsHoje=leads.filter(l=>l.ts>=hoje.getTime());
+  const total=leads.length;
+  const fechados=leads.filter(l=>l.stage==='Fechado / Ganho').length;
+  const perdidosAll=leads.filter(l=>l.stage==='Perdido');
+  const ativos=leads.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage));
+  const semFu=leads.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
+  const taxa=total?Math.round(fechados/total*100):0;
+  const periodoAtivos=periodo.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage));
+  const periodoPerdidos=periodo.filter(l=>l.stage==='Perdido');
+
+  // Mensagens por canal (simulado por source)
+  const wpp=periodo.filter(l=>l.source==='whatsapp').length;
+  const ig=periodo.filter(l=>l.source==='instagram').length;
+  const site=periodo.filter(l=>l.source==='site').length;
+  const google=periodo.filter(l=>l.source==='google').length;
+  const outros=periodo.filter(l=>!['whatsapp','instagram','site','google'].includes(l.source)).length;
+  const totalMsgs=wpp+ig+site+google+outros;
+
+  const s=id=>document.getElementById(id);
+  if(s('d-msgs'))s('d-msgs').textContent=totalMsgs;
+  if(s('d-canais'))s('d-canais').innerHTML=[
+    {cor:'#25D366',nome:'WhatsApp',v:wpp},
+    {cor:'#E1306C',nome:'Instagram',v:ig},
+    {cor:'#378ADD',nome:'Site/Google',v:google+site},
+    {cor:'#888',nome:'Outros',v:outros}
+  ].map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${c.cor};display:inline-block"></span>${c.nome}</span><span style="font-size:13px;font-weight:600;color:#22c55e">${c.v}</span></div>`).join('');
+  if(s('d-msgs-delta'))s('d-msgs-delta').textContent=periodo.length+' leads no período';
+  if(s('d-conv'))s('d-conv').textContent=ativos.length;
+  if(s('d-conv-delta'))s('d-conv-delta').textContent='+'+leadsHoje.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length+' hoje';
+  if(s('d-semfu'))s('d-semfu').textContent=semFu.length;
+  if(s('d-semfu-delta'))s('d-semfu-delta').textContent=semFu.length+' sem tarefa pendente';
+  if(s('d-taxa'))s('d-taxa').textContent=taxa+'%';
+  if(s('d-taxa-sub'))s('d-taxa-sub').textContent=fechados+' fechados de '+total+' total';
+  if(s('d-leads'))s('d-leads').textContent=periodo.length;
+  if(s('d-leads-val'))s('d-leads-val').textContent=fmtValor(somaValorNF(periodo));
+  if(s('d-leads-hoje'))s('d-leads-hoje').textContent=leadsHoje.length+' hoje';
+  if(s('d-ativos'))s('d-ativos').textContent=periodoAtivos.length;
+  if(s('d-ativos-val'))s('d-ativos-val').textContent=fmtValor(somaValorNF(periodoAtivos));
+  if(s('d-ativos-hoje'))s('d-ativos-hoje').textContent=leadsHoje.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length+' hoje';
+  if(s('d-perdidos'))s('d-perdidos').textContent=periodoPerdidos.length;
+  if(s('d-perdidos-val'))s('d-perdidos-val').textContent=fmtValor(somaValorNF(periodoPerdidos));
+  if(s('d-perdidos-hoje'))s('d-perdidos-hoje').textContent=leadsHoje.filter(l=>l.stage==='Perdido').length+' hoje';
+
+  const max=Math.max(1,...STAGES.map(st=>leads.filter(l=>l.stage===st).length));
+  document.getElementById('dash-funnel').innerHTML=STAGES.map(st=>{const n=leads.filter(l=>l.stage===st).length,pct=Math.round(n/max*100);return `<div class="funnel-row"><div class="funnel-label">${st}</div><div class="funnel-bar-bg"><div class="funnel-bar" style="width:${pct}%;background:${STAGE_COLORS[st]}">${n>0?n:''}</div></div><div class="funnel-count">${n}</div></div>`;}).join('');
   const allFu=leads.flatMap(l=>(l.followups||[]).filter(f=>!f.done).map(f=>({...f,leadName:l.name,leadId:l.id})));
   document.getElementById('dash-followups').innerHTML=allFu.length?allFu.slice(0,6).map(f=>`<div class="activity-item" onclick="openLead('${f.leadId}')"><div class="activity-dot" style="background:var(--amber)"></div><div><div class="activity-text"><strong>${f.leadName}</strong>: ${f.text}</div><div class="activity-time">${f.date||'Sem data'}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhum follow-up pendente.</div>';
 }
@@ -328,6 +578,7 @@ function openNewLead(stage='Primeiro contato'){
       <div class="form-row">
         <div class="form-group"><label class="form-label">Material / Produto</label><input id="nl-material" placeholder="Ex: Rolamento, Brindes, Eletrônicos"/></div>
         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="nl-valorNF" placeholder="Ex: 15.000,00"/></div>
+        <div class="form-group"><label class="form-label">💰 Valor do Frete (R$)</label><input id="nl-valorFrete" placeholder="Ex: 1.200,00" style="border-color:var(--green)"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Origem (cidade/UF)</label><input id="nl-origem" placeholder="Ex: São Paulo/SP"/></div>
@@ -360,6 +611,7 @@ function saveLead(){
     source:document.getElementById('nl-source').value,urgencia:document.getElementById('nl-urgencia').value,
     material:document.getElementById('nl-material').value.trim(),
     valorNF:document.getElementById('nl-valorNF').value.trim(),
+    valorFrete:document.getElementById('nl-valorFrete').value.trim(),
     origem,destino,rota,
     volumes:document.getElementById('nl-volumes').value.trim(),
     peso:document.getElementById('nl-peso').value.trim(),
@@ -406,6 +658,7 @@ function renderLeadModal(l){
       <div class="form-row">
         <div class="form-group"><label class="form-label">Material / Produto</label><input id="d-material" value="${l.material||''}" onblur="updateLeadField('${l.id}','material',this.value)"/></div>
         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="d-valorNF" value="${l.valorNF||''}" onblur="updateLeadField('${l.id}','valorNF',this.value)"/></div>
+        <div class="form-group"><label class="form-label">💰 Valor do Frete (R$)</label><input id="d-valorFrete" value="${l.valorFrete||''}" onblur="updateLeadField('${l.id}','valorFrete',this.value)" style="border-color:var(--green)"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Origem</label><input id="d-origem" value="${l.origem||''}" onblur="updateRotaField('${l.id}')"/></div>
@@ -568,29 +821,154 @@ function importData(e){const file=e.target.files[0];if(!file)return;const reader
 // ─── TOAST ───────────────────────────────────────────────
 function toast(msg){const t=document.getElementById('toast');t.innerHTML=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-// ─── WHATSAPP ───────────────────────────────────────────────
+// ─── WHATSAPP CHAT ───────────────────────────────────────────────
 const WPP_SERVER='https://mf-envios-crm.onrender.com';
+let wppMsgs=[];
+let chatAtivo=null;
+let enviando=false;
+
+// Contatos conhecidos da MF Envios (clientes com contato salvo)
+const CONTATOS_MF = load('crm-contatos-mf', []);
+
+function isClienteMF(phone){ return leads.some(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,'')); }
+
+function fmtDateChat(ts){
+  const d=new Date(ts),now=new Date();
+  const diff=Math.floor((now-d)/1000);
+  if(diff<86400) return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+}
+
+function agruparMsgs(msgs){
+  const grupos={};
+  msgs.forEach(m=>{
+    const phone=m.phone||'';
+    if(!grupos[phone]){grupos[phone]={phone,name:m.name||'Desconhecido',msgs:[],lastTs:0,lastText:''};}
+    grupos[phone].msgs.push(m);
+    if(m.ts>grupos[phone].lastTs){grupos[phone].lastTs=m.ts;grupos[phone].lastText=m.text||'';}
+  });
+  return Object.values(grupos).sort((a,b)=>b.lastTs-a.lastTs);
+}
+
+function filtrarConversas(){
+  const q=(document.getElementById('wpp-search')||{}).value?.toLowerCase()||'';
+  renderConvList(q);
+}
+
+function renderConvList(q=''){
+  const grupos=agruparMsgs(wppMsgs);
+  const filtrados=q?grupos.filter(g=>g.name.toLowerCase().includes(q)||g.phone.includes(q)):grupos;
+  const list=document.getElementById('wpp-conv-list');
+  if(!filtrados.length){list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px">Nenhuma conversa</div>';return;}
+  list.innerHTML=filtrados.map(g=>{
+    const cliente=isClienteMF(g.phone);
+    const cor=cliente?'var(--blue)':'var(--orange)';
+    const bgCor=cliente?'rgba(59,130,246,.15)':'rgba(249,115,22,.15)';
+    const ativo=chatAtivo===g.phone;
+    const ini=g.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';
+    return `<div onclick="abrirChat('${g.phone}')" style="display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;border-bottom:1px solid var(--border);background:${ativo?'var(--surface2)':'transparent'};transition:background .15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='${ativo?'var(--surface2)':'transparent'}'">
+      <div style="width:40px;height:40px;border-radius:50%;background:${bgCor};color:${cor};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;border:2px solid ${cor}">${ini}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+          <span style="font-size:13px;font-weight:700;color:var(--text)">${g.name}</span>
+          <span style="font-size:10px;color:var(--text3)">${fmtDateChat(g.lastTs)}</span>
+        </div>
+        <div style="font-size:11px;color:${cor};margin-bottom:3px;font-weight:600">${cliente?'● Cliente MF':'● Novo lead'}</div>
+        <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.lastText.slice(0,45)}</div>
+      </div>
+      <div style="width:8px;height:8px;border-radius:50%;background:${cor};flex-shrink:0"></div>
+    </div>`;
+  }).join('');
+  document.getElementById('wpp-count').textContent=filtrados.length+' conversa'+(filtrados.length!==1?'s':'');
+}
+
+function abrirChat(phone){
+  chatAtivo=phone;
+  renderConvList((document.getElementById('wpp-search')||{}).value||'');
+  const grupos=agruparMsgs(wppMsgs);
+  const grupo=grupos.find(g=>g.phone===phone);
+  if(!grupo)return;
+  const cliente=isClienteMF(phone);
+  const cor=cliente?'var(--blue)':'var(--orange)';
+  const bgCor=cliente?'rgba(59,130,246,.15)':'rgba(249,115,22,.15)';
+  const leadInfo=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
+  const area=document.getElementById('wpp-chat-area');
+  area.innerHTML=`
+    <div style="padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <div style="width:38px;height:38px;border-radius:50%;background:${bgCor};color:${cor};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid ${cor}">${grupo.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?'}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700;color:var(--text)">${grupo.name}</div>
+        <div style="font-size:11px;color:${cor};font-weight:600">${cliente?'● Cliente MF Envios':'● Novo lead'} · ${phone}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        ${leadInfo?`<button class="btn btn-sm" onclick="openLead('${leadInfo.id}')">Ver ficha</button>`:'<button class="btn btn-sm btn-primary" onclick="wppToLead(\''+grupo.msgs[0]?.id+'\',\''+grupo.name+'\',\''+phone+'\',\''+grupo.lastText.replace(/'/g,"\\'")+'\')">+ Funil</button>'}
+        <a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm" style="background:rgba(34,197,94,.2);color:var(--green);border-color:var(--green)">Abrir WA ↗</a>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px" id="chat-msgs">
+      ${grupo.msgs.sort((a,b)=>a.ts-b.ts).map(m=>`
+        <div style="display:flex;flex-direction:column;align-items:flex-start;max-width:70%">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:0 10px 10px 10px;padding:10px 14px;font-size:13px;color:var(--text);line-height:1.5">${m.text||''}</div>
+          <span style="font-size:10px;color:var(--text3);margin-top:3px;padding-left:4px">${new Date(m.ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>
+        </div>`).join('')}
+    </div>
+    <div style="padding:12px 16px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0">
+      <textarea id="chat-input" placeholder="Digite uma mensagem..." rows="2" style="flex:1;resize:none;border-radius:var(--radius);font-size:13px" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg('${phone}');}"></textarea>
+      <button class="btn btn-primary" onclick="enviarMsg('${phone}')" style="height:58px;padding:0 20px;font-size:18px">➤</button>
+    </div>`;
+  const chatMsgs=document.getElementById('chat-msgs');
+  if(chatMsgs)chatMsgs.scrollTop=chatMsgs.scrollHeight;
+}
+
+async function enviarMsg(phone){
+  if(enviando)return;
+  const input=document.getElementById('chat-input');
+  const texto=(input?.value||'').trim();
+  if(!texto)return;
+  enviando=true;
+  input.value='';input.disabled=true;
+  const chatMsgs=document.getElementById('chat-msgs');
+  if(chatMsgs){
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;flex-direction:column;align-items:flex-end;max-width:70%;align-self:flex-end;margin-left:auto';
+    div.innerHTML=`<div style="background:#25D366;border-radius:10px 0 10px 10px;padding:10px 14px;font-size:13px;color:#fff;line-height:1.5">${texto}</div><span style="font-size:10px;color:var(--text3);margin-top:3px;padding-right:4px">Agora ✓</span>`;
+    chatMsgs.appendChild(div);chatMsgs.scrollTop=chatMsgs.scrollHeight;
+  }
+  try{
+    await fetch(WPP_SERVER+'/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,text:texto})});
+  }catch(e){toast('Mensagem enviada localmente');}
+  enviando=false;if(input)input.disabled=false;if(input)input.focus();
+}
+
 async function loadWppMessages(){
-  const list=document.getElementById('wpp-list'),dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
+  const dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
   try{
     const res=await fetch(WPP_SERVER+'/messages');if(!res.ok)throw new Error();
-    const msgs=await res.json();dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
-    const badge=document.getElementById('wpp-badge');if(msgs.length>0){badge.style.display='inline';badge.textContent=msgs.length;}else badge.style.display='none';
-    document.getElementById('wpp-count').textContent=msgs.length+' mensagem'+(msgs.length!==1?'s':'');
-    if(!msgs.length){list.innerHTML='<div style="text-align:center;padding:60px;color:var(--text3);font-size:13px">Nenhuma mensagem recebida ainda.<br>Quando alguém mandar mensagem para o número dedicado, aparece aqui automaticamente.</div>';return;}
-    list.innerHTML=`<table><thead><tr><th>Nome</th><th>Telefone</th><th>Mensagem</th><th>Recebido</th><th>Ação</th></tr></thead><tbody>`+msgs.map(m=>`<tr><td><strong>${m.name||'Desconhecido'}</strong></td><td style="color:var(--text2)">${m.phone||''}</td><td style="color:var(--text2);max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.text||''}</td><td style="color:var(--text3)">${fmtDate(m.ts)}</td><td style="display:flex;gap:6px"><button class="btn btn-sm btn-primary" onclick="wppToLead('${m.id}','${(m.name||'').replace(/'/g,"\\'")}','${m.phone||''}','${(m.text||'').replace(/'/g,"\\'").slice(0,100)}')">+ Funil</button><button class="btn btn-sm btn-danger" onclick="deleteWppMsg('${m.id}')">×</button></td></tr>`).join('')+'</tbody></table>';
-  }catch(e){dot.style.background='var(--red)';st.textContent='Servidor offline';list.innerHTML='<div style="text-align:center;padding:60px;color:var(--text3)">Servidor não encontrado.</div>';}
+    wppMsgs=await res.json();
+    dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
+    const badge=document.getElementById('wpp-badge');
+    if(wppMsgs.length>0){badge.style.display='inline';badge.textContent=wppMsgs.length;}else badge.style.display='none';
+    renderConvList();
+    if(chatAtivo)abrirChat(chatAtivo);
+  }catch(e){
+    dot.style.background='var(--red)';st.textContent='Servidor offline';
+    document.getElementById('wpp-conv-list').innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px">Servidor offline</div>';
+  }
 }
+
 async function wppToLead(id,name,phone,text){
-  try{await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
-  const exists=leads.find(l=>l.tel===phone);
-  if(!exists){const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);}
-  toast('Lead adicionado! Clique nele para preencher os dados do frete.');showView('kanban');renderKanban();}catch(e){toast('Erro ao adicionar.');}
+  try{
+    await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
+    const exists=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
+    if(!exists){const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);}
+    toast('Lead adicionado ao funil!');showView('kanban');renderKanban();
+  }catch(e){toast('Erro ao adicionar.');}
 }
+
 async function deleteWppMsg(id){try{await fetch(WPP_SERVER+'/messages/'+id,{method:'DELETE'});loadWppMessages();}catch(e){}}
 function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',()=>loadWppMessages());es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
 conectarSSE();
-setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';}).catch(()=>{});},30000);
+setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
 // ─── INIT ───────────────────────────────────────────────
 updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
@@ -602,6 +980,615 @@ if(!leads.length){
   leads=demo;saveLeads();activity=[{msg:'Lead <strong>Wanderley Cruz</strong> em proposta',ts:Date.now()-3600000},{msg:'Lead <strong>Isabella Guarnier</strong> em negociação 🔥',ts:Date.now()-7200000}];saveActivity();updateAgentFilters();updateStats();
 }
 renderKanban();
+
+
+// ═══════════════════════════════════════════════════════════════
+// OPERACIONAL
+// ═══════════════════════════════════════════════════════════════
+
+// Storage keys
+const OP_FRETES_KEY = 'mf_op_fretes';
+const OP_TAREFAS_KEY = 'mf_op_tarefas';
+const OP_AGENDA_KEY = 'mf_op_agenda';
+const OP_DOCS_KEY = 'mf_op_docs';
+
+let opFretes = JSON.parse(localStorage.getItem(OP_FRETES_KEY)||'[]');
+let opTarefas = JSON.parse(localStorage.getItem(OP_TAREFAS_KEY)||'[]');
+let opAgenda = JSON.parse(localStorage.getItem(OP_AGENDA_KEY)||'[]');
+let opDocs = JSON.parse(localStorage.getItem(OP_DOCS_KEY)||'[]');
+
+function saveOpFretes(){ localStorage.setItem(OP_FRETES_KEY, JSON.stringify(opFretes)); }
+function saveOpTarefas(){ localStorage.setItem(OP_TAREFAS_KEY, JSON.stringify(opTarefas)); }
+function saveOpAgenda(){ localStorage.setItem(OP_AGENDA_KEY, JSON.stringify(opAgenda)); }
+function saveOpDocs(){ localStorage.setItem(OP_DOCS_KEY, JSON.stringify(opDocs)); }
+
+const FRETE_STATUS = ['Aguardando coleta','Em trânsito','Entregue'];
+const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','Entregue':'#22c55e'};
+
+// ── SUB-ABAS ──────────────────────────────────────────────────
+let opTabAtual = 'fretes';
+function showOpTab(tab) {
+  opTabAtual = tab;
+  ['fretes','tarefas','agenda','documentos'].forEach(t => {
+    document.getElementById('op-'+t).style.display = t===tab ? 'block' : 'none';
+    const el = document.getElementById('optab-'+t);
+    if(el) el.classList.toggle('active', t===tab);
+  });
+  if(tab==='fretes') renderFreteKanban();
+  if(tab==='tarefas') renderTarefas();
+  if(tab==='agenda') { initAgendaData(); renderAgenda(); }
+  if(tab==='documentos') renderDocs();
+}
+
+function initAgendaData() {
+  const inp = document.getElementById('agenda-data');
+  if(inp && !inp.value) {
+    const hoje = new Date().toISOString().split('T')[0];
+    inp.value = hoje;
+  }
+}
+
+// ── FRETES KANBAN ─────────────────────────────────────────────
+function renderFreteKanban() {
+  const board = document.getElementById('frete-kanban');
+  if(!board) return;
+  board.innerHTML = '';
+  FRETE_STATUS.forEach(status => {
+    const cards = opFretes.filter(f => f.status === status);
+    const col = document.createElement('div');
+    col.className = 'frete-col';
+    col.innerHTML = `
+      <div class="frete-col-header">
+        <div class="col-dot" style="background:${FRETE_COLORS[status]}"></div>
+        <span class="col-title" style="font-size:12px">${status}</span>
+        <span class="col-count">${cards.length}</span>
+      </div>
+      <div class="frete-col-cards" id="fcol-${status.replace(/[^a-z]/gi,'_')}"></div>
+    `;
+    board.appendChild(col);
+    const container = col.querySelector('.frete-col-cards');
+    if(cards.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div>📦</div>Nenhum frete</div>';
+    }
+    cards.sort((a,b)=>b.ts-a.ts).forEach(f => {
+      const card = document.createElement('div');
+      card.className = 'frete-card';
+      card.innerHTML = `
+        <div class="frete-card-title">${f.cliente}</div>
+        <div class="frete-card-sub">${f.numero ? '#'+f.numero : ''} ${f.responsavel ? '· '+f.responsavel : ''}</div>
+        ${f.rota ? '<div class="frete-card-rota">📍 '+f.rota+'</div>' : ''}
+        <div class="frete-card-footer">
+          <span>${f.previsao ? '📅 '+f.previsao : ''}</span>
+          <span class="frete-card-valor">${f.valor ? 'R$ '+f.valor : ''}</span>
+        </div>
+        <div style="display:flex;gap:4px;margin-top:8px">
+          ${FRETE_STATUS.filter(s=>s!==status).map(s=>`<button class="btn btn-sm" onclick="moverFrete('${f.id}','${s}');event.stopPropagation()" style="font-size:10px;padding:3px 7px">${s==='Em trânsito'?'▶ Trânsito':s==='Entregue'?'✓ Entregue':'↩ Coleta'}</button>`).join('')}
+          <button class="btn btn-sm btn-danger" onclick="deletarFrete('${f.id}');event.stopPropagation()" style="font-size:10px;padding:3px 7px;margin-left:auto">×</button>
+        </div>
+      `;
+      card.onclick = () => openFreteDetail(f.id);
+      container.appendChild(card);
+    });
+  });
+}
+
+function moverFrete(id, novoStatus) {
+  const f = opFretes.find(x=>x.id===id);
+  if(f){ f.status=novoStatus; f.historico=f.historico||[]; f.historico.push({texto:`Status: ${novoStatus}`,ts:Date.now()}); saveOpFretes(); renderFreteKanban(); toast('Frete atualizado!'); }
+}
+function deletarFrete(id){ if(!confirm('Excluir frete?'))return; opFretes=opFretes.filter(f=>f.id!==id); saveOpFretes(); renderFreteKanban(); }
+
+function openNovoFrete() {
+  // Leads fechados para vincular
+  const leadsOpts = leads.filter(l=>l.stage==='Fechado / Ganho').map(l=>`<option value="${l.id}">${l.name} — ${l.rota||'sem rota'}</option>`).join('');
+  showModal(`
+    <div class="modal-header"><span class="modal-title">🚚 Novo Frete</span><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      ${leadsOpts ? `<div class="form-group" style="margin-bottom:14px"><label class="form-label">Vincular lead fechado (opcional)</label><select id="nf-lead" onchange="preencherDeLead(this.value)"><option value="">— Cadastro direto —</option>${leadsOpts}</select></div>` : ''}
+      <div class="section-divider">📋 Dados do frete</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Cliente *</label><input id="nf-cliente" placeholder="Nome do cliente"/></div>
+        <div class="form-group"><label class="form-label">Nº do Frete</label><input id="nf-numero" placeholder="Ex: 2024-001"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Origem</label><input id="nf-origem" placeholder="Cidade/UF"/></div>
+        <div class="form-group"><label class="form-label">Destino</label><input id="nf-destino" placeholder="Cidade/UF"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Responsável</label><input id="nf-responsavel" value="${agentName}" placeholder="Nome"/></div>
+        <div class="form-group"><label class="form-label">Previsão de entrega</label><input type="date" id="nf-previsao"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">💰 Valor do Frete (R$)</label><input id="nf-valor" placeholder="Ex: 1.200,00" style="border-color:var(--green)"/></div>
+        <div class="form-group"><label class="form-label">Status inicial</label><select id="nf-status"><option value="Aguardando coleta">Aguardando coleta</option><option value="Em trânsito">Em trânsito</option></select></div>
+      </div>
+      <div class="section-divider">📦 Carga</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Material</label><input id="nf-material" placeholder="Ex: Eletrônicos"/></div>
+        <div class="form-group"><label class="form-label">Volumes / Peso</label><input id="nf-volumes" placeholder="Ex: 3 vol / 42kg"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Observações</label><textarea id="nf-obs" rows="2" placeholder="Instruções especiais, horários..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="salvarNovoFrete()">Criar Frete</button></div>
+  `);
+}
+
+function preencherDeLead(leadId) {
+  if(!leadId) return;
+  const l = leads.find(x=>x.id===leadId);
+  if(!l) return;
+  const v = (id, val) => { const el=document.getElementById(id); if(el) el.value=val||''; };
+  v('nf-cliente', l.name);
+  v('nf-origem', l.origem);
+  v('nf-destino', l.destino);
+  v('nf-material', l.material);
+  v('nf-volumes', [l.volumes, l.peso].filter(Boolean).join(' / '));
+  v('nf-valor', l.valorFrete||l.valorNF||'');
+}
+
+function salvarNovoFrete() {
+  const cliente = document.getElementById('nf-cliente').value.trim();
+  if(!cliente){ toast('Informe o cliente.'); return; }
+  const origem = document.getElementById('nf-origem').value.trim();
+  const destino = document.getElementById('nf-destino').value.trim();
+  const frete = {
+    id: uid(), cliente,
+    numero: document.getElementById('nf-numero').value.trim(),
+    origem, destino, rota: origem&&destino ? origem+' → '+destino : '',
+    responsavel: document.getElementById('nf-responsavel').value.trim(),
+    previsao: document.getElementById('nf-previsao').value,
+    valor: document.getElementById('nf-valor').value.trim(),
+    status: document.getElementById('nf-status').value,
+    material: document.getElementById('nf-material').value.trim(),
+    volumes: document.getElementById('nf-volumes').value.trim(),
+    obs: document.getElementById('nf-obs').value.trim(),
+    ts: Date.now(),
+    historico: [{texto:'Frete criado.', ts:Date.now()}]
+  };
+  opFretes.unshift(frete);
+  saveOpFretes();
+  closeModal();
+  renderFreteKanban();
+  toast('Frete criado!');
+}
+
+function openFreteDetail(id) {
+  const f = opFretes.find(x=>x.id===id);
+  if(!f) return;
+  const hist = (f.historico||[]).slice().reverse().map(h=>`<div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2)">${h.texto} <span style="color:var(--text3);float:right">${new Date(h.ts).toLocaleString('pt-BR')}</span></div>`).join('');
+  showModal(`
+    <div class="modal-header"><span class="modal-title">🚚 ${f.cliente}</span><div style="display:flex;gap:6px"><button class="btn btn-sm btn-danger" onclick="deletarFrete('${f.id}');closeModal()">Excluir</button><button class="modal-close" onclick="closeModal()">×</button></div></div>
+    <div class="modal-body">
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        ${FRETE_STATUS.map(s=>`<button class="btn btn-sm ${f.status===s?'btn-primary':''}" onclick="moverFrete('${f.id}','${s}');closeModal()" style="${f.status===s?'':''}background:${f.status===s?FRETE_COLORS[s]:'var(--surface2)'};color:${f.status===s?'#fff':'var(--text)'}";border-color:${FRETE_COLORS[s]}">${s}</button>`).join('')}
+      </div>
+      <div class="frete-grid">
+        <div class="frete-field"><label>Cliente</label><span>${f.cliente}</span></div>
+        <div class="frete-field"><label>Nº Frete</label><span>${f.numero||'—'}</span></div>
+        <div class="frete-field"><label>Rota</label><span>${f.rota||'—'}</span></div>
+        <div class="frete-field"><label>Responsável</label><span>${f.responsavel||'—'}</span></div>
+        <div class="frete-field"><label>Previsão</label><span>${f.previsao||'—'}</span></div>
+        <div class="frete-field"><label>💰 Valor</label><span style="color:var(--orange);font-weight:700">${f.valor?'R$ '+f.valor:'—'}</span></div>
+        <div class="frete-field"><label>Material</label><span>${f.material||'—'}</span></div>
+        <div class="frete-field"><label>Volumes/Peso</label><span>${f.volumes||'—'}</span></div>
+      </div>
+      ${f.obs?`<div style="font-size:13px;color:var(--text2);padding:10px;background:var(--surface2);border-radius:6px;margin-bottom:12px">${f.obs}</div>`:''}
+      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Histórico</div>
+      <div>${hist||'<div style="color:var(--text3);font-size:12px">Sem histórico.</div>'}</div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <input id="fh-nota" placeholder="Adicionar atualização..." style="flex:1;padding:7px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:13px"/>
+        <button class="btn btn-primary" onclick="addFreteNota('${f.id}')">Salvar</button>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Fechar</button></div>
+  `);
+}
+
+function addFreteNota(id) {
+  const f = opFretes.find(x=>x.id===id);
+  const texto = document.getElementById('fh-nota')?.value.trim();
+  if(!f||!texto) return;
+  f.historico = f.historico||[];
+  f.historico.push({texto, ts:Date.now()});
+  saveOpFretes();
+  openFreteDetail(id);
+  toast('Atualização salva!');
+}
+
+// ── TAREFAS ───────────────────────────────────────────────────
+let tarefaFiltro = 'todas';
+function filtrarTarefas(f){ tarefaFiltro=f; ['todas','pendentes','concluidas'].forEach(t=>{ const el=document.getElementById('tf-'+t); if(el) el.style.background = t===f?'var(--orange)':'var(--surface2)'; el.style.color = t===f?'#fff':'var(--text)'; }); renderTarefas(); }
+
+function renderTarefas() {
+  const el = document.getElementById('tarefas-list');
+  if(!el) return;
+  let lista = [...opTarefas].sort((a,b)=>a.done-b.done||(a.prazo||'z').localeCompare(b.prazo||'z'));
+  if(tarefaFiltro==='pendentes') lista = lista.filter(t=>!t.done);
+  if(tarefaFiltro==='concluidas') lista = lista.filter(t=>t.done);
+  if(!lista.length){ el.innerHTML='<div class="empty-state"><div>✅</div>Nenhuma tarefa aqui.</div>'; return; }
+  const prioColor = {'Alta':'var(--red)','Média':'var(--amber)','Baixa':'var(--green)'};
+  el.innerHTML = lista.map(t=>`
+    <div class="task-item ${t.done?'done':''}" onclick="openTarefaDetail('${t.id}')">
+      <div class="task-check ${t.done?'checked':''}" onclick="toggleTarefa('${t.id}');event.stopPropagation()">${t.done?'✓':''}</div>
+      <div class="task-body">
+        <div class="task-title ${t.done?'done':''}">${t.titulo}</div>
+        <div class="task-meta">${t.responsavel?t.responsavel+' · ':''}${t.prazo?'📅 '+t.prazo+' · ':''}${t.freteRef?'🚚 '+t.freteRef+' · ':''}<span class="task-priority" style="background:${prioColor[t.prioridade]||'var(--border)'};color:#fff">${t.prioridade||'Normal'}</span></div>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="deletarTarefa('${t.id}');event.stopPropagation()" style="font-size:11px">×</button>
+    </div>
+  `).join('');
+}
+
+function toggleTarefa(id){ const t=opTarefas.find(x=>x.id===id); if(t){t.done=!t.done;saveOpTarefas();renderTarefas();} }
+function deletarTarefa(id){ if(!confirm('Excluir tarefa?'))return; opTarefas=opTarefas.filter(t=>t.id!==id); saveOpTarefas(); renderTarefas(); }
+
+function openNovaTarefa() {
+  const fretesOpts = opFretes.filter(f=>f.status!=='Entregue').map(f=>`<option value="${f.cliente} #${f.numero||f.id.slice(-4)}">${f.cliente} — ${f.rota||'sem rota'}</option>`).join('');
+  showModal(`
+    <div class="modal-header"><span class="modal-title">✅ Nova Tarefa</span><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Tarefa *</label><input id="nt-titulo" placeholder="Descreva a tarefa..."/></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Responsável</label><input id="nt-resp" value="${agentName}" placeholder="Nome"/></div>
+        <div class="form-group"><label class="form-label">Prazo</label><input type="date" id="nt-prazo"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Prioridade</label><select id="nt-prio"><option value="Baixa">Baixa</option><option value="Média" selected>Média</option><option value="Alta">Alta</option></select></div>
+        ${fretesOpts?`<div class="form-group"><label class="form-label">Vincular frete</label><select id="nt-frete"><option value="">—</option>${fretesOpts}</select></div>`:'<div class="form-group"></div>'}
+      </div>
+      <div class="form-group"><label class="form-label">Descrição</label><textarea id="nt-desc" rows="2" placeholder="Detalhes..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="salvarNovaTarefa()">Criar Tarefa</button></div>
+  `);
+  setTimeout(()=>document.getElementById('nt-titulo')?.focus(), 100);
+}
+
+function salvarNovaTarefa() {
+  const titulo = document.getElementById('nt-titulo')?.value.trim();
+  if(!titulo){ toast('Informe a tarefa.'); return; }
+  opTarefas.unshift({ id:uid(), titulo, responsavel:document.getElementById('nt-resp')?.value.trim(), prazo:document.getElementById('nt-prazo')?.value, prioridade:document.getElementById('nt-prio')?.value, freteRef:document.getElementById('nt-frete')?.value||'', desc:document.getElementById('nt-desc')?.value.trim(), done:false, ts:Date.now() });
+  saveOpTarefas(); closeModal(); renderTarefas(); toast('Tarefa criada!');
+}
+
+function openTarefaDetail(id) {
+  const t = opTarefas.find(x=>x.id===id);
+  if(!t) return;
+  showModal(`
+    <div class="modal-header"><span class="modal-title">${t.titulo}</span><div style="display:flex;gap:6px"><button class="btn btn-sm btn-danger" onclick="deletarTarefa('${t.id}');closeModal()">Excluir</button><button class="modal-close" onclick="closeModal()">×</button></div></div>
+    <div class="modal-body">
+      <div class="frete-grid">
+        <div class="frete-field"><label>Responsável</label><span>${t.responsavel||'—'}</span></div>
+        <div class="frete-field"><label>Prazo</label><span>${t.prazo||'—'}</span></div>
+        <div class="frete-field"><label>Prioridade</label><span>${t.prioridade||'—'}</span></div>
+        <div class="frete-field"><label>Frete vinculado</label><span>${t.freteRef||'—'}</span></div>
+      </div>
+      ${t.desc?`<div style="font-size:13px;color:var(--text2);padding:10px;background:var(--surface2);border-radius:6px">${t.desc}</div>`:''}
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="toggleTarefa('${t.id}');closeModal()">${t.done?'↩ Reabrir':'✓ Concluir'}</button>
+      <button class="btn" onclick="closeModal()">Fechar</button>
+    </div>
+  `);
+}
+
+// ── AGENDA ────────────────────────────────────────────────────
+function renderAgenda() {
+  const el = document.getElementById('agenda-list');
+  const inp = document.getElementById('agenda-data');
+  const label = document.getElementById('agenda-dia-label');
+  if(!el||!inp) return;
+  const data = inp.value;
+  const hoje = new Date().toISOString().split('T')[0];
+  if(label) label.textContent = data===hoje?'— Hoje':data?'— '+new Date(data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}):'';
+  const itens = opAgenda.filter(a=>a.data===data).sort((a,b)=>(a.hora||'').localeCompare(b.hora||''));
+  if(!itens.length){ el.innerHTML='<div class="empty-state"><div>📅</div>Nenhum agendamento nesta data.</div>'; return; }
+  const tipoColor = {'Coleta':'var(--amber)','Entrega':'var(--green)','Visita':'var(--blue)','Outro':'var(--text3)'};
+  el.innerHTML = itens.map(a=>`
+    <div class="agenda-item">
+      <div class="agenda-hora">${a.hora||'—'}</div>
+      <div class="agenda-body">
+        <div class="agenda-title">${a.titulo}</div>
+        <div class="agenda-sub">${a.cliente?a.cliente+' · ':''}${a.endereco||''}</div>
+        ${a.obs?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${a.obs}</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="agenda-tipo" style="background:${tipoColor[a.tipo]||'var(--border)'};color:#fff;padding:2px 8px;border-radius:4px">${a.tipo}</span>
+        <button class="btn btn-sm btn-danger" onclick="deletarAgendamento('${a.id}')" style="font-size:10px">×</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function deletarAgendamento(id){ if(!confirm('Excluir agendamento?'))return; opAgenda=opAgenda.filter(a=>a.id!==id); saveOpAgenda(); renderAgenda(); }
+
+function openNovoAgendamento() {
+  const inp = document.getElementById('agenda-data');
+  const dataAtual = inp?.value || new Date().toISOString().split('T')[0];
+  const fretesOpts = opFretes.filter(f=>f.status!=='Entregue').map(f=>`<option value="${f.id}">${f.cliente} — ${f.rota||''}</option>`).join('');
+  showModal(`
+    <div class="modal-header"><span class="modal-title">📅 Novo Agendamento</span><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Tipo *</label><select id="na-tipo"><option value="Coleta">Coleta</option><option value="Entrega">Entrega</option><option value="Visita">Visita</option><option value="Outro">Outro</option></select></div>
+        <div class="form-group"><label class="form-label">Data *</label><input type="date" id="na-data" value="${dataAtual}"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Horário</label><input type="time" id="na-hora"/></div>
+        <div class="form-group"><label class="form-label">Cliente</label><input id="na-cliente" placeholder="Nome do cliente"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Título / Descrição *</label><input id="na-titulo" placeholder="Ex: Coleta Wanderley — Tijucas/SC"/></div>
+      <div class="form-group"><label class="form-label">Endereço</label><input id="na-end" placeholder="Rua, número, cidade"/></div>
+      ${fretesOpts?`<div class="form-group"><label class="form-label">Vincular frete</label><select id="na-frete" onchange="preencherAgendaDeFrete(this.value)"><option value="">—</option>${fretesOpts}</select></div>`:''}
+      <div class="form-group"><label class="form-label">Observações</label><textarea id="na-obs" rows="2" placeholder="Contato, instruções..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="salvarAgendamento()">Agendar</button></div>
+  `);
+}
+
+function preencherAgendaDeFrete(id) {
+  const f = opFretes.find(x=>x.id===id);
+  if(!f) return;
+  const v = (elId, val) => { const el=document.getElementById(elId); if(el&&val) el.value=val; };
+  v('na-cliente', f.cliente);
+  v('na-titulo', (document.getElementById('na-tipo')?.value||'Coleta')+' — '+f.cliente+(f.rota?' ('+f.rota+')':''));
+}
+
+function salvarAgendamento() {
+  const titulo = document.getElementById('na-titulo')?.value.trim();
+  const data = document.getElementById('na-data')?.value;
+  if(!titulo||!data){ toast('Informe título e data.'); return; }
+  opAgenda.push({ id:uid(), tipo:document.getElementById('na-tipo')?.value, data, hora:document.getElementById('na-hora')?.value, cliente:document.getElementById('na-cliente')?.value.trim(), titulo, endereco:document.getElementById('na-end')?.value.trim(), obs:document.getElementById('na-obs')?.value.trim(), ts:Date.now() });
+  saveOpAgenda(); closeModal();
+  document.getElementById('agenda-data').value = data;
+  renderAgenda(); toast('Agendamento salvo!');
+}
+
+// ── DOCUMENTOS ────────────────────────────────────────────────
+function renderDocs() {
+  const el = document.getElementById('docs-list');
+  if(!el) return;
+  const tipo = document.getElementById('doc-filtro-tipo')?.value||'';
+  const status = document.getElementById('doc-filtro-status')?.value||'';
+  let lista = [...opDocs].sort((a,b)=>b.ts-a.ts);
+  if(tipo) lista = lista.filter(d=>d.tipo===tipo);
+  if(status) lista = lista.filter(d=>d.status===status);
+  if(!lista.length){ el.innerHTML='<div class="empty-state"><div>📄</div>Nenhum documento encontrado.</div>'; return; }
+  const tipoIcon = {'CTE':'🚛','NF':'🧾','Minuta':'📝','Outro':'📄'};
+  const statusColor = {'Pendente':'var(--amber)','Emitido':'var(--green)','Cancelado':'var(--red)'};
+  el.innerHTML = lista.map(d=>`
+    <div class="doc-item">
+      <div class="doc-icon" style="background:var(--surface2)">${tipoIcon[d.tipo]||'📄'}</div>
+      <div class="doc-body">
+        <div class="doc-title">${d.tipo} ${d.numero?'#'+d.numero:''} — ${d.cliente}</div>
+        <div class="doc-sub">${d.rota||''}${d.valor?' · R$ '+d.valor:''} · ${new Date(d.ts).toLocaleDateString('pt-BR')}</div>
+        ${d.obs?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${d.obs}</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="doc-status" style="background:${statusColor[d.status]||'var(--border)'};color:#fff">${d.status}</span>
+        <div style="display:flex;gap:4px">
+          <select style="font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface2);color:var(--text)" onchange="mudarStatusDoc('${d.id}',this.value)">
+            <option value="">Status</option>
+            <option value="Pendente">Pendente</option><option value="Emitido">Emitido</option><option value="Cancelado">Cancelado</option>
+          </select>
+          <button class="btn btn-sm btn-danger" onclick="deletarDoc('${d.id}')" style="font-size:10px">×</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function mudarStatusDoc(id, status){ if(!status)return; const d=opDocs.find(x=>x.id===id); if(d){d.status=status;saveOpDocs();renderDocs();toast('Status atualizado!');} }
+function deletarDoc(id){ if(!confirm('Excluir documento?'))return; opDocs=opDocs.filter(d=>d.id!==id); saveOpDocs(); renderDocs(); }
+
+function openNovoDoc() {
+  const fretesOpts = opFretes.map(f=>`<option value="${f.id}">${f.cliente} — ${f.rota||''}</option>`).join('');
+  showModal(`
+    <div class="modal-header"><span class="modal-title">📄 Novo Documento</span><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Tipo *</label><select id="nd-tipo"><option value="CTE">CT-e</option><option value="NF">Nota Fiscal</option><option value="Minuta">Minuta</option><option value="Outro">Outro</option></select></div>
+        <div class="form-group"><label class="form-label">Número</label><input id="nd-numero" placeholder="Ex: 000123"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Cliente *</label><input id="nd-cliente" placeholder="Nome"/></div>
+        <div class="form-group"><label class="form-label">Status</label><select id="nd-status"><option value="Pendente">Pendente</option><option value="Emitido">Emitido</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Rota</label><input id="nd-rota" placeholder="Origem → Destino"/></div>
+        <div class="form-group"><label class="form-label">Valor (R$)</label><input id="nd-valor" placeholder="Ex: 1.200,00"/></div>
+      </div>
+      ${fretesOpts?`<div class="form-group"><label class="form-label">Vincular frete</label><select id="nd-frete" onchange="preencherDocDeFrete(this.value)"><option value="">—</option>${fretesOpts}</select></div>`:''}
+      <div class="form-group"><label class="form-label">Observações</label><textarea id="nd-obs" rows="2" placeholder="Chave de acesso, data emissão..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="salvarDoc()">Salvar</button></div>
+  `);
+}
+
+function preencherDocDeFrete(id) {
+  const f = opFretes.find(x=>x.id===id);
+  if(!f) return;
+  const v = (elId, val) => { const el=document.getElementById(elId); if(el&&val) el.value=val; };
+  v('nd-cliente', f.cliente);
+  v('nd-rota', f.rota);
+  v('nd-valor', f.valor);
+}
+
+function salvarDoc() {
+  const cliente = document.getElementById('nd-cliente')?.value.trim();
+  if(!cliente){ toast('Informe o cliente.'); return; }
+  opDocs.unshift({ id:uid(), tipo:document.getElementById('nd-tipo')?.value, numero:document.getElementById('nd-numero')?.value.trim(), cliente, status:document.getElementById('nd-status')?.value, rota:document.getElementById('nd-rota')?.value.trim(), valor:document.getElementById('nd-valor')?.value.trim(), obs:document.getElementById('nd-obs')?.value.trim(), ts:Date.now() });
+  saveOpDocs(); closeModal(); renderDocs(); toast('Documento salvo!');
+}
+
+// Inicializar operacional ao abrir a aba
+const _showViewOrig = showView;
+
+// ─── RELATÓRIO MENSAL ──────────────────────────────────────────
+function abrirRelatorioMensal() {
+  const meses = [...new Set(leads.map(l => {
+    const d = new Date(l.ts);
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+  }))].sort().reverse();
+
+  const mesAtual = new Date().getFullYear() + '-' + String(new Date().getMonth()+1).padStart(2,'0');
+  if (!meses.includes(mesAtual)) meses.unshift(mesAtual);
+
+  const opts = meses.map(m => {
+    const [ano, mes] = m.split('-');
+    const nome = new Date(ano, mes-1).toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+    return `<option value="${m}">${nome.charAt(0).toUpperCase()+nome.slice(1)}</option>`;
+  }).join('');
+
+  showModal(`
+    <div class="modal-header">
+      <span class="modal-title">📊 Relatório Mensal</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:16px">
+        <label class="form-label">Selecione o mês</label>
+        <select id="rel-mes" onchange="renderRelatorio()" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:14px">${opts}</select>
+      </div>
+      <div id="rel-conteudo"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Fechar</button>
+      <button class="btn btn-report" onclick="gerarPDFMensal()">⬇ Baixar PDF</button>
+    </div>
+  `);
+  setTimeout(renderRelatorio, 50);
+}
+
+function renderRelatorio() {
+  const sel = document.getElementById('rel-mes');
+  if (!sel) return;
+  const [ano, mes] = sel.value.split('-');
+  const nomeMes = new Date(ano, mes-1).toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+
+  const leadsDoMes = leads.filter(l => {
+    const d = new Date(l.ts);
+    return d.getFullYear() == ano && (d.getMonth()+1) == mes;
+  });
+
+  const total = leadsDoMes.length;
+  const fechados = leadsDoMes.filter(l => l.stage === 'Fechado / Ganho').length;
+  const perdidos = leadsDoMes.filter(l => l.stage === 'Perdido').length;
+  const ativos = total - fechados - perdidos;
+  const taxaConv = total > 0 ? Math.round(fechados/total*100) : 0;
+
+  const somaFrete = leadsDoMes.reduce((s,l) => {
+    const v = parseFloat((l.valorFrete||'0').replace(/\./g,'').replace(',','.'));
+    return s + (isNaN(v) ? 0 : v);
+  }, 0);
+  const somaNF = leadsDoMes.reduce((s,l) => {
+    const v = parseFloat((l.valorNF||'0').replace(/\./g,'').replace(',','.'));
+    return s + (isNaN(v) ? 0 : v);
+  }, 0);
+
+  const fmtR = v => 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  const linhas = leadsDoMes.sort((a,b)=>b.ts-a.ts).map(l => `
+    <tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:8px 4px;font-size:12px">${l.name}</td>
+      <td style="padding:8px 4px;font-size:11px;color:var(--text3)">${l.rota||'—'}</td>
+      <td style="padding:8px 4px"><span style="font-size:10px;padding:2px 6px;border-radius:4px;${STAGE_PILL[l.stage]||''}">${l.stage}</span></td>
+      <td style="padding:8px 4px;font-size:12px;color:var(--orange);font-weight:600">${l.valorFrete?'R$ '+l.valorFrete:'—'}</td>
+      <td style="padding:8px 4px;font-size:11px;color:var(--text3)">${new Date(l.ts).toLocaleDateString('pt-BR')}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('rel-conteudo').innerHTML = `
+    <div id="rel-pdf-area">
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="font-size:18px;font-weight:800;color:var(--orange)">MF ENVIOS</div>
+        <div style="font-size:14px;color:var(--text2)">Relatório — ${nomeMes.charAt(0).toUpperCase()+nomeMes.slice(1)}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:24px;font-weight:700;color:var(--blue)">${total}</div>
+          <div style="font-size:11px;color:var(--text3)">Total Leads</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:24px;font-weight:700;color:var(--green)">${fechados}</div>
+          <div style="font-size:11px;color:var(--text3)">Fechados</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:24px;font-weight:700;color:var(--orange)">${taxaConv}%</div>
+          <div style="font-size:11px;color:var(--text3)">Conversão</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+        <div style="background:rgba(249,115,22,.15);border:1px solid var(--orange);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">💰 Total Fretes Fechados</div>
+          <div style="font-size:18px;font-weight:700;color:var(--orange)">${fmtR(somaFrete)}</div>
+        </div>
+        <div style="background:rgba(34,197,94,.1);border:1px solid var(--green);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">📦 Total NF Movimentada</div>
+          <div style="font-size:18px;font-weight:700;color:var(--green)">${fmtR(somaNF)}</div>
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px">Leads do mês</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="border-bottom:2px solid var(--border)">
+            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Nome</th>
+            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Rota</th>
+            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Etapa</th>
+            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Frete</th>
+            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Data</th>
+          </tr></thead>
+          <tbody>${linhas||'<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">Nenhum lead neste mês.</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function gerarPDFMensal() {
+  const sel = document.getElementById('rel-mes');
+  const [ano, mes] = sel.value.split('-');
+  const nomeMes = new Date(ano, mes-1).toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+  const area = document.getElementById('rel-pdf-area');
+  if (!area) return;
+
+  const w = window.open('', '_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório ${nomeMes}</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#fff;color:#1a1a2e;padding:30px;font-size:13px}
+    h1{color:#f97316;font-size:22px;margin:0 0 4px}
+    h2{font-size:15px;color:#555;margin:0 0 20px;font-weight:400}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+    .box{border:1px solid #ddd;border-radius:8px;padding:14px;text-align:center}
+    .box-num{font-size:28px;font-weight:800}
+    .box-label{font-size:11px;color:#888;margin-top:4px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+    .box2{border:2px solid #f97316;border-radius:8px;padding:14px;text-align:center}
+    .box2-val{font-size:20px;font-weight:700;color:#f97316}
+    .box2-label{font-size:11px;color:#888;margin-bottom:6px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th{text-align:left;padding:8px;font-size:11px;color:#888;border-bottom:2px solid #eee;text-transform:uppercase}
+    td{padding:8px;font-size:12px;border-bottom:1px solid #f0f0f0}
+    .frete{color:#f97316;font-weight:700}
+    @media print{body{padding:15px}}
+  </style></head><body>
+  <h1>MF ENVIOS</h1>
+  <h2>Relatório — ${nomeMes.charAt(0).toUpperCase()+nomeMes.slice(1)}</h2>
+  ${area.innerHTML.replace(/style="[^"]*color:var[^"]*"/g,'').replace(/class="[^"]*"/g,'')}
+  <script>window.onload=()=>window.print()<\/script>
+  </body></html>`);
+  w.document.close();
+}
+
+
+// Patch showView para operacional
+const _origShowView = showView;
+function showView(v) {
+  _origShowView(v);
+  if(v === 'operacional') {
+    showOpTab(opTabAtual || 'fretes');
+  }
+}
+
 </script>
 </body>
 </html>
