@@ -93,7 +93,6 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 .followup-check{width:16px;height:16px;accent-color:var(--orange);cursor:pointer}.followup-text{flex:1;font-size:13px}.followup-date{font-size:11px;color:var(--text3)}.followup-done{text-decoration:line-through;color:var(--text3)}
 .frete-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px}
 .frete-field label{font-size:11px;color:var(--text3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}.frete-field span{font-size:13px;color:var(--text)}
-.dash-f-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}.dash-f-btn:hover{background:var(--surface2)}.dash-f-btn.active{background:#0a1931;color:#fff;border-color:var(--border2)}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none}.toast.show{opacity:1}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 </style>
@@ -146,102 +145,26 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 </div>
 
 <div class="view" id="view-dashboard">
-  <div style="flex-shrink:0;display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap">
-    <button class="dash-f-btn active" onclick="dashFiltro(this,'hoje')">Hoje</button>
-    <button class="dash-f-btn" onclick="dashFiltro(this,'ontem')">Ontem</button>
-    <button class="dash-f-btn" onclick="dashFiltro(this,'semana')">Semana</button>
-    <button class="dash-f-btn" onclick="dashFiltro(this,'mes')">Mês</button>
-    <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="dash-periodo-label">Hoje</span>
-  </div>
-  <div style="flex:1;overflow-y:auto;padding:16px 20px">
-    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px">
-      <div class="dash-card">
-        <div class="dash-card-title">Mensagens recebidas</div>
-        <div style="font-size:32px;font-weight:600;color:var(--text);margin-bottom:4px" id="d-msgs">0</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">no período</div>
-        <div id="d-canais"></div>
-        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-msgs-delta"></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-title">Conversas ativas</div>
-        <div style="font-size:32px;font-weight:600;color:#a78bfa;margin-bottom:4px" id="d-conv">0</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">leads em andamento</div>
-        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--green)" id="d-conv-delta"></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-title">Sem follow-up</div>
-        <div style="font-size:32px;font-weight:600;color:#f97316;margin-bottom:4px" id="d-semfu">0</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">leads sem tarefa</div>
-        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-semfu-delta"></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-title">Taxa de conversão</div>
-        <div style="font-size:32px;font-weight:600;color:#22c55e;margin-bottom:4px" id="d-taxa">0%</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">fechados / total</div>
-        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-taxa-sub"></div>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px">
-      <div class="dash-card">
-        <div class="dash-card-title">Leads</div>
-        <div style="font-size:28px;font-weight:600;color:#a78bfa" id="d-leads">0</div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-leads-val">R$ 0</div>
-        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--green)" id="d-leads-hoje">0 hoje</div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-title">Leads ativos</div>
-        <div style="font-size:28px;font-weight:600;color:#a78bfa" id="d-ativos">0</div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-ativos-val">R$ 0</div>
-        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--green)" id="d-ativos-hoje">0 hoje</div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-title">Leads perdidos</div>
-        <div style="font-size:28px;font-weight:600;color:var(--red)" id="d-perdidos">0</div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-perdidos-val">R$ 0</div>
-        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--text3)" id="d-perdidos-hoje">0 hoje</div>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+  <div class="dash-content">
+    <div class="dash-grid" id="dash-metrics"></div>
+    <div class="dash-row">
       <div class="dash-card"><div class="dash-card-title">Funil por etapa</div><div id="dash-funnel"></div></div>
+      <div class="dash-card"><div class="dash-card-title">Atividade recente</div><div id="dash-activity"></div></div>
+    </div>
+    <div class="dash-row">
+      <div class="dash-card"><div class="dash-card-title">Por responsável</div><div id="dash-agents"></div></div>
       <div class="dash-card"><div class="dash-card-title">Follow-ups pendentes</div><div id="dash-followups"></div></div>
     </div>
   </div>
 </div>
 
 <div class="view" id="view-wpp">
-  <div style="display:flex;flex:1;overflow:hidden;height:100%">
-
-    <!-- LISTA DE CONVERSAS -->
-    <div style="width:320px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--surface)">
-      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
-        <div style="flex:1;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input id="wpp-search" placeholder="Buscar conversa..." style="border:none;background:none;outline:none;font-size:13px;color:var(--text);width:100%" oninput="filtrarConversas()"/>
-        </div>
-        <button class="btn btn-sm" onclick="loadWppMessages()" title="Atualizar">↻</button>
-      </div>
-      <div style="padding:8px 12px;display:flex;gap:6px;border-bottom:1px solid var(--border)">
-        <span style="font-size:11px;background:rgba(249,115,22,.2);color:var(--orange);padding:2px 8px;border-radius:20px;font-weight:600">● Novos leads</span>
-        <span style="font-size:11px;background:rgba(59,130,246,.2);color:var(--blue);padding:2px 8px;border-radius:20px;font-weight:600">● Clientes MF</span>
-      </div>
-      <div style="flex:1;overflow-y:auto" id="wpp-conv-list">
-        <div style="text-align:center;padding:40px;color:var(--text3);font-size:13px">Carregando...</div>
-      </div>
-      <div style="padding:10px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);text-align:center" id="wpp-count">0 conversas</div>
-    </div>
-
-    <!-- ÁREA DO CHAT -->
-    <div style="flex:1;display:flex;flex-direction:column;background:var(--bg)" id="wpp-chat-area">
-      <div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3)">
-        <div style="font-size:40px">💬</div>
-        <div style="font-size:14px">Selecione uma conversa para começar</div>
-        <div style="font-size:12px">As mensagens aparecem aqui automaticamente</div>
-      </div>
-    </div>
-
+  <div class="wpp-toolbar">
+    <span style="font-size:13px;font-weight:600">💬 Mensagens recebidas no WhatsApp</span>
+    <button class="btn btn-sm" onclick="loadWppMessages()" style="margin-left:12px">↻ Atualizar</button>
+    <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="wpp-count"></span>
   </div>
+  <div class="wpp-content" id="wpp-list"><div style="text-align:center;padding:40px;color:var(--text3)">Carregando...</div></div>
 </div>
 
 <div class="view" id="view-ia">
@@ -369,76 +292,14 @@ function renderLeads(){
   }).join(''):`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text3)">Nenhum lead encontrado.</td></tr>`;
 }
 
-let dashPeriodo='hoje';
-function dashFiltro(btn,periodo){
-  document.querySelectorAll('.dash-f-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');dashPeriodo=periodo;renderDashboard();
-}
-function getLeadsPeriodo(){
-  const agora=Date.now();
-  const hoje=new Date();hoje.setHours(0,0,0,0);
-  const hojets=hoje.getTime();
-  const ontemI=hojets-86400000,ontemF=hojets;
-  const semanaI=hojets-7*86400000;
-  const mesI=new Date(hoje.getFullYear(),hoje.getMonth(),1).getTime();
-  if(dashPeriodo==='hoje') return leads.filter(l=>l.ts>=hojets);
-  if(dashPeriodo==='ontem') return leads.filter(l=>l.ts>=ontemI&&l.ts<ontemF);
-  if(dashPeriodo==='semana') return leads.filter(l=>l.ts>=semanaI);
-  if(dashPeriodo==='mes') return leads.filter(l=>l.ts>=mesI);
-  return leads;
-}
-function somaValorNF(arr){
-  return arr.reduce((s,l)=>{const v=parseFloat((l.valorNF||'0').replace(/\./g,'').replace(',','.'));return s+(isNaN(v)?0:v);},0);
-}
-function fmtValor(v){return v>=1000000?'R$ '+(v/1000000).toFixed(1)+'M':v>=1000?'R$ '+(v/1000).toFixed(0)+'k':'R$ '+Math.round(v);}
 function renderDashboard(){
-  const periodo=getLeadsPeriodo();
-  const hoje=new Date();hoje.setHours(0,0,0,0);
-  const leadsHoje=leads.filter(l=>l.ts>=hoje.getTime());
-  const total=leads.length;
-  const fechados=leads.filter(l=>l.stage==='Fechado / Ganho').length;
-  const perdidosAll=leads.filter(l=>l.stage==='Perdido');
-  const ativos=leads.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage));
-  const semFu=leads.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
-  const taxa=total?Math.round(fechados/total*100):0;
-  const periodoAtivos=periodo.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage));
-  const periodoPerdidos=periodo.filter(l=>l.stage==='Perdido');
-
-  // Mensagens por canal (simulado por source)
-  const wpp=periodo.filter(l=>l.source==='whatsapp').length;
-  const ig=periodo.filter(l=>l.source==='instagram').length;
-  const site=periodo.filter(l=>l.source==='site').length;
-  const google=periodo.filter(l=>l.source==='google').length;
-  const outros=periodo.filter(l=>!['whatsapp','instagram','site','google'].includes(l.source)).length;
-  const totalMsgs=wpp+ig+site+google+outros;
-
-  const s=id=>document.getElementById(id);
-  if(s('d-msgs'))s('d-msgs').textContent=totalMsgs;
-  if(s('d-canais'))s('d-canais').innerHTML=[
-    {cor:'#25D366',nome:'WhatsApp',v:wpp},
-    {cor:'#E1306C',nome:'Instagram',v:ig},
-    {cor:'#378ADD',nome:'Site/Google',v:google+site},
-    {cor:'#888',nome:'Outros',v:outros}
-  ].map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${c.cor};display:inline-block"></span>${c.nome}</span><span style="font-size:13px;font-weight:600;color:#22c55e">${c.v}</span></div>`).join('');
-  if(s('d-msgs-delta'))s('d-msgs-delta').textContent=periodo.length+' leads no período';
-  if(s('d-conv'))s('d-conv').textContent=ativos.length;
-  if(s('d-conv-delta'))s('d-conv-delta').textContent='+'+leadsHoje.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length+' hoje';
-  if(s('d-semfu'))s('d-semfu').textContent=semFu.length;
-  if(s('d-semfu-delta'))s('d-semfu-delta').textContent=semFu.length+' sem tarefa pendente';
-  if(s('d-taxa'))s('d-taxa').textContent=taxa+'%';
-  if(s('d-taxa-sub'))s('d-taxa-sub').textContent=fechados+' fechados de '+total+' total';
-  if(s('d-leads'))s('d-leads').textContent=periodo.length;
-  if(s('d-leads-val'))s('d-leads-val').textContent=fmtValor(somaValorNF(periodo));
-  if(s('d-leads-hoje'))s('d-leads-hoje').textContent=leadsHoje.length+' hoje';
-  if(s('d-ativos'))s('d-ativos').textContent=periodoAtivos.length;
-  if(s('d-ativos-val'))s('d-ativos-val').textContent=fmtValor(somaValorNF(periodoAtivos));
-  if(s('d-ativos-hoje'))s('d-ativos-hoje').textContent=leadsHoje.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length+' hoje';
-  if(s('d-perdidos'))s('d-perdidos').textContent=periodoPerdidos.length;
-  if(s('d-perdidos-val'))s('d-perdidos-val').textContent=fmtValor(somaValorNF(periodoPerdidos));
-  if(s('d-perdidos-hoje'))s('d-perdidos-hoje').textContent=leadsHoje.filter(l=>l.stage==='Perdido').length+' hoje';
-
-  const max=Math.max(1,...STAGES.map(st=>leads.filter(l=>l.stage===st).length));
-  document.getElementById('dash-funnel').innerHTML=STAGES.map(st=>{const n=leads.filter(l=>l.stage===st).length,pct=Math.round(n/max*100);return `<div class="funnel-row"><div class="funnel-label">${st}</div><div class="funnel-bar-bg"><div class="funnel-bar" style="width:${pct}%;background:${STAGE_COLORS[st]}">${n>0?n:''}</div></div><div class="funnel-count">${n}</div></div>`;}).join('');
+  const total=leads.length,fechados=leads.filter(l=>l.stage==='Fechado / Ganho').length,perdidos=leads.filter(l=>l.stage==='Perdido').length,ativos=leads.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length,taxa=total?Math.round(fechados/total*100):0;
+  document.getElementById('dash-metrics').innerHTML=[{l:'Total de leads',v:total,s:''},{l:'Em andamento',v:ativos,s:'ativos no funil'},{l:'Fechados',v:fechados,s:taxa+'% conversão'},{l:'Perdidos',v:perdidos,s:''}].map(m=>`<div class="metric-card"><div class="metric-label">${m.l}</div><div class="metric-val">${m.v}</div>${m.s?`<div class="metric-sub">${m.s}</div>`:''}</div>`).join('');
+  const max=Math.max(1,...STAGES.map(s=>leads.filter(l=>l.stage===s).length));
+  document.getElementById('dash-funnel').innerHTML=STAGES.map(s=>{const n=leads.filter(l=>l.stage===s).length,pct=Math.round(n/max*100);return `<div class="funnel-row"><div class="funnel-label">${s}</div><div class="funnel-bar-bg"><div class="funnel-bar" style="width:${pct}%;background:${STAGE_COLORS[s]}">${n>0?n:''}</div></div><div class="funnel-count">${n}</div></div>`;}).join('');
+  document.getElementById('dash-activity').innerHTML=activity.slice(0,8).length?activity.slice(0,8).map(a=>`<div class="activity-item"><div class="activity-dot" style="background:var(--border2)"></div><div><div class="activity-text">${a.msg}</div><div class="activity-time">${fmtDate(a.ts)}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhuma atividade.</div>';
+  const agentMap={};leads.forEach(l=>{if(l.agent)agentMap[l.agent]=(agentMap[l.agent]||0)+1;});
+  document.getElementById('dash-agents').innerHTML=Object.entries(agentMap).sort((a,b)=>b[1]-a[1]).length?Object.entries(agentMap).sort((a,b)=>b[1]-a[1]).map(([a,n])=>`<div class="funnel-row"><div class="funnel-label">${a}</div><div class="funnel-bar-bg"><div class="funnel-bar" style="width:${Math.round(n/Math.max(1,total)*100)}%;background:var(--orange)">${n}</div></div><div class="funnel-count">${n}</div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhum responsável.</div>';
   const allFu=leads.flatMap(l=>(l.followups||[]).filter(f=>!f.done).map(f=>({...f,leadName:l.name,leadId:l.id})));
   document.getElementById('dash-followups').innerHTML=allFu.length?allFu.slice(0,6).map(f=>`<div class="activity-item" onclick="openLead('${f.leadId}')"><div class="activity-dot" style="background:var(--amber)"></div><div><div class="activity-text"><strong>${f.leadName}</strong>: ${f.text}</div><div class="activity-time">${f.date||'Sem data'}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhum follow-up pendente.</div>';
 }
@@ -707,154 +568,29 @@ function importData(e){const file=e.target.files[0];if(!file)return;const reader
 // ─── TOAST ───────────────────────────────────────────────
 function toast(msg){const t=document.getElementById('toast');t.innerHTML=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-// ─── WHATSAPP CHAT ───────────────────────────────────────────────
+// ─── WHATSAPP ───────────────────────────────────────────────
 const WPP_SERVER='https://mf-envios-crm.onrender.com';
-let wppMsgs=[];
-let chatAtivo=null;
-let enviando=false;
-
-// Contatos conhecidos da MF Envios (clientes com contato salvo)
-const CONTATOS_MF = load('crm-contatos-mf', []);
-
-function isClienteMF(phone){ return leads.some(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,'')); }
-
-function fmtDateChat(ts){
-  const d=new Date(ts),now=new Date();
-  const diff=Math.floor((now-d)/1000);
-  if(diff<86400) return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
-}
-
-function agruparMsgs(msgs){
-  const grupos={};
-  msgs.forEach(m=>{
-    const phone=m.phone||'';
-    if(!grupos[phone]){grupos[phone]={phone,name:m.name||'Desconhecido',msgs:[],lastTs:0,lastText:''};}
-    grupos[phone].msgs.push(m);
-    if(m.ts>grupos[phone].lastTs){grupos[phone].lastTs=m.ts;grupos[phone].lastText=m.text||'';}
-  });
-  return Object.values(grupos).sort((a,b)=>b.lastTs-a.lastTs);
-}
-
-function filtrarConversas(){
-  const q=(document.getElementById('wpp-search')||{}).value?.toLowerCase()||'';
-  renderConvList(q);
-}
-
-function renderConvList(q=''){
-  const grupos=agruparMsgs(wppMsgs);
-  const filtrados=q?grupos.filter(g=>g.name.toLowerCase().includes(q)||g.phone.includes(q)):grupos;
-  const list=document.getElementById('wpp-conv-list');
-  if(!filtrados.length){list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px">Nenhuma conversa</div>';return;}
-  list.innerHTML=filtrados.map(g=>{
-    const cliente=isClienteMF(g.phone);
-    const cor=cliente?'var(--blue)':'var(--orange)';
-    const bgCor=cliente?'rgba(59,130,246,.15)':'rgba(249,115,22,.15)';
-    const ativo=chatAtivo===g.phone;
-    const ini=g.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';
-    return `<div onclick="abrirChat('${g.phone}')" style="display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;border-bottom:1px solid var(--border);background:${ativo?'var(--surface2)':'transparent'};transition:background .15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='${ativo?'var(--surface2)':'transparent'}'">
-      <div style="width:40px;height:40px;border-radius:50%;background:${bgCor};color:${cor};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;border:2px solid ${cor}">${ini}</div>
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-          <span style="font-size:13px;font-weight:700;color:var(--text)">${g.name}</span>
-          <span style="font-size:10px;color:var(--text3)">${fmtDateChat(g.lastTs)}</span>
-        </div>
-        <div style="font-size:11px;color:${cor};margin-bottom:3px;font-weight:600">${cliente?'● Cliente MF':'● Novo lead'}</div>
-        <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.lastText.slice(0,45)}</div>
-      </div>
-      <div style="width:8px;height:8px;border-radius:50%;background:${cor};flex-shrink:0"></div>
-    </div>`;
-  }).join('');
-  document.getElementById('wpp-count').textContent=filtrados.length+' conversa'+(filtrados.length!==1?'s':'');
-}
-
-function abrirChat(phone){
-  chatAtivo=phone;
-  renderConvList((document.getElementById('wpp-search')||{}).value||'');
-  const grupos=agruparMsgs(wppMsgs);
-  const grupo=grupos.find(g=>g.phone===phone);
-  if(!grupo)return;
-  const cliente=isClienteMF(phone);
-  const cor=cliente?'var(--blue)':'var(--orange)';
-  const bgCor=cliente?'rgba(59,130,246,.15)':'rgba(249,115,22,.15)';
-  const leadInfo=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
-  const area=document.getElementById('wpp-chat-area');
-  area.innerHTML=`
-    <div style="padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0">
-      <div style="width:38px;height:38px;border-radius:50%;background:${bgCor};color:${cor};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid ${cor}">${grupo.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?'}</div>
-      <div style="flex:1">
-        <div style="font-size:14px;font-weight:700;color:var(--text)">${grupo.name}</div>
-        <div style="font-size:11px;color:${cor};font-weight:600">${cliente?'● Cliente MF Envios':'● Novo lead'} · ${phone}</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        ${leadInfo?`<button class="btn btn-sm" onclick="openLead('${leadInfo.id}')">Ver ficha</button>`:'<button class="btn btn-sm btn-primary" onclick="wppToLead(\''+grupo.msgs[0]?.id+'\',\''+grupo.name+'\',\''+phone+'\',\''+grupo.lastText.replace(/'/g,"\\'")+'\')">+ Funil</button>'}
-        <a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm" style="background:rgba(34,197,94,.2);color:var(--green);border-color:var(--green)">Abrir WA ↗</a>
-      </div>
-    </div>
-    <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px" id="chat-msgs">
-      ${grupo.msgs.sort((a,b)=>a.ts-b.ts).map(m=>`
-        <div style="display:flex;flex-direction:column;align-items:flex-start;max-width:70%">
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:0 10px 10px 10px;padding:10px 14px;font-size:13px;color:var(--text);line-height:1.5">${m.text||''}</div>
-          <span style="font-size:10px;color:var(--text3);margin-top:3px;padding-left:4px">${new Date(m.ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>
-        </div>`).join('')}
-    </div>
-    <div style="padding:12px 16px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0">
-      <textarea id="chat-input" placeholder="Digite uma mensagem..." rows="2" style="flex:1;resize:none;border-radius:var(--radius);font-size:13px" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg('${phone}');}"></textarea>
-      <button class="btn btn-primary" onclick="enviarMsg('${phone}')" style="height:58px;padding:0 20px;font-size:18px">➤</button>
-    </div>`;
-  const chatMsgs=document.getElementById('chat-msgs');
-  if(chatMsgs)chatMsgs.scrollTop=chatMsgs.scrollHeight;
-}
-
-async function enviarMsg(phone){
-  if(enviando)return;
-  const input=document.getElementById('chat-input');
-  const texto=(input?.value||'').trim();
-  if(!texto)return;
-  enviando=true;
-  input.value='';input.disabled=true;
-  const chatMsgs=document.getElementById('chat-msgs');
-  if(chatMsgs){
-    const div=document.createElement('div');
-    div.style.cssText='display:flex;flex-direction:column;align-items:flex-end;max-width:70%;align-self:flex-end;margin-left:auto';
-    div.innerHTML=`<div style="background:#25D366;border-radius:10px 0 10px 10px;padding:10px 14px;font-size:13px;color:#fff;line-height:1.5">${texto}</div><span style="font-size:10px;color:var(--text3);margin-top:3px;padding-right:4px">Agora ✓</span>`;
-    chatMsgs.appendChild(div);chatMsgs.scrollTop=chatMsgs.scrollHeight;
-  }
-  try{
-    await fetch(WPP_SERVER+'/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,text:texto})});
-  }catch(e){toast('Mensagem enviada localmente');}
-  enviando=false;if(input)input.disabled=false;if(input)input.focus();
-}
-
 async function loadWppMessages(){
-  const dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
+  const list=document.getElementById('wpp-list'),dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
   try{
     const res=await fetch(WPP_SERVER+'/messages');if(!res.ok)throw new Error();
-    wppMsgs=await res.json();
-    dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
-    const badge=document.getElementById('wpp-badge');
-    if(wppMsgs.length>0){badge.style.display='inline';badge.textContent=wppMsgs.length;}else badge.style.display='none';
-    renderConvList();
-    if(chatAtivo)abrirChat(chatAtivo);
-  }catch(e){
-    dot.style.background='var(--red)';st.textContent='Servidor offline';
-    document.getElementById('wpp-conv-list').innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px">Servidor offline</div>';
-  }
+    const msgs=await res.json();dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
+    const badge=document.getElementById('wpp-badge');if(msgs.length>0){badge.style.display='inline';badge.textContent=msgs.length;}else badge.style.display='none';
+    document.getElementById('wpp-count').textContent=msgs.length+' mensagem'+(msgs.length!==1?'s':'');
+    if(!msgs.length){list.innerHTML='<div style="text-align:center;padding:60px;color:var(--text3);font-size:13px">Nenhuma mensagem recebida ainda.<br>Quando alguém mandar mensagem para o número dedicado, aparece aqui automaticamente.</div>';return;}
+    list.innerHTML=`<table><thead><tr><th>Nome</th><th>Telefone</th><th>Mensagem</th><th>Recebido</th><th>Ação</th></tr></thead><tbody>`+msgs.map(m=>`<tr><td><strong>${m.name||'Desconhecido'}</strong></td><td style="color:var(--text2)">${m.phone||''}</td><td style="color:var(--text2);max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.text||''}</td><td style="color:var(--text3)">${fmtDate(m.ts)}</td><td style="display:flex;gap:6px"><button class="btn btn-sm btn-primary" onclick="wppToLead('${m.id}','${(m.name||'').replace(/'/g,"\\'")}','${m.phone||''}','${(m.text||'').replace(/'/g,"\\'").slice(0,100)}')">+ Funil</button><button class="btn btn-sm btn-danger" onclick="deleteWppMsg('${m.id}')">×</button></td></tr>`).join('')+'</tbody></table>';
+  }catch(e){dot.style.background='var(--red)';st.textContent='Servidor offline';list.innerHTML='<div style="text-align:center;padding:60px;color:var(--text3)">Servidor não encontrado.</div>';}
 }
-
 async function wppToLead(id,name,phone,text){
-  try{
-    await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
-    const exists=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
-    if(!exists){const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);}
-    toast('Lead adicionado ao funil!');showView('kanban');renderKanban();
-  }catch(e){toast('Erro ao adicionar.');}
+  try{await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
+  const exists=leads.find(l=>l.tel===phone);
+  if(!exists){const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);}
+  toast('Lead adicionado! Clique nele para preencher os dados do frete.');showView('kanban');renderKanban();}catch(e){toast('Erro ao adicionar.');}
 }
-
 async function deleteWppMsg(id){try{await fetch(WPP_SERVER+'/messages/'+id,{method:'DELETE'});loadWppMessages();}catch(e){}}
 function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',()=>loadWppMessages());es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
 conectarSSE();
-setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
+setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';}).catch(()=>{});},30000);
 
 // ─── INIT ───────────────────────────────────────────────
 updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
