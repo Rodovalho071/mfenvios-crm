@@ -767,10 +767,12 @@ function abrirRelatorio(){
         <div class="lead-field"><label>Material</label><span>${l.material||l.prod||'—'}</span></div>
         <div class="lead-field"><label>Volumes / Peso</label><span>${[l.volumes,l.peso,l.medidas].filter(Boolean).join(' · ')||'—'}</span></div>
         <div class="lead-field"><label>Valor da NF</label><span>${l.valorNF?'R$ '+l.valorNF:'—'}</span></div>
+        <div class="lead-field"><label style="color:#f97316">Frete</label><span style="color:#f97316;font-weight:700">${l.valorFrete ? "R$ "+l.valorFrete : "—"}</span></div>
       </div>
       <div class="lead-field" style="margin-bottom:8px"><label>Rota</label><span>${l.rota||'—'}</span></div>
       <div class="lead-horario">Horário: ${fmtTime(l.ts)}${l.urgencia?' · Urgência: '+l.urgencia:''}</div>
       ${l.obs?`<div class="lead-obs">${l.obs}</div>`:''}
+      ${(l.history||[]).filter(h=>h.text&&!h.text.includes('captado')&&!h.text.includes('Etapa:')).length?`<div style="margin-top:8px;border-top:1px solid #e5e7eb;padding-top:8px"><div style="font-size:10px;color:#888;margin-bottom:4px">ANOTAÇÕES</div>${(l.history||[]).filter(h=>h.text&&!h.text.includes('captado')&&!h.text.includes('Etapa:')).map(h=>`<div style="font-size:12px;background:#f8fafc;padding:8px;border-radius:6px;margin-bottom:4px;border-left:3px solid #f97316">${h.text}</div>`).join('')}</div>`:''}
     </div>`;
   }).join(''):'<p style="color:#888">Nenhum lead registrado hoje.</p>'}
   ${followupsPendentes.length?`
