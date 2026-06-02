@@ -1423,7 +1423,7 @@ function salvarDoc() {
 }
 
 // Inicializar operacional ao abrir a aba
-const _showViewOrig = showView;
+
 
 // ─── RELATÓRIO MENSAL ──────────────────────────────────────────
 function abrirRelatorioMensal() {
@@ -1582,14 +1582,7 @@ function gerarPDFMensal() {
 }
 
 
-// Patch showView para operacional
-const _origShowView = showView;
-function showView(v) {
-  _origShowView(v);
-  if(v === 'operacional') {
-    showOpTab(opTabAtual || 'fretes');
-  }
-}
+
 
 </script>
 </body>
