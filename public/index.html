@@ -2050,7 +2050,7 @@ const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','En
 
 //  SUB-ABAS 
 
-let opTabAtual = 'fretes';
+var opTabAtual = 'fretes';
 let funiMesOffset=0;
 function funiGetMesInicio(){const d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+funiMesOffset);return d.getTime();}
 function funiGetMesFim(){const d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+funiMesOffset+1);return d.getTime();}
