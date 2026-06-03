@@ -842,11 +842,6 @@ function updateAgentFilters(){
 
 
 
-let funiMesOffset=0;
-function funiGetMesInicio(){const d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+funiMesOffset);return d.getTime();}
-function funiGetMesFim(){const d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+funiMesOffset+1);return d.getTime();}
-function funiAtualizarLabel(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+funiMesOffset);const m=["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];const el=document.getElementById("funil-mes-label");if(el)el.textContent=m[d.getMonth()]+" "+d.getFullYear();}
-function funiNavegar(delta){const n=funiMesOffset+delta;if(n>0)return;funiMesOffset=n;renderKanban();}
 function renderKanban(){
 
   const q=(document.getElementById('kanban-search')||{}).value?.toLowerCase()||'';
@@ -2056,6 +2051,12 @@ const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','En
 //  SUB-ABAS 
 
 let opTabAtual = 'fretes';
+let funiMesOffset=0;
+function funiGetMesInicio(){const d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+funiMesOffset);return d.getTime();}
+function funiGetMesFim(){const d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+funiMesOffset+1);return d.getTime();}
+function funiAtualizarLabel(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+funiMesOffset);const m=["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];const el=document.getElementById("funil-mes-label");if(el)el.textContent=m[d.getMonth()]+" "+d.getFullYear();}
+function funiNavegar(delta){const n=funiMesOffset+delta;if(n>0)return;funiMesOffset=n;renderKanban();}
+
 
 function showOpTab(tab) {
 
