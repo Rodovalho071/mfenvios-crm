@@ -122,6 +122,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">📊 Dashboard</div>
   <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
   <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
+  <div class="tab" onclick="showView('operacional')" id="tab-operacional">⚙️ Operacional</div>
   <div class="tabs-right"><button class="btn btn-primary btn-sm" onclick="openNewLead()">+ Novo Lead</button></div>
 </div>
 
@@ -665,7 +666,72 @@ function abrirRelatorio(){
     ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
   </div>`:''}
   <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
-  </body></html>`;
+  
+<!-- OPERACIONAL VIEW -->
+<div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
+
+  <!-- Sub-tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
+    <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">✅ Tarefas</div>
+    <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
+    <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
+    <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📄 Documentos</div>
+  </div>
+
+  <!-- TAREFAS -->
+  <div id="op-view-tarefas">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Tarefas</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddTarefa()">+ Nova Tarefa</button>
+    </div>
+    <div id="tarefas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- FRETES KANBAN -->
+  <div id="op-view-fretes" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Fretes em andamento</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddFrete()">+ Novo Frete</button>
+    </div>
+    <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px" id="fretes-kanban"></div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="op-view-agenda" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Agenda</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddAgenda()">+ Novo Evento</button>
+    </div>
+    <div id="agenda-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- DOCUMENTOS -->
+  <div id="op-view-docs" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Documentos</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddDoc()">+ Novo Documento</button>
+    </div>
+    <div id="docs-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+</div>
+
+<!-- MODAIS OPERACIONAL -->
+<div id="modal-op" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:420px;max-width:95vw;box-shadow:var(--shadow)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <strong id="modal-op-title" style="font-size:15px"></strong>
+      <span onclick="closeModalOp()" style="cursor:pointer;color:var(--text3);font-size:18px">&times;</span>
+    </div>
+    <div id="modal-op-body"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="closeModalOp()">Cancelar</button>
+      <button class="btn btn-primary" id="modal-op-save" onclick="saveModalOp()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+</body></html>`;
 
   const w=window.open('','_blank');w.document.write(html);w.document.close();
   setTimeout(()=>w.print(),500);
@@ -856,6 +922,234 @@ function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.add
 conectarSSE();
 setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
+
+// ═══════════════════════════════════════════
+//  OPERACIONAL — Tarefas, Fretes, Agenda, Docs
+// ═══════════════════════════════════════════
+const OP_API = window.location.origin;
+let opCurrentTab = 'tarefas';
+let opModalMode = null, opModalId = null;
+
+function opTab(tab) {
+  opCurrentTab = tab;
+  ['tarefas','fretes','agenda','docs'].forEach(t => {
+    document.getElementById('op-view-'+t).style.display = t===tab ? '' : 'none';
+    const el = document.getElementById('op-tab-'+t);
+    if(el) { el.style.borderBottomColor = t===tab ? 'var(--orange)' : 'transparent'; el.style.color = t===tab ? 'var(--text)' : ''; }
+  });
+  if(tab==='tarefas') loadTarefas();
+  if(tab==='fretes') loadFretes();
+  if(tab==='agenda') loadAgenda();
+  if(tab==='docs') loadDocs();
+}
+
+// ── TAREFAS ─────────────────────────────────
+async function loadTarefas() {
+  const res = await fetch(OP_API+'/tarefas').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('tarefas-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhuma tarefa ainda.</div>'; return; }
+  list.innerHTML = res.map(t => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;border-left:3px solid ${t.done?'var(--green)':'var(--orange)'}">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleTarefa('${t.id}',this.checked)" style="width:16px;height:16px;cursor:pointer">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;${t.done?'text-decoration:line-through;color:var(--text3)':''}">${t.titulo||'Sem título'}</div>
+        ${t.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${t.desc}</div>`:''}
+        ${t.data?`<div style="font-size:11px;color:var(--text3);margin-top:4px">📅 ${t.data}</div>`:''}
+      </div>
+      <button onclick="deleteTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddTarefa() {
+  opModalMode='tarefa'; opModalId=null;
+  document.getElementById('modal-op-title').textContent='Nova Tarefa';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Ligar para cliente" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function saveModalOp() {
+  if(opModalMode==='tarefa') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,done:false})});
+    closeModalOp(); loadTarefas();
+  } else if(opModalMode==='frete') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta'})});
+    closeModalOp(); loadFretes();
+  } else if(opModalMode==='agenda') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value})});
+    closeModalOp(); loadAgenda();
+  } else if(opModalMode==='doc') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value})});
+    closeModalOp(); loadDocs();
+  }
+}
+
+async function toggleTarefa(id, done) {
+  await fetch(OP_API+'/tarefas/'+id, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({done})});
+  loadTarefas();
+}
+async function deleteTarefa(id) {
+  if(!confirm('Remover tarefa?')) return;
+  await fetch(OP_API+'/tarefas/'+id, {method:'DELETE'});
+  loadTarefas();
+}
+
+// ── FRETES KANBAN ───────────────────────────
+const FRETE_COLS = ['Aguardando coleta','Em trânsito','Entregue','Problema'];
+const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','Entregue':'#22c55e','Problema':'#ef4444'};
+
+async function loadFretes() {
+  const res = await fetch(OP_API+'/fretes').then(r=>r.json()).catch(()=>[]);
+  const kb = document.getElementById('fretes-kanban');
+  kb.innerHTML = FRETE_COLS.map(col => `
+    <div style="min-width:220px;flex:1;background:var(--surface2);border-radius:var(--radius);padding:12px">
+      <div style="font-size:12px;font-weight:700;color:${FRETE_COLORS[col]};margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">${col} <span style="background:rgba(255,255,255,.1);border-radius:20px;padding:1px 7px;font-size:11px">${res.filter(f=>f.status===col).length}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${res.filter(f=>f.status===col).map(f=>`
+          <div style="background:var(--surface);border-radius:var(--radius-sm);padding:10px;border-left:3px solid ${FRETE_COLORS[col]}">
+            <div style="font-size:13px;font-weight:600">${f.titulo}</div>
+            ${f.origem?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${f.origem} → ${f.destino||'?'}</div>`:''}
+            ${f.valor?`<div style="font-size:12px;color:var(--green);margin-top:4px">R$ ${f.valor}</div>`:''}
+            <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
+              ${FRETE_COLS.filter(c=>c!==col).map(c=>`<button onclick="moveFrete('${f.id}','${c}')" style="font-size:10px;padding:2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text3)">→ ${c.split(' ')[0]}</button>`).join('')}
+              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5;margin-left:auto">🗑</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function openAddFrete() {
+  opModalMode='frete';
+  document.getElementById('modal-op-title').textContent='Novo Frete';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">IDENTIFICAÇÃO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Pedido #1234 - João" style="width:100%;margin-top:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:12px;color:var(--text3)">ORIGEM</label><input id="op-f-origem" class="form-input" placeholder="Cidade/UF" style="width:100%;margin-top:4px"></div>
+        <div><label style="font-size:12px;color:var(--text3)">DESTINO</label><input id="op-f-destino" class="form-input" placeholder="Cidade/UF" style="width:100%;margin-top:4px"></div>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">VALOR (R$)</label><input id="op-f-valor" class="form-input" placeholder="0,00" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">STATUS</label>
+        <select id="op-f-status" class="form-input" style="width:100%;margin-top:4px">
+          ${FRETE_COLS.map(c=>`<option value="${c}">${c}</option>`).join('')}
+        </select>
+      </div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function moveFrete(id, status) {
+  await fetch(OP_API+'/fretes/'+id, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+  loadFretes();
+}
+async function deleteFrete(id) {
+  if(!confirm('Remover frete?')) return;
+  await fetch(OP_API+'/fretes/'+id, {method:'DELETE'});
+  loadFretes();
+}
+
+// ── AGENDA ──────────────────────────────────
+async function loadAgenda() {
+  const res = await fetch(OP_API+'/agenda').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('agenda-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum evento ainda.</div>'; return; }
+  const sorted = [...res].sort((a,b)=>{ if(!a.data) return 1; if(!b.data) return -1; return a.data.localeCompare(b.data); });
+  list.innerHTML = sorted.map(e => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--blue,#3b82f6)">
+      <div style="text-align:center;min-width:44px">
+        ${e.data?`<div style="font-size:18px;font-weight:700;line-height:1">${e.data.slice(8)}</div><div style="font-size:10px;color:var(--text3)">${['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][parseInt(e.data.slice(5,7))]}</div>`:'<div style="font-size:20px">📅</div>'}
+      </div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${e.titulo}</div>
+        ${e.hora?`<div style="font-size:12px;color:var(--text3);margin-top:2px">⏰ ${e.hora}</div>`:''}
+        ${e.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${e.desc}</div>`:''}
+      </div>
+      <button onclick="deleteAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddAgenda() {
+  opModalMode='agenda';
+  document.getElementById('modal-op-title').textContent='Novo Evento';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Reunião com cliente" style="width:100%;margin-top:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" style="width:100%;margin-top:4px"></div>
+        <div><label style="font-size:12px;color:var(--text3)">HORA</label><input id="op-f-hora" type="time" class="form-input" style="width:100%;margin-top:4px"></div>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function deleteAgenda(id) {
+  if(!confirm('Remover evento?')) return;
+  await fetch(OP_API+'/agenda/'+id, {method:'DELETE'});
+  loadAgenda();
+}
+
+// ── DOCUMENTOS ──────────────────────────────
+async function loadDocs() {
+  const res = await fetch(OP_API+'/documentos').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('docs-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum documento ainda.</div>'; return; }
+  list.innerHTML = res.map(d => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:24px">${{Contrato:'📝',NF:'🧾',Boleto:'💳',Proposta:'📋',Outro:'📄'}[d.tipo]||'📄'}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${d.titulo}</div>
+        ${d.tipo?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${d.tipo}</div>`:''}
+        ${d.obs?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.obs}</div>`:''}
+        ${d.link?`<a href="${d.link}" target="_blank" style="font-size:12px;color:var(--orange);margin-top:4px;display:block">🔗 Abrir link</a>`:''}
+      </div>
+      <button onclick="deleteDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddDoc() {
+  opModalMode='doc';
+  document.getElementById('modal-op-title').textContent='Novo Documento';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Contrato Wanderley Cruz" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">TIPO</label>
+        <select id="op-f-tipo" class="form-input" style="width:100%;margin-top:4px">
+          <option>Contrato</option><option>NF</option><option>Boleto</option><option>Proposta</option><option>Outro</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">LINK (opcional)</label><input id="op-f-link" class="form-input" placeholder="https://..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">OBSERVAÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function deleteDoc(id) {
+  if(!confirm('Remover documento?')) return;
+  await fetch(OP_API+'/documentos/'+id, {method:'DELETE'});
+  loadDocs();
+}
+
+function closeModalOp() {
+  document.getElementById('modal-op').style.display='none';
+}
+
+// Carregar tarefas ao abrir aba
+const _origShowView = typeof showView === 'function' ? showView : null;
+
 // ─── INIT ───────────────────────────────────────────────
 updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
 if(!leads.length){
@@ -867,5 +1161,70 @@ if(!leads.length){
 }
 renderKanban();
 </script>
+
+<!-- OPERACIONAL VIEW -->
+<div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
+
+  <!-- Sub-tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
+    <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">✅ Tarefas</div>
+    <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
+    <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
+    <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📄 Documentos</div>
+  </div>
+
+  <!-- TAREFAS -->
+  <div id="op-view-tarefas">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Tarefas</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddTarefa()">+ Nova Tarefa</button>
+    </div>
+    <div id="tarefas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- FRETES KANBAN -->
+  <div id="op-view-fretes" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Fretes em andamento</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddFrete()">+ Novo Frete</button>
+    </div>
+    <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px" id="fretes-kanban"></div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="op-view-agenda" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Agenda</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddAgenda()">+ Novo Evento</button>
+    </div>
+    <div id="agenda-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- DOCUMENTOS -->
+  <div id="op-view-docs" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Documentos</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddDoc()">+ Novo Documento</button>
+    </div>
+    <div id="docs-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+</div>
+
+<!-- MODAIS OPERACIONAL -->
+<div id="modal-op" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:420px;max-width:95vw;box-shadow:var(--shadow)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <strong id="modal-op-title" style="font-size:15px"></strong>
+      <span onclick="closeModalOp()" style="cursor:pointer;color:var(--text3);font-size:18px">&times;</span>
+    </div>
+    <div id="modal-op-body"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="closeModalOp()">Cancelar</button>
+      <button class="btn btn-primary" id="modal-op-save" onclick="saveModalOp()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
