@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,42 +16,6 @@
   --amber:#f59e0b;--amber-bg:rgba(245,158,11,0.2);--purple:#a78bfa;--orange:#f97316;
   --radius:10px;--radius-sm:6px;--shadow:0 4px 12px rgba(0,0,0,.5);--shadow-md:0 8px 24px rgba(0,0,0,.6);
 }
-
-/* ── OPERACIONAL ── */
-.op-tabs{display:flex;gap:4px;padding:12px 20px 0;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
-.op-tab{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;transition:all .2s}
-.op-tab:hover{color:var(--text2)}.op-tab.active{background:var(--bg);color:var(--text);border-color:var(--border)}
-.op-content{flex:1;overflow-y:auto;padding:16px 20px;background:var(--bg)}
-.op-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.op-title{font-size:14px;font-weight:700;color:var(--text)}
-.frete-kanban{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px}
-.frete-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-width:260px;max-width:260px;display:flex;flex-direction:column}
-.frete-col-header{padding:12px 14px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
-.frete-col-cards{overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;flex:1;max-height:calc(100vh - 280px)}
-.frete-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all .15s}
-.frete-card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow)}
-.frete-card-title{font-size:13px;font-weight:700;margin-bottom:3px}
-.frete-card-sub{font-size:11px;color:var(--text3);margin-bottom:4px}
-.frete-card-rota{font-size:11px;color:var(--blue);margin-bottom:6px}
-.frete-card-footer{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3)}
-.frete-card-valor{font-size:12px;font-weight:700;color:var(--orange)}
-.task-item{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:all .15s}
-.task-item:hover{border-color:var(--border2)}.task-item.done{opacity:.5}
-.task-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px}
-.task-check.checked{background:var(--green);border-color:var(--green);color:#fff}
-.task-body{flex:1}.task-title{font-size:13px;font-weight:600;margin-bottom:2px}.task-title.done{text-decoration:line-through;color:var(--text3)}
-.task-meta{font-size:11px;color:var(--text3)}.task-priority{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
-.agenda-item{display:flex;gap:12px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px}
-.agenda-hora{font-size:13px;font-weight:700;color:var(--orange);min-width:50px}
-.agenda-body{flex:1}.agenda-title{font-size:13px;font-weight:600;margin-bottom:2px}.agenda-sub{font-size:11px;color:var(--text3)}
-.agenda-tipo{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600}
-.doc-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px}
-.doc-icon{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.doc-body{flex:1}.doc-title{font-size:13px;font-weight:600;margin-bottom:2px}.doc-sub{font-size:11px;color:var(--text3)}
-.doc-status{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600}
-.empty-state{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
-.empty-state div:first-child{font-size:32px;margin-bottom:8px}
-
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
 .topbar{display:flex;align-items:center;gap:16px;padding:0 24px;height:56px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
@@ -158,8 +126,8 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">📊 Dashboard</div>
   <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
   <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
-  <div class="tab" onclick="showView('operacional')" id="tab-operacional">🔧 Operacional</div>
-  <div class="tabs-right"><button class="btn btn-sm" onclick="abrirRelatorioMensal()" style="background:var(--orange);color:#fff;border-color:var(--orange)">📊 Relatório Mensal</button> <button class="btn btn-primary btn-sm" onclick="openNewLead()">+ Novo Lead</button></div>
+  <div class="tab" onclick="showView('operacional')" id="tab-operacional">⚙️ Operacional</div>
+  <div class="tabs-right"><button class="btn btn-primary btn-sm" onclick="openNewLead()">+ Novo Lead</button></div>
 </div>
 
 <div class="view active" id="view-kanban">
@@ -167,8 +135,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <div class="search-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Buscar lead..." id="kanban-search" oninput="renderKanban()"/></div>
     <select class="filter-select" id="kanban-agent" onchange="renderKanban()"><option value="">Todos os responsáveis</option></select>
   </div>
-  <div style="display:flex;align-items:center;gap:10px;padding:8px 20px;flex-shrink:0"><button class="btn btn-sm" onclick="funiNavegar(-1)">&#9664;</button><span id="funil-mes-label" style="font-size:14px;font-weight:700;min-width:140px;text-align:center;color:var(--text)"></span><button class="btn btn-sm" onclick="funiNavegar(1)">&#9654;</button><span id="funil-count" style="margin-left:auto;font-size:12px;color:var(--text3)"></span></div>
-<div class="kanban-board" id="kanban-board"></div>
+  <div class="kanban-board" id="kanban-board"></div>
 </div>
 
 <div class="view" id="view-clientes">
@@ -179,7 +146,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="leads-count"></span>
   </div>
   <div class="leads-content">
-    <table><thead><tr><th>Nome</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>Valor Frete</th><th>Responsável</th><th>Horário</th><th>Follow-up</th></tr></thead><tbody id="leads-tbody"></tbody></table>
+    <table><thead><tr><th>Nome</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>Responsável</th><th>Horário</th><th>Follow-up</th></tr></thead><tbody id="leads-tbody"></tbody></table>
   </div>
 </div>
 
@@ -288,7 +255,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
       <div class="ia-card">
         <div class="ia-card-title">Mensagem do WhatsApp</div>
         <div class="form-group"><textarea id="ia-msg" rows="6" placeholder="Cole aqui a mensagem recebida no WhatsApp..."></textarea></div>
-        
+        <div class="form-group"><label class="form-label">Chave da API Anthropic</label><input type="password" id="ia-key" placeholder="sk-ant-..." oninput="saveKey()"/></div>
         <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="analisarMsg()">Analisar com IA ↗</button><button class="btn" onclick="document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none'">Limpar</button></div>
       </div>
       <div class="ia-card" id="ia-output" style="display:none">
@@ -299,79 +266,6 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
       <div class="ia-card"><div class="ia-card-title">Como usar</div><div style="font-size:13px;color:var(--text2);line-height:1.7"><p style="margin-bottom:10px">1. Cole a mensagem do WhatsApp.</p><p style="margin-bottom:10px">2. A IA extrai nome, telefone, produto, etapa e observações.</p><p>3. Revise e clique em Adicionar ao funil.</p></div></div>
       <div class="ia-card" style="margin-top:12px"><div class="ia-card-title">Últimas análises</div><div id="ia-history"></div></div>
     </div>
-  </div>
-</div>
-
-
-<div class="view" id="view-operacional">
-  <div class="op-tabs">
-    <div class="op-tab active" onclick="showOpTab('fretes')" id="optab-fretes">🚚 Fretes</div>
-    <div class="op-tab" onclick="showOpTab('tarefas')" id="optab-tarefas">✅ Tarefas</div>
-    <div class="op-tab" onclick="showOpTab('agenda')" id="optab-agenda">📅 Agenda</div>
-    <div class="op-tab" onclick="showOpTab('documentos')" id="optab-documentos">📄 Documentos</div>
-  </div>
-  <div class="op-content">
-
-    <!-- FRETES -->
-    <div id="op-fretes">
-      <div class="op-header">
-        <span class="op-title">Fretes em andamento</span>
-        <button class="btn btn-primary btn-sm" onclick="openNovoFrete()">+ Novo Frete</button>
-      </div>
-      <div class="frete-kanban" id="frete-kanban"></div>
-    </div>
-
-    <!-- TAREFAS -->
-    <div id="op-tarefas" style="display:none">
-      <div class="op-header">
-        <span class="op-title">Tarefas da equipe</span>
-        <button class="btn btn-primary btn-sm" onclick="openNovaTarefa()">+ Nova Tarefa</button>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:14px">
-        <button class="btn btn-sm" onclick="filtrarTarefas('todas')" id="tf-todas" style="background:var(--surface2)">Todas</button>
-        <button class="btn btn-sm" onclick="filtrarTarefas('pendentes')" id="tf-pendentes">Pendentes</button>
-        <button class="btn btn-sm" onclick="filtrarTarefas('concluidas')" id="tf-concluidas">Concluídas</button>
-      </div>
-      <div id="tarefas-list"></div>
-    </div>
-
-    <!-- AGENDA -->
-    <div id="op-agenda" style="display:none">
-      <div class="op-header">
-        <span class="op-title">Coletas e Entregas</span>
-        <button class="btn btn-primary btn-sm" onclick="openNovoAgendamento()">+ Agendar</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <input type="date" id="agenda-data" onchange="renderAgenda()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px"/>
-        <span style="font-size:13px;color:var(--text3)" id="agenda-dia-label"></span>
-      </div>
-      <div id="agenda-list"></div>
-    </div>
-
-    <!-- DOCUMENTOS -->
-    <div id="op-documentos" style="display:none">
-      <div class="op-header">
-        <span class="op-title">Documentos</span>
-        <button class="btn btn-primary btn-sm" onclick="openNovoDoc()">+ Novo Documento</button>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:14px">
-        <select id="doc-filtro-tipo" onchange="renderDocs()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px">
-          <option value="">Todos os tipos</option>
-          <option value="CTE">CT-e</option>
-          <option value="NF">Nota Fiscal</option>
-          <option value="Minuta">Minuta</option>
-          <option value="Outro">Outro</option>
-        </select>
-        <select id="doc-filtro-status" onchange="renderDocs()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px">
-          <option value="">Todos os status</option>
-          <option value="Pendente">Pendente</option>
-          <option value="Emitido">Emitido</option>
-          <option value="Cancelado">Cancelado</option>
-        </select>
-      </div>
-      <div id="docs-list"></div>
-    </div>
-
   </div>
 </div>
 
@@ -425,7 +319,7 @@ function renderKanban(){
   const ag=(document.getElementById('kanban-agent')||{}).value||'';
   const board=document.getElementById('kanban-board');board.innerHTML='';
   STAGES.forEach(stage=>{
-    funiAtualizarLabel();var _mi=funiGetMesInicio(),_mf=funiGetMesFim();let cards=leads.filter(l=>l.stage===stage&&(l.ts||0)>=_mi&&(l.ts||0)<_mf);
+    let cards=leads.filter(l=>l.stage===stage);
     if(q)cards=cards.filter(l=>(l.name+l.prod+l.tel+l.obs+(l.rota||'')).toLowerCase().includes(q));
     if(ag)cards=cards.filter(l=>l.agent===ag);
     const col=document.createElement('div');col.className='kanban-col';
@@ -439,7 +333,7 @@ function renderKanban(){
         <div class="card-name">${lead.name}</div>
         <div class="card-phone">${lead.tel||'Sem telefone'}</div>
         ${lead.rota?`<div class="card-route">📦 ${lead.rota}</div>`:''}
-        ${lead.valorFrete?`<div class="card-msg" style="color:var(--green);font-weight:700">💰 Frete: R$ ${lead.valorFrete}</div>`:lead.obs?`<div class="card-msg">${lead.obs.slice(0,55)}</div>`:''}
+        ${lead.obs?`<div class="card-msg">${lead.obs.slice(0,55)}</div>`:''}
         <div class="card-tags">
           ${lead.source==='whatsapp'?'<span class="tag tag-wpp">WhatsApp</span>':''}
           ${hasFu?'<span class="tag tag-followup">Follow-up</span>':''}
@@ -473,7 +367,6 @@ function renderLeads(){
       <td style="color:var(--blue);font-size:12px">${l.rota||l.prod||'—'}</td>
       <td><span class="stage-pill" style="${STAGE_PILL[l.stage]||''}">${l.stage}</span></td>
       <td style="color:var(--green)">${l.valorNF?'R$ '+l.valorNF:'—'}</td>
-      <td style="color:var(--orange);font-weight:600">${l.valorFrete?'R$ '+l.valorFrete:'—'}</td>
       <td style="color:var(--text2)">${l.agent||'—'}</td>
       <td style="color:var(--text3)">${fmtTime(l.ts)}</td>
       <td style="color:${fu?'var(--amber)':'var(--text3)'}">${fu?fu.text:'—'}</td>
@@ -579,7 +472,6 @@ function openNewLead(stage='Primeiro contato'){
       <div class="form-row">
         <div class="form-group"><label class="form-label">Material / Produto</label><input id="nl-material" placeholder="Ex: Rolamento, Brindes, Eletrônicos"/></div>
         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="nl-valorNF" placeholder="Ex: 15.000,00"/></div>
-        <div class="form-group"><label class="form-label">💰 Valor do Frete (R$)</label><input id="nl-valorFrete" placeholder="Ex: 1.200,00" style="border-color:var(--green)"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Origem (cidade/UF)</label><input id="nl-origem" placeholder="Ex: São Paulo/SP"/></div>
@@ -612,7 +504,6 @@ function saveLead(){
     source:document.getElementById('nl-source').value,urgencia:document.getElementById('nl-urgencia').value,
     material:document.getElementById('nl-material').value.trim(),
     valorNF:document.getElementById('nl-valorNF').value.trim(),
-    valorFrete:document.getElementById('nl-valorFrete').value.trim(),
     origem,destino,rota,
     volumes:document.getElementById('nl-volumes').value.trim(),
     peso:document.getElementById('nl-peso').value.trim(),
@@ -659,7 +550,6 @@ function renderLeadModal(l){
       <div class="form-row">
         <div class="form-group"><label class="form-label">Material / Produto</label><input id="d-material" value="${l.material||''}" onblur="updateLeadField('${l.id}','material',this.value)"/></div>
         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="d-valorNF" value="${l.valorNF||''}" onblur="updateLeadField('${l.id}','valorNF',this.value)"/></div>
-        <div class="form-group"><label class="form-label">💰 Valor do Frete (R$)</label><input id="d-valorFrete" value="${l.valorFrete||''}" onblur="updateLeadField('${l.id}','valorFrete',this.value)" style="border-color:var(--green)"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Origem</label><input id="d-origem" value="${l.origem||''}" onblur="updateRotaField('${l.id}')"/></div>
@@ -768,16 +658,10 @@ function abrirRelatorio(){
         <div class="lead-field"><label>Material</label><span>${l.material||l.prod||'—'}</span></div>
         <div class="lead-field"><label>Volumes / Peso</label><span>${[l.volumes,l.peso,l.medidas].filter(Boolean).join(' · ')||'—'}</span></div>
         <div class="lead-field"><label>Valor da NF</label><span>${l.valorNF?'R$ '+l.valorNF:'—'}</span></div>
-        <div class="lead-field"><label style="color:#f97316">Frete</label><span style="color:#f97316;font-weight:700">${l.valorFrete ? "R$ "+l.valorFrete : "—"}</span></div>
-        <div class="lead-field"><label style="color:#f97316">Frete</label><span style="color:#f97316;font-weight:700">${l.valorFrete ? "R$ "+l.valorFrete : "—"}</span></div>
-        <div class="lead-field"><label style="color:#f97316">Frete</label><span style="color:#f97316;font-weight:700">${l.valorFrete ? "R$ "+l.valorFrete : "—"}</span></div>
       </div>
       <div class="lead-field" style="margin-bottom:8px"><label>Rota</label><span>${l.rota||'—'}</span></div>
       <div class="lead-horario">Horário: ${fmtTime(l.ts)}${l.urgencia?' · Urgência: '+l.urgencia:''}</div>
       ${l.obs?`<div class="lead-obs">${l.obs}</div>`:''}
-      ${(l.history||[]).filter(h=>h.text&&!h.text.includes('captado')&&!h.text.includes('Etapa:')).length?`<div style="margin-top:8px;border-top:1px solid #e5e7eb;padding-top:8px"><div style="font-size:10px;color:#888;margin-bottom:4px">ANOTAÇÕES</div>${(l.history||[]).filter(h=>h.text&&!h.text.includes('captado')&&!h.text.includes('Etapa:')).map(h=>`<div style="font-size:12px;background:#f8fafc;padding:8px;border-radius:6px;margin-bottom:4px;border-left:3px solid #f97316">${h.text}</div>`).join('')}</div>`:''}
-      ${(l.history||[]).filter(h=>h.text&&!h.text.includes('captado')&&!h.text.includes('Etapa:')).length?`<div style="margin-top:8px;border-top:1px solid #e5e7eb;padding-top:8px"><div style="font-size:10px;color:#888;margin-bottom:4px">ANOTAÇÕES</div>${(l.history||[]).filter(h=>h.text&&!h.text.includes('captado')&&!h.text.includes('Etapa:')).map(h=>`<div style="font-size:12px;background:#f8fafc;padding:8px;border-radius:6px;margin-bottom:4px;border-left:3px solid #f97316">${h.text}</div>`).join('')}</div>`:''}
-      ${(l.history||[]).filter(h=>h.text&&!h.text.includes('captado')&&!h.text.includes('Etapa:')).length?`<div style="margin-top:8px;border-top:1px solid #e5e7eb;padding-top:8px"><div style="font-size:10px;color:#888;margin-bottom:4px">ANOTAÇÕES</div>${(l.history||[]).filter(h=>h.text&&!h.text.includes('captado')&&!h.text.includes('Etapa:')).map(h=>`<div style="font-size:12px;background:#f8fafc;padding:8px;border-radius:6px;margin-bottom:4px;border-left:3px solid #f97316">${h.text}</div>`).join('')}</div>`:''}
     </div>`;
   }).join(''):'<p style="color:#888">Nenhum lead registrado hoje.</p>'}
   ${followupsPendentes.length?`
@@ -786,7 +670,72 @@ function abrirRelatorio(){
     ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
   </div>`:''}
   <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
-  </body></html>`;
+  
+<!-- OPERACIONAL VIEW -->
+<div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
+
+  <!-- Sub-tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
+    <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">✅ Tarefas</div>
+    <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
+    <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
+    <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📄 Documentos</div>
+  </div>
+
+  <!-- TAREFAS -->
+  <div id="op-view-tarefas">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Tarefas</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddTarefa()">+ Nova Tarefa</button>
+    </div>
+    <div id="tarefas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- FRETES KANBAN -->
+  <div id="op-view-fretes" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Fretes em andamento</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddFrete()">+ Novo Frete</button>
+    </div>
+    <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px" id="fretes-kanban"></div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="op-view-agenda" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Agenda</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddAgenda()">+ Novo Evento</button>
+    </div>
+    <div id="agenda-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- DOCUMENTOS -->
+  <div id="op-view-docs" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Documentos</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddDoc()">+ Novo Documento</button>
+    </div>
+    <div id="docs-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+</div>
+
+<!-- MODAIS OPERACIONAL -->
+<div id="modal-op" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:420px;max-width:95vw;box-shadow:var(--shadow)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <strong id="modal-op-title" style="font-size:15px"></strong>
+      <span onclick="closeModalOp()" style="cursor:pointer;color:var(--text3);font-size:18px">&times;</span>
+    </div>
+    <div id="modal-op-body"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="closeModalOp()">Cancelar</button>
+      <button class="btn btn-primary" id="modal-op-save" onclick="saveModalOp()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+</body></html>`;
 
   const w=window.open('','_blank');w.document.write(html);w.document.close();
   setTimeout(()=>w.print(),500);
@@ -795,30 +744,19 @@ function abrirRelatorio(){
 // ─── IA ───────────────────────────────────────────────
 function saveKey(){iaKey=document.getElementById('ia-key').value;save('crm-ia-key',iaKey);}
 async function analisarMsg(){
-  const msg=document.getElementById('ia-msg').value.trim();
-  if(!msg){toast('Cole uma mensagem.');return;}
-  const out=document.getElementById('ia-output');
-  out.style.display='block';
-  out.innerHTML='<div style="color:var(--text3)">Analisando com Groq...</div>';
-  fetch('/analisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensagem:msg})})
-  .then(r=>r.json())
-  .then(d=>{
-    if(!d.ok)throw new Error(d.error);
-    const p=d.dados;iaPreview=p;
-    const rota=p.origem&&p.destino?p.origem+' → '+p.destino:'--';
-    out.innerHTML='<div class="field"><span class="field-label">Nome</span>'+(p.nome||'--')+'</div>'
-      +'<div class="field"><span class="field-label">Telefone</span>'+(p.tel||'--')+'</div>'
-      +'<div class="field"><span class="field-label">Material</span>'+(p.material||'--')+'</div>'
-      +'<div class="field"><span class="field-label">Rota</span>'+rota+'</div>'
-      +'<div class="field"><span class="field-label">Etapa</span>'+(p.etapa||'--')+'</div>'
-      +'<div class="field"><span class="field-label">Obs</span>'+(p.obs||'--')+'</div>'
-      +'<div style="margin-top:12px"><button class="btn btn-primary" onclick="addLeadFromIA()">+ Adicionar ao Funil</button></div>';
-    save('crm-ia-hist',[{...p,ts:Date.now()},...load('crm-ia-hist',[]).slice(0,9)]);
-    renderIAHistory();
-  })
-  .catch(e=>out.innerHTML='<div style="color:var(--red)">Erro: '+e.message+'</div>');
+  const msg=document.getElementById('ia-msg').value.trim(),key=document.getElementById('ia-key').value.trim()||iaKey;
+  if(!msg){toast('Cole uma mensagem primeiro.');return;}if(!key){toast('Informe sua chave da API Anthropic.');return;}
+  const out=document.getElementById('ia-output'),res=document.getElementById('ia-result-content'),addBtn=document.getElementById('ia-add-btn');
+  out.style.display='block';res.innerHTML='<div style="color:var(--text3)">⏳ Analisando...</div>';addBtn.style.display='none';iaPreview=null;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:`Analise a mensagem de WhatsApp de frete/logística e extraia:\n1. nome\n2. tel\n3. material\n4. origem\n5. destino\n6. volumes\n7. peso\n8. medidas\n9. valorNF\n10. etapa (uma de: Primeiro contato, Qualificação, Proposta enviada, Negociação, Fechado / Ganho, Perdido)\n11. obs\n\nResponda APENAS JSON puro:\n{"nome":"...","tel":"...","material":"...","origem":"...","destino":"...","volumes":"...","peso":"...","medidas":"...","valorNF":"...","etapa":"...","obs":"..."}\n\nMensagem:\n"""\n${msg}\n"""`}]})});
+    const data=await r.json();const text=data.content?.filter(c=>c.type==='text').map(c=>c.text).join('')||'';
+    const p=JSON.parse(text.replace(/```json|```/g,'').trim());iaPreview=p;
+    res.innerHTML=`<div class="field"><span class="field-label">Nome</span>${p.nome}</div><div class="field"><span class="field-label">Telefone</span>${p.tel||'—'}</div><div class="field"><span class="field-label">Material</span>${p.material||'—'}</div><div class="field"><span class="field-label">Rota</span>${p.origem&&p.destino?p.origem+' → '+p.destino:'—'}</div><div class="field"><span class="field-label">Volumes / Peso</span>${[p.volumes,p.peso,p.medidas].filter(Boolean).join(' · ')||'—'}</div><div class="field"><span class="field-label">Valor NF</span>${p.valorNF?'R$ '+p.valorNF:'—'}</div><div class="field"><span class="field-label">Etapa</span><span class="stage-pill" style="${STAGE_PILL[p.etapa]||''}">${p.etapa}</span></div><div class="field" style="margin-top:8px"><span class="field-label">Obs</span>${p.obs}</div>`;
+    addBtn.style.display='block';addBtn.innerHTML=`<button class="btn btn-primary" onclick="addFromIA()">✓ Adicionar ao funil</button>`;
+    const iaHist=load('crm-ia-hist',[]);iaHist.unshift({nome:p.nome,etapa:p.etapa,ts:Date.now()});save('crm-ia-hist',iaHist.slice(0,10));renderIAHistory();
+  }catch(e){res.innerHTML=`<div style="color:var(--red)">Erro ao analisar. Verifique a chave.<br><small>${e.message}</small></div>`;}
 }
-
 function addFromIA(){
   if(!iaPreview)return;
   const rota=iaPreview.origem&&iaPreview.destino?iaPreview.origem+' → '+iaPreview.destino:'';
@@ -988,6 +926,234 @@ function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.add
 conectarSSE();
 setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
+
+// ═══════════════════════════════════════════
+//  OPERACIONAL — Tarefas, Fretes, Agenda, Docs
+// ═══════════════════════════════════════════
+const OP_API = window.location.origin;
+let opCurrentTab = 'tarefas';
+let opModalMode = null, opModalId = null;
+
+function opTab(tab) {
+  opCurrentTab = tab;
+  ['tarefas','fretes','agenda','docs'].forEach(t => {
+    document.getElementById('op-view-'+t).style.display = t===tab ? '' : 'none';
+    const el = document.getElementById('op-tab-'+t);
+    if(el) { el.style.borderBottomColor = t===tab ? 'var(--orange)' : 'transparent'; el.style.color = t===tab ? 'var(--text)' : ''; }
+  });
+  if(tab==='tarefas') loadTarefas();
+  if(tab==='fretes') loadFretes();
+  if(tab==='agenda') loadAgenda();
+  if(tab==='docs') loadDocs();
+}
+
+// ── TAREFAS ─────────────────────────────────
+async function loadTarefas() {
+  const res = await fetch(OP_API+'/tarefas').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('tarefas-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhuma tarefa ainda.</div>'; return; }
+  list.innerHTML = res.map(t => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;border-left:3px solid ${t.done?'var(--green)':'var(--orange)'}">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleTarefa('${t.id}',this.checked)" style="width:16px;height:16px;cursor:pointer">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;${t.done?'text-decoration:line-through;color:var(--text3)':''}">${t.titulo||'Sem título'}</div>
+        ${t.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${t.desc}</div>`:''}
+        ${t.data?`<div style="font-size:11px;color:var(--text3);margin-top:4px">📅 ${t.data}</div>`:''}
+      </div>
+      <button onclick="deleteTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddTarefa() {
+  opModalMode='tarefa'; opModalId=null;
+  document.getElementById('modal-op-title').textContent='Nova Tarefa';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Ligar para cliente" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function saveModalOp() {
+  if(opModalMode==='tarefa') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,done:false})});
+    closeModalOp(); loadTarefas();
+  } else if(opModalMode==='frete') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta'})});
+    closeModalOp(); loadFretes();
+  } else if(opModalMode==='agenda') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value})});
+    closeModalOp(); loadAgenda();
+  } else if(opModalMode==='doc') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value})});
+    closeModalOp(); loadDocs();
+  }
+}
+
+async function toggleTarefa(id, done) {
+  await fetch(OP_API+'/tarefas/'+id, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({done})});
+  loadTarefas();
+}
+async function deleteTarefa(id) {
+  if(!confirm('Remover tarefa?')) return;
+  await fetch(OP_API+'/tarefas/'+id, {method:'DELETE'});
+  loadTarefas();
+}
+
+// ── FRETES KANBAN ───────────────────────────
+const FRETE_COLS = ['Aguardando coleta','Em trânsito','Entregue','Problema'];
+const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','Entregue':'#22c55e','Problema':'#ef4444'};
+
+async function loadFretes() {
+  const res = await fetch(OP_API+'/fretes').then(r=>r.json()).catch(()=>[]);
+  const kb = document.getElementById('fretes-kanban');
+  kb.innerHTML = FRETE_COLS.map(col => `
+    <div style="min-width:220px;flex:1;background:var(--surface2);border-radius:var(--radius);padding:12px">
+      <div style="font-size:12px;font-weight:700;color:${FRETE_COLORS[col]};margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">${col} <span style="background:rgba(255,255,255,.1);border-radius:20px;padding:1px 7px;font-size:11px">${res.filter(f=>f.status===col).length}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${res.filter(f=>f.status===col).map(f=>`
+          <div style="background:var(--surface);border-radius:var(--radius-sm);padding:10px;border-left:3px solid ${FRETE_COLORS[col]}">
+            <div style="font-size:13px;font-weight:600">${f.titulo}</div>
+            ${f.origem?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${f.origem} → ${f.destino||'?'}</div>`:''}
+            ${f.valor?`<div style="font-size:12px;color:var(--green);margin-top:4px">R$ ${f.valor}</div>`:''}
+            <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
+              ${FRETE_COLS.filter(c=>c!==col).map(c=>`<button onclick="moveFrete('${f.id}','${c}')" style="font-size:10px;padding:2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text3)">→ ${c.split(' ')[0]}</button>`).join('')}
+              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5;margin-left:auto">🗑</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function openAddFrete() {
+  opModalMode='frete';
+  document.getElementById('modal-op-title').textContent='Novo Frete';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">IDENTIFICAÇÃO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Pedido #1234 - João" style="width:100%;margin-top:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:12px;color:var(--text3)">ORIGEM</label><input id="op-f-origem" class="form-input" placeholder="Cidade/UF" style="width:100%;margin-top:4px"></div>
+        <div><label style="font-size:12px;color:var(--text3)">DESTINO</label><input id="op-f-destino" class="form-input" placeholder="Cidade/UF" style="width:100%;margin-top:4px"></div>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">VALOR (R$)</label><input id="op-f-valor" class="form-input" placeholder="0,00" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">STATUS</label>
+        <select id="op-f-status" class="form-input" style="width:100%;margin-top:4px">
+          ${FRETE_COLS.map(c=>`<option value="${c}">${c}</option>`).join('')}
+        </select>
+      </div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function moveFrete(id, status) {
+  await fetch(OP_API+'/fretes/'+id, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+  loadFretes();
+}
+async function deleteFrete(id) {
+  if(!confirm('Remover frete?')) return;
+  await fetch(OP_API+'/fretes/'+id, {method:'DELETE'});
+  loadFretes();
+}
+
+// ── AGENDA ──────────────────────────────────
+async function loadAgenda() {
+  const res = await fetch(OP_API+'/agenda').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('agenda-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum evento ainda.</div>'; return; }
+  const sorted = [...res].sort((a,b)=>{ if(!a.data) return 1; if(!b.data) return -1; return a.data.localeCompare(b.data); });
+  list.innerHTML = sorted.map(e => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--blue,#3b82f6)">
+      <div style="text-align:center;min-width:44px">
+        ${e.data?`<div style="font-size:18px;font-weight:700;line-height:1">${e.data.slice(8)}</div><div style="font-size:10px;color:var(--text3)">${['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][parseInt(e.data.slice(5,7))]}</div>`:'<div style="font-size:20px">📅</div>'}
+      </div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${e.titulo}</div>
+        ${e.hora?`<div style="font-size:12px;color:var(--text3);margin-top:2px">⏰ ${e.hora}</div>`:''}
+        ${e.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${e.desc}</div>`:''}
+      </div>
+      <button onclick="deleteAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddAgenda() {
+  opModalMode='agenda';
+  document.getElementById('modal-op-title').textContent='Novo Evento';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Reunião com cliente" style="width:100%;margin-top:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" style="width:100%;margin-top:4px"></div>
+        <div><label style="font-size:12px;color:var(--text3)">HORA</label><input id="op-f-hora" type="time" class="form-input" style="width:100%;margin-top:4px"></div>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function deleteAgenda(id) {
+  if(!confirm('Remover evento?')) return;
+  await fetch(OP_API+'/agenda/'+id, {method:'DELETE'});
+  loadAgenda();
+}
+
+// ── DOCUMENTOS ──────────────────────────────
+async function loadDocs() {
+  const res = await fetch(OP_API+'/documentos').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('docs-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum documento ainda.</div>'; return; }
+  list.innerHTML = res.map(d => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:24px">${{Contrato:'📝',NF:'🧾',Boleto:'💳',Proposta:'📋',Outro:'📄'}[d.tipo]||'📄'}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${d.titulo}</div>
+        ${d.tipo?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${d.tipo}</div>`:''}
+        ${d.obs?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.obs}</div>`:''}
+        ${d.link?`<a href="${d.link}" target="_blank" style="font-size:12px;color:var(--orange);margin-top:4px;display:block">🔗 Abrir link</a>`:''}
+      </div>
+      <button onclick="deleteDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddDoc() {
+  opModalMode='doc';
+  document.getElementById('modal-op-title').textContent='Novo Documento';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Contrato Wanderley Cruz" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">TIPO</label>
+        <select id="op-f-tipo" class="form-input" style="width:100%;margin-top:4px">
+          <option>Contrato</option><option>NF</option><option>Boleto</option><option>Proposta</option><option>Outro</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">LINK (opcional)</label><input id="op-f-link" class="form-input" placeholder="https://..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">OBSERVAÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function deleteDoc(id) {
+  if(!confirm('Remover documento?')) return;
+  await fetch(OP_API+'/documentos/'+id, {method:'DELETE'});
+  loadDocs();
+}
+
+function closeModalOp() {
+  document.getElementById('modal-op').style.display='none';
+}
+
+// Carregar tarefas ao abrir aba
+const _origShowView = typeof showView === 'function' ? showView : null;
+
 // ─── INIT ───────────────────────────────────────────────
 updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
 if(!leads.length){
@@ -998,614 +1164,71 @@ if(!leads.length){
   leads=demo;saveLeads();activity=[{msg:'Lead <strong>Wanderley Cruz</strong> em proposta',ts:Date.now()-3600000},{msg:'Lead <strong>Isabella Guarnier</strong> em negociação 🔥',ts:Date.now()-7200000}];saveActivity();updateAgentFilters();updateStats();
 }
 renderKanban();
-
-
-// ═══════════════════════════════════════════════════════════════
-// OPERACIONAL
-// ═══════════════════════════════════════════════════════════════
-
-// Storage keys
-const OP_FRETES_KEY = 'mf_op_fretes';
-const OP_TAREFAS_KEY = 'mf_op_tarefas';
-const OP_AGENDA_KEY = 'mf_op_agenda';
-const OP_DOCS_KEY = 'mf_op_docs';
-
-let opFretes = JSON.parse(localStorage.getItem(OP_FRETES_KEY)||'[]');
-let opTarefas = JSON.parse(localStorage.getItem(OP_TAREFAS_KEY)||'[]');
-let opAgenda = JSON.parse(localStorage.getItem(OP_AGENDA_KEY)||'[]');
-let opDocs = JSON.parse(localStorage.getItem(OP_DOCS_KEY)||'[]');
-
-function saveOpFretes(){ localStorage.setItem(OP_FRETES_KEY, JSON.stringify(opFretes)); }
-function saveOpTarefas(){ localStorage.setItem(OP_TAREFAS_KEY, JSON.stringify(opTarefas)); }
-function saveOpAgenda(){ localStorage.setItem(OP_AGENDA_KEY, JSON.stringify(opAgenda)); }
-function saveOpDocs(){ localStorage.setItem(OP_DOCS_KEY, JSON.stringify(opDocs)); }
-
-const FRETE_STATUS = ['Aguardando coleta','Em trânsito','Entregue'];
-const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','Entregue':'#22c55e'};
-
-// ── SUB-ABAS ──────────────────────────────────────────────────
-let opTabAtual = 'fretes';
-var funiMesOffset=0;
-function funiGetMesInicio(){var d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+funiMesOffset);return d.getTime();}
-function funiGetMesFim(){var d=new Date();d.setDate(1);d.setHours(0,0,0,0);d.setMonth(d.getMonth()+funiMesOffset+1);return d.getTime();}
-function funiAtualizarLabel(){var d=new Date();d.setDate(1);d.setMonth(d.getMonth()+funiMesOffset);var m=["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];var el=document.getElementById("funil-mes-label");if(el)el.textContent=m[d.getMonth()]+" "+d.getFullYear();var cnt=document.getElementById("funil-count");if(cnt){var mi=funiGetMesInicio(),mf=funiGetMesFim();var tot=leads.filter(function(l){return(l.ts||0)>=mi&&(l.ts||0)<mf;});cnt.textContent=tot.length+" lead(s)";}}
-function funiNavegar(delta){var n=funiMesOffset+delta;if(n>0)return;funiMesOffset=n;renderKanban();}
-
-function showOpTab(tab) {
-  opTabAtual = tab;
-  ['fretes','tarefas','agenda','documentos'].forEach(t => {
-    document.getElementById('op-'+t).style.display = t===tab ? 'block' : 'none';
-    const el = document.getElementById('optab-'+t);
-    if(el) el.classList.toggle('active', t===tab);
-  });
-  if(tab==='fretes') renderFreteKanban();
-  if(tab==='tarefas') renderTarefas();
-  if(tab==='agenda') { initAgendaData(); renderAgenda(); }
-  if(tab==='documentos') renderDocs();
-}
-
-function initAgendaData() {
-  const inp = document.getElementById('agenda-data');
-  if(inp && !inp.value) {
-    const hoje = new Date().toISOString().split('T')[0];
-    inp.value = hoje;
-  }
-}
-
-// ── FRETES KANBAN ─────────────────────────────────────────────
-function renderFreteKanban() {
-  const board = document.getElementById('frete-kanban');
-  if(!board) return;
-  board.innerHTML = '';
-  FRETE_STATUS.forEach(status => {
-    const cards = opFretes.filter(f => f.status === status);
-    const col = document.createElement('div');
-    col.className = 'frete-col';
-    col.innerHTML = `
-      <div class="frete-col-header">
-        <div class="col-dot" style="background:${FRETE_COLORS[status]}"></div>
-        <span class="col-title" style="font-size:12px">${status}</span>
-        <span class="col-count">${cards.length}</span>
-      </div>
-      <div class="frete-col-cards" id="fcol-${status.replace(/[^a-z]/gi,'_')}"></div>
-    `;
-    board.appendChild(col);
-    const container = col.querySelector('.frete-col-cards');
-    if(cards.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div>📦</div>Nenhum frete</div>';
-    }
-    cards.sort((a,b)=>b.ts-a.ts).forEach(f => {
-      const card = document.createElement('div');
-      card.className = 'frete-card';
-      card.innerHTML = `
-        <div class="frete-card-title">${f.cliente}</div>
-        <div class="frete-card-sub">${f.numero ? '#'+f.numero : ''} ${f.responsavel ? '· '+f.responsavel : ''}</div>
-        ${f.rota ? '<div class="frete-card-rota">📍 '+f.rota+'</div>' : ''}
-        <div class="frete-card-footer">
-          <span>${f.previsao ? '📅 '+f.previsao : ''}</span>
-          <span class="frete-card-valor">${f.valor ? 'R$ '+f.valor : ''}</span>
-        </div>
-        <div style="display:flex;gap:4px;margin-top:8px">
-          ${FRETE_STATUS.filter(s=>s!==status).map(s=>`<button class="btn btn-sm" onclick="moverFrete('${f.id}','${s}');event.stopPropagation()" style="font-size:10px;padding:3px 7px">${s==='Em trânsito'?'▶ Trânsito':s==='Entregue'?'✓ Entregue':'↩ Coleta'}</button>`).join('')}
-          <button class="btn btn-sm btn-danger" onclick="deletarFrete('${f.id}');event.stopPropagation()" style="font-size:10px;padding:3px 7px;margin-left:auto">×</button>
-        </div>
-      `;
-      card.onclick = () => openFreteDetail(f.id);
-      container.appendChild(card);
-    });
-  });
-}
-
-function moverFrete(id, novoStatus) {
-  const f = opFretes.find(x=>x.id===id);
-  if(f){ f.status=novoStatus; f.historico=f.historico||[]; f.historico.push({texto:`Status: ${novoStatus}`,ts:Date.now()}); saveOpFretes(); renderFreteKanban(); toast('Frete atualizado!'); }
-}
-function deletarFrete(id){ if(!confirm('Excluir frete?'))return; opFretes=opFretes.filter(f=>f.id!==id); saveOpFretes(); renderFreteKanban(); }
-
-function openNovoFrete() {
-  // Leads fechados para vincular
-  const leadsOpts = leads.filter(l=>l.stage==='Fechado / Ganho').map(l=>`<option value="${l.id}">${l.name} — ${l.rota||'sem rota'}</option>`).join('');
-  showModal(`
-    <div class="modal-header"><span class="modal-title">🚚 Novo Frete</span><button class="modal-close" onclick="closeModal()">×</button></div>
-    <div class="modal-body">
-      ${leadsOpts ? `<div class="form-group" style="margin-bottom:14px"><label class="form-label">Vincular lead fechado (opcional)</label><select id="nf-lead" onchange="preencherDeLead(this.value)"><option value="">— Cadastro direto —</option>${leadsOpts}</select></div>` : ''}
-      <div class="section-divider">📋 Dados do frete</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Cliente *</label><input id="nf-cliente" placeholder="Nome do cliente"/></div>
-        <div class="form-group"><label class="form-label">Nº do Frete</label><input id="nf-numero" placeholder="Ex: 2024-001"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Origem</label><input id="nf-origem" placeholder="Cidade/UF"/></div>
-        <div class="form-group"><label class="form-label">Destino</label><input id="nf-destino" placeholder="Cidade/UF"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Responsável</label><input id="nf-responsavel" value="${agentName}" placeholder="Nome"/></div>
-        <div class="form-group"><label class="form-label">Previsão de entrega</label><input type="date" id="nf-previsao"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">💰 Valor do Frete (R$)</label><input id="nf-valor" placeholder="Ex: 1.200,00" style="border-color:var(--green)"/></div>
-        <div class="form-group"><label class="form-label">Status inicial</label><select id="nf-status"><option value="Aguardando coleta">Aguardando coleta</option><option value="Em trânsito">Em trânsito</option></select></div>
-      </div>
-      <div class="section-divider">📦 Carga</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Material</label><input id="nf-material" placeholder="Ex: Eletrônicos"/></div>
-        <div class="form-group"><label class="form-label">Volumes / Peso</label><input id="nf-volumes" placeholder="Ex: 3 vol / 42kg"/></div>
-      </div>
-      <div class="form-group"><label class="form-label">Observações</label><textarea id="nf-obs" rows="2" placeholder="Instruções especiais, horários..."></textarea></div>
-    </div>
-    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="salvarNovoFrete()">Criar Frete</button></div>
-  `);
-}
-
-function preencherDeLead(leadId) {
-  if(!leadId) return;
-  const l = leads.find(x=>x.id===leadId);
-  if(!l) return;
-  const v = (id, val) => { const el=document.getElementById(id); if(el) el.value=val||''; };
-  v('nf-cliente', l.name);
-  v('nf-origem', l.origem);
-  v('nf-destino', l.destino);
-  v('nf-material', l.material);
-  v('nf-volumes', [l.volumes, l.peso].filter(Boolean).join(' / '));
-  v('nf-valor', l.valorFrete||l.valorNF||'');
-}
-
-function salvarNovoFrete() {
-  const cliente = document.getElementById('nf-cliente').value.trim();
-  if(!cliente){ toast('Informe o cliente.'); return; }
-  const origem = document.getElementById('nf-origem').value.trim();
-  const destino = document.getElementById('nf-destino').value.trim();
-  const frete = {
-    id: uid(), cliente,
-    numero: document.getElementById('nf-numero').value.trim(),
-    origem, destino, rota: origem&&destino ? origem+' → '+destino : '',
-    responsavel: document.getElementById('nf-responsavel').value.trim(),
-    previsao: document.getElementById('nf-previsao').value,
-    valor: document.getElementById('nf-valor').value.trim(),
-    status: document.getElementById('nf-status').value,
-    material: document.getElementById('nf-material').value.trim(),
-    volumes: document.getElementById('nf-volumes').value.trim(),
-    obs: document.getElementById('nf-obs').value.trim(),
-    ts: Date.now(),
-    historico: [{texto:'Frete criado.', ts:Date.now()}]
-  };
-  opFretes.unshift(frete);
-  saveOpFretes();
-  closeModal();
-  renderFreteKanban();
-  toast('Frete criado!');
-}
-
-function openFreteDetail(id) {
-  const f = opFretes.find(x=>x.id===id);
-  if(!f) return;
-  const hist = (f.historico||[]).slice().reverse().map(h=>`<div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2)">${h.texto} <span style="color:var(--text3);float:right">${new Date(h.ts).toLocaleString('pt-BR')}</span></div>`).join('');
-  showModal(`
-    <div class="modal-header"><span class="modal-title">🚚 ${f.cliente}</span><div style="display:flex;gap:6px"><button class="btn btn-sm btn-danger" onclick="deletarFrete('${f.id}');closeModal()">Excluir</button><button class="modal-close" onclick="closeModal()">×</button></div></div>
-    <div class="modal-body">
-      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-        ${FRETE_STATUS.map(s=>`<button class="btn btn-sm ${f.status===s?'btn-primary':''}" onclick="moverFrete('${f.id}','${s}');closeModal()" style="${f.status===s?'':''}background:${f.status===s?FRETE_COLORS[s]:'var(--surface2)'};color:${f.status===s?'#fff':'var(--text)'}";border-color:${FRETE_COLORS[s]}">${s}</button>`).join('')}
-      </div>
-      <div class="frete-grid">
-        <div class="frete-field"><label>Cliente</label><span>${f.cliente}</span></div>
-        <div class="frete-field"><label>Nº Frete</label><span>${f.numero||'—'}</span></div>
-        <div class="frete-field"><label>Rota</label><span>${f.rota||'—'}</span></div>
-        <div class="frete-field"><label>Responsável</label><span>${f.responsavel||'—'}</span></div>
-        <div class="frete-field"><label>Previsão</label><span>${f.previsao||'—'}</span></div>
-        <div class="frete-field"><label>💰 Valor</label><span style="color:var(--orange);font-weight:700">${f.valor?'R$ '+f.valor:'—'}</span></div>
-        <div class="frete-field"><label>Material</label><span>${f.material||'—'}</span></div>
-        <div class="frete-field"><label>Volumes/Peso</label><span>${f.volumes||'—'}</span></div>
-      </div>
-      ${f.obs?`<div style="font-size:13px;color:var(--text2);padding:10px;background:var(--surface2);border-radius:6px;margin-bottom:12px">${f.obs}</div>`:''}
-      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Histórico</div>
-      <div>${hist||'<div style="color:var(--text3);font-size:12px">Sem histórico.</div>'}</div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <input id="fh-nota" placeholder="Adicionar atualização..." style="flex:1;padding:7px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:13px"/>
-        <button class="btn btn-primary" onclick="addFreteNota('${f.id}')">Salvar</button>
-      </div>
-    </div>
-    <div class="modal-footer"><button class="btn" onclick="closeModal()">Fechar</button></div>
-  `);
-}
-
-function addFreteNota(id) {
-  const f = opFretes.find(x=>x.id===id);
-  const texto = document.getElementById('fh-nota')?.value.trim();
-  if(!f||!texto) return;
-  f.historico = f.historico||[];
-  f.historico.push({texto, ts:Date.now()});
-  saveOpFretes();
-  openFreteDetail(id);
-  toast('Atualização salva!');
-}
-
-// ── TAREFAS ───────────────────────────────────────────────────
-let tarefaFiltro = 'todas';
-function filtrarTarefas(f){ tarefaFiltro=f; ['todas','pendentes','concluidas'].forEach(t=>{ const el=document.getElementById('tf-'+t); if(el) el.style.background = t===f?'var(--orange)':'var(--surface2)'; el.style.color = t===f?'#fff':'var(--text)'; }); renderTarefas(); }
-
-function renderTarefas() {
-  const el = document.getElementById('tarefas-list');
-  if(!el) return;
-  let lista = [...opTarefas].sort((a,b)=>a.done-b.done||(a.prazo||'z').localeCompare(b.prazo||'z'));
-  if(tarefaFiltro==='pendentes') lista = lista.filter(t=>!t.done);
-  if(tarefaFiltro==='concluidas') lista = lista.filter(t=>t.done);
-  if(!lista.length){ el.innerHTML='<div class="empty-state"><div>✅</div>Nenhuma tarefa aqui.</div>'; return; }
-  const prioColor = {'Alta':'var(--red)','Média':'var(--amber)','Baixa':'var(--green)'};
-  el.innerHTML = lista.map(t=>`
-    <div class="task-item ${t.done?'done':''}" onclick="openTarefaDetail('${t.id}')">
-      <div class="task-check ${t.done?'checked':''}" onclick="toggleTarefa('${t.id}');event.stopPropagation()">${t.done?'✓':''}</div>
-      <div class="task-body">
-        <div class="task-title ${t.done?'done':''}">${t.titulo}</div>
-        <div class="task-meta">${t.responsavel?t.responsavel+' · ':''}${t.prazo?'📅 '+t.prazo+' · ':''}${t.freteRef?'🚚 '+t.freteRef+' · ':''}<span class="task-priority" style="background:${prioColor[t.prioridade]||'var(--border)'};color:#fff">${t.prioridade||'Normal'}</span></div>
-      </div>
-      <button class="btn btn-sm btn-danger" onclick="deletarTarefa('${t.id}');event.stopPropagation()" style="font-size:11px">×</button>
-    </div>
-  `).join('');
-}
-
-function toggleTarefa(id){ const t=opTarefas.find(x=>x.id===id); if(t){t.done=!t.done;saveOpTarefas();renderTarefas();} }
-function deletarTarefa(id){ if(!confirm('Excluir tarefa?'))return; opTarefas=opTarefas.filter(t=>t.id!==id); saveOpTarefas(); renderTarefas(); }
-
-function openNovaTarefa() {
-  const fretesOpts = opFretes.filter(f=>f.status!=='Entregue').map(f=>`<option value="${f.cliente} #${f.numero||f.id.slice(-4)}">${f.cliente} — ${f.rota||'sem rota'}</option>`).join('');
-  showModal(`
-    <div class="modal-header"><span class="modal-title">✅ Nova Tarefa</span><button class="modal-close" onclick="closeModal()">×</button></div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Tarefa *</label><input id="nt-titulo" placeholder="Descreva a tarefa..."/></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Responsável</label><input id="nt-resp" value="${agentName}" placeholder="Nome"/></div>
-        <div class="form-group"><label class="form-label">Prazo</label><input type="date" id="nt-prazo"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Prioridade</label><select id="nt-prio"><option value="Baixa">Baixa</option><option value="Média" selected>Média</option><option value="Alta">Alta</option></select></div>
-        ${fretesOpts?`<div class="form-group"><label class="form-label">Vincular frete</label><select id="nt-frete"><option value="">—</option>${fretesOpts}</select></div>`:'<div class="form-group"></div>'}
-      </div>
-      <div class="form-group"><label class="form-label">Descrição</label><textarea id="nt-desc" rows="2" placeholder="Detalhes..."></textarea></div>
-    </div>
-    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="salvarNovaTarefa()">Criar Tarefa</button></div>
-  `);
-  setTimeout(()=>document.getElementById('nt-titulo')?.focus(), 100);
-}
-
-function salvarNovaTarefa() {
-  const titulo = document.getElementById('nt-titulo')?.value.trim();
-  if(!titulo){ toast('Informe a tarefa.'); return; }
-  opTarefas.unshift({ id:uid(), titulo, responsavel:document.getElementById('nt-resp')?.value.trim(), prazo:document.getElementById('nt-prazo')?.value, prioridade:document.getElementById('nt-prio')?.value, freteRef:document.getElementById('nt-frete')?.value||'', desc:document.getElementById('nt-desc')?.value.trim(), done:false, ts:Date.now() });
-  saveOpTarefas(); closeModal(); renderTarefas(); toast('Tarefa criada!');
-}
-
-function openTarefaDetail(id) {
-  const t = opTarefas.find(x=>x.id===id);
-  if(!t) return;
-  showModal(`
-    <div class="modal-header"><span class="modal-title">${t.titulo}</span><div style="display:flex;gap:6px"><button class="btn btn-sm btn-danger" onclick="deletarTarefa('${t.id}');closeModal()">Excluir</button><button class="modal-close" onclick="closeModal()">×</button></div></div>
-    <div class="modal-body">
-      <div class="frete-grid">
-        <div class="frete-field"><label>Responsável</label><span>${t.responsavel||'—'}</span></div>
-        <div class="frete-field"><label>Prazo</label><span>${t.prazo||'—'}</span></div>
-        <div class="frete-field"><label>Prioridade</label><span>${t.prioridade||'—'}</span></div>
-        <div class="frete-field"><label>Frete vinculado</label><span>${t.freteRef||'—'}</span></div>
-      </div>
-      ${t.desc?`<div style="font-size:13px;color:var(--text2);padding:10px;background:var(--surface2);border-radius:6px">${t.desc}</div>`:''}
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="toggleTarefa('${t.id}');closeModal()">${t.done?'↩ Reabrir':'✓ Concluir'}</button>
-      <button class="btn" onclick="closeModal()">Fechar</button>
-    </div>
-  `);
-}
-
-// ── AGENDA ────────────────────────────────────────────────────
-function renderAgenda() {
-  const el = document.getElementById('agenda-list');
-  const inp = document.getElementById('agenda-data');
-  const label = document.getElementById('agenda-dia-label');
-  if(!el||!inp) return;
-  const data = inp.value;
-  const hoje = new Date().toISOString().split('T')[0];
-  if(label) label.textContent = data===hoje?'— Hoje':data?'— '+new Date(data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}):'';
-  const itens = opAgenda.filter(a=>a.data===data).sort((a,b)=>(a.hora||'').localeCompare(b.hora||''));
-  if(!itens.length){ el.innerHTML='<div class="empty-state"><div>📅</div>Nenhum agendamento nesta data.</div>'; return; }
-  const tipoColor = {'Coleta':'var(--amber)','Entrega':'var(--green)','Visita':'var(--blue)','Outro':'var(--text3)'};
-  el.innerHTML = itens.map(a=>`
-    <div class="agenda-item">
-      <div class="agenda-hora">${a.hora||'—'}</div>
-      <div class="agenda-body">
-        <div class="agenda-title">${a.titulo}</div>
-        <div class="agenda-sub">${a.cliente?a.cliente+' · ':''}${a.endereco||''}</div>
-        ${a.obs?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${a.obs}</div>`:''}
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="agenda-tipo" style="background:${tipoColor[a.tipo]||'var(--border)'};color:#fff;padding:2px 8px;border-radius:4px">${a.tipo}</span>
-        <button class="btn btn-sm btn-danger" onclick="deletarAgendamento('${a.id}')" style="font-size:10px">×</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function deletarAgendamento(id){ if(!confirm('Excluir agendamento?'))return; opAgenda=opAgenda.filter(a=>a.id!==id); saveOpAgenda(); renderAgenda(); }
-
-function openNovoAgendamento() {
-  const inp = document.getElementById('agenda-data');
-  const dataAtual = inp?.value || new Date().toISOString().split('T')[0];
-  const fretesOpts = opFretes.filter(f=>f.status!=='Entregue').map(f=>`<option value="${f.id}">${f.cliente} — ${f.rota||''}</option>`).join('');
-  showModal(`
-    <div class="modal-header"><span class="modal-title">📅 Novo Agendamento</span><button class="modal-close" onclick="closeModal()">×</button></div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Tipo *</label><select id="na-tipo"><option value="Coleta">Coleta</option><option value="Entrega">Entrega</option><option value="Visita">Visita</option><option value="Outro">Outro</option></select></div>
-        <div class="form-group"><label class="form-label">Data *</label><input type="date" id="na-data" value="${dataAtual}"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Horário</label><input type="time" id="na-hora"/></div>
-        <div class="form-group"><label class="form-label">Cliente</label><input id="na-cliente" placeholder="Nome do cliente"/></div>
-      </div>
-      <div class="form-group"><label class="form-label">Título / Descrição *</label><input id="na-titulo" placeholder="Ex: Coleta Wanderley — Tijucas/SC"/></div>
-      <div class="form-group"><label class="form-label">Endereço</label><input id="na-end" placeholder="Rua, número, cidade"/></div>
-      ${fretesOpts?`<div class="form-group"><label class="form-label">Vincular frete</label><select id="na-frete" onchange="preencherAgendaDeFrete(this.value)"><option value="">—</option>${fretesOpts}</select></div>`:''}
-      <div class="form-group"><label class="form-label">Observações</label><textarea id="na-obs" rows="2" placeholder="Contato, instruções..."></textarea></div>
-    </div>
-    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="salvarAgendamento()">Agendar</button></div>
-  `);
-}
-
-function preencherAgendaDeFrete(id) {
-  const f = opFretes.find(x=>x.id===id);
-  if(!f) return;
-  const v = (elId, val) => { const el=document.getElementById(elId); if(el&&val) el.value=val; };
-  v('na-cliente', f.cliente);
-  v('na-titulo', (document.getElementById('na-tipo')?.value||'Coleta')+' — '+f.cliente+(f.rota?' ('+f.rota+')':''));
-}
-
-function salvarAgendamento() {
-  const titulo = document.getElementById('na-titulo')?.value.trim();
-  const data = document.getElementById('na-data')?.value;
-  if(!titulo||!data){ toast('Informe título e data.'); return; }
-  opAgenda.push({ id:uid(), tipo:document.getElementById('na-tipo')?.value, data, hora:document.getElementById('na-hora')?.value, cliente:document.getElementById('na-cliente')?.value.trim(), titulo, endereco:document.getElementById('na-end')?.value.trim(), obs:document.getElementById('na-obs')?.value.trim(), ts:Date.now() });
-  saveOpAgenda(); closeModal();
-  document.getElementById('agenda-data').value = data;
-  renderAgenda(); toast('Agendamento salvo!');
-}
-
-// ── DOCUMENTOS ────────────────────────────────────────────────
-function renderDocs() {
-  const el = document.getElementById('docs-list');
-  if(!el) return;
-  const tipo = document.getElementById('doc-filtro-tipo')?.value||'';
-  const status = document.getElementById('doc-filtro-status')?.value||'';
-  let lista = [...opDocs].sort((a,b)=>b.ts-a.ts);
-  if(tipo) lista = lista.filter(d=>d.tipo===tipo);
-  if(status) lista = lista.filter(d=>d.status===status);
-  if(!lista.length){ el.innerHTML='<div class="empty-state"><div>📄</div>Nenhum documento encontrado.</div>'; return; }
-  const tipoIcon = {'CTE':'🚛','NF':'🧾','Minuta':'📝','Outro':'📄'};
-  const statusColor = {'Pendente':'var(--amber)','Emitido':'var(--green)','Cancelado':'var(--red)'};
-  el.innerHTML = lista.map(d=>`
-    <div class="doc-item">
-      <div class="doc-icon" style="background:var(--surface2)">${tipoIcon[d.tipo]||'📄'}</div>
-      <div class="doc-body">
-        <div class="doc-title">${d.tipo} ${d.numero?'#'+d.numero:''} — ${d.cliente}</div>
-        <div class="doc-sub">${d.rota||''}${d.valor?' · R$ '+d.valor:''} · ${new Date(d.ts).toLocaleDateString('pt-BR')}</div>
-        ${d.obs?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${d.obs}</div>`:''}
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="doc-status" style="background:${statusColor[d.status]||'var(--border)'};color:#fff">${d.status}</span>
-        <div style="display:flex;gap:4px">
-          <select style="font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;background:var(--surface2);color:var(--text)" onchange="mudarStatusDoc('${d.id}',this.value)">
-            <option value="">Status</option>
-            <option value="Pendente">Pendente</option><option value="Emitido">Emitido</option><option value="Cancelado">Cancelado</option>
-          </select>
-          <button class="btn btn-sm btn-danger" onclick="deletarDoc('${d.id}')" style="font-size:10px">×</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function mudarStatusDoc(id, status){ if(!status)return; const d=opDocs.find(x=>x.id===id); if(d){d.status=status;saveOpDocs();renderDocs();toast('Status atualizado!');} }
-function deletarDoc(id){ if(!confirm('Excluir documento?'))return; opDocs=opDocs.filter(d=>d.id!==id); saveOpDocs(); renderDocs(); }
-
-function openNovoDoc() {
-  const fretesOpts = opFretes.map(f=>`<option value="${f.id}">${f.cliente} — ${f.rota||''}</option>`).join('');
-  showModal(`
-    <div class="modal-header"><span class="modal-title">📄 Novo Documento</span><button class="modal-close" onclick="closeModal()">×</button></div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Tipo *</label><select id="nd-tipo"><option value="CTE">CT-e</option><option value="NF">Nota Fiscal</option><option value="Minuta">Minuta</option><option value="Outro">Outro</option></select></div>
-        <div class="form-group"><label class="form-label">Número</label><input id="nd-numero" placeholder="Ex: 000123"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Cliente *</label><input id="nd-cliente" placeholder="Nome"/></div>
-        <div class="form-group"><label class="form-label">Status</label><select id="nd-status"><option value="Pendente">Pendente</option><option value="Emitido">Emitido</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Rota</label><input id="nd-rota" placeholder="Origem → Destino"/></div>
-        <div class="form-group"><label class="form-label">Valor (R$)</label><input id="nd-valor" placeholder="Ex: 1.200,00"/></div>
-      </div>
-      ${fretesOpts?`<div class="form-group"><label class="form-label">Vincular frete</label><select id="nd-frete" onchange="preencherDocDeFrete(this.value)"><option value="">—</option>${fretesOpts}</select></div>`:''}
-      <div class="form-group"><label class="form-label">Observações</label><textarea id="nd-obs" rows="2" placeholder="Chave de acesso, data emissão..."></textarea></div>
-    </div>
-    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="salvarDoc()">Salvar</button></div>
-  `);
-}
-
-function preencherDocDeFrete(id) {
-  const f = opFretes.find(x=>x.id===id);
-  if(!f) return;
-  const v = (elId, val) => { const el=document.getElementById(elId); if(el&&val) el.value=val; };
-  v('nd-cliente', f.cliente);
-  v('nd-rota', f.rota);
-  v('nd-valor', f.valor);
-}
-
-function salvarDoc() {
-  const cliente = document.getElementById('nd-cliente')?.value.trim();
-  if(!cliente){ toast('Informe o cliente.'); return; }
-  opDocs.unshift({ id:uid(), tipo:document.getElementById('nd-tipo')?.value, numero:document.getElementById('nd-numero')?.value.trim(), cliente, status:document.getElementById('nd-status')?.value, rota:document.getElementById('nd-rota')?.value.trim(), valor:document.getElementById('nd-valor')?.value.trim(), obs:document.getElementById('nd-obs')?.value.trim(), ts:Date.now() });
-  saveOpDocs(); closeModal(); renderDocs(); toast('Documento salvo!');
-}
-
-// Inicializar operacional ao abrir a aba
-
-
-// ─── RELATÓRIO MENSAL ──────────────────────────────────────────
-function abrirRelatorioMensal() {
-  const meses = [...new Set(leads.map(l => {
-    const d = new Date(l.ts);
-    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
-  }))].sort().reverse();
-
-  const mesAtual = new Date().getFullYear() + '-' + String(new Date().getMonth()+1).padStart(2,'0');
-  if (!meses.includes(mesAtual)) meses.unshift(mesAtual);
-
-  const opts = meses.map(m => {
-    const [ano, mes] = m.split('-');
-    const nome = new Date(ano, mes-1).toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
-    return `<option value="${m}">${nome.charAt(0).toUpperCase()+nome.slice(1)}</option>`;
-  }).join('');
-
-  showModal(`
-    <div class="modal-header">
-      <span class="modal-title">📊 Relatório Mensal</span>
-      <button class="modal-close" onclick="closeModal()">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group" style="margin-bottom:16px">
-        <label class="form-label">Selecione o mês</label>
-        <select id="rel-mes" onchange="renderRelatorio()" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:14px">${opts}</select>
-      </div>
-      <div id="rel-conteudo"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal()">Fechar</button>
-      <button class="btn btn-report" onclick="gerarPDFMensal()">⬇ Baixar PDF</button>
-    </div>
-  `);
-  setTimeout(renderRelatorio, 50);
-}
-
-function renderRelatorio() {
-  const sel = document.getElementById('rel-mes');
-  if (!sel) return;
-  const [ano, mes] = sel.value.split('-');
-  const nomeMes = new Date(ano, mes-1).toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
-
-  const leadsDoMes = leads.filter(l => {
-    const d = new Date(l.ts);
-    return d.getFullYear() == ano && (d.getMonth()+1) == mes;
-  });
-
-  const total = leadsDoMes.length;
-  const fechados = leadsDoMes.filter(l => l.stage === 'Fechado / Ganho').length;
-  const perdidos = leadsDoMes.filter(l => l.stage === 'Perdido').length;
-  const ativos = total - fechados - perdidos;
-  const taxaConv = total > 0 ? Math.round(fechados/total*100) : 0;
-
-  const somaFrete = leadsDoMes.reduce((s,l) => {
-    const v = parseFloat((l.valorFrete||'0').replace(/\./g,'').replace(',','.'));
-    return s + (isNaN(v) ? 0 : v);
-  }, 0);
-  const somaNF = leadsDoMes.reduce((s,l) => {
-    const v = parseFloat((l.valorNF||'0').replace(/\./g,'').replace(',','.'));
-    return s + (isNaN(v) ? 0 : v);
-  }, 0);
-
-  const fmtR = v => 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-
-  const linhas = leadsDoMes.sort((a,b)=>b.ts-a.ts).map(l => `
-    <tr style="border-bottom:1px solid var(--border)">
-      <td style="padding:8px 4px;font-size:12px">${l.name}</td>
-      <td style="padding:8px 4px;font-size:11px;color:var(--text3)">${l.rota||'—'}</td>
-      <td style="padding:8px 4px"><span style="font-size:10px;padding:2px 6px;border-radius:4px;${STAGE_PILL[l.stage]||''}">${l.stage}</span></td>
-      <td style="padding:8px 4px;font-size:12px;color:var(--orange);font-weight:600">${l.valorFrete?'R$ '+l.valorFrete:'—'}</td>
-      <td style="padding:8px 4px;font-size:11px;color:var(--text3)">${new Date(l.ts).toLocaleDateString('pt-BR')}</td>
-    </tr>
-  `).join('');
-
-  document.getElementById('rel-conteudo').innerHTML = `
-    <div id="rel-pdf-area">
-      <div style="text-align:center;margin-bottom:16px">
-        <div style="font-size:18px;font-weight:800;color:var(--orange)">MF ENVIOS</div>
-        <div style="font-size:14px;color:var(--text2)">Relatório — ${nomeMes.charAt(0).toUpperCase()+nomeMes.slice(1)}</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
-        <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center">
-          <div style="font-size:24px;font-weight:700;color:var(--blue)">${total}</div>
-          <div style="font-size:11px;color:var(--text3)">Total Leads</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center">
-          <div style="font-size:24px;font-weight:700;color:var(--green)">${fechados}</div>
-          <div style="font-size:11px;color:var(--text3)">Fechados</div>
-        </div>
-        <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center">
-          <div style="font-size:24px;font-weight:700;color:var(--orange)">${taxaConv}%</div>
-          <div style="font-size:11px;color:var(--text3)">Conversão</div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-        <div style="background:rgba(249,115,22,.15);border:1px solid var(--orange);border-radius:8px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">💰 Total Fretes Fechados</div>
-          <div style="font-size:18px;font-weight:700;color:var(--orange)">${fmtR(somaFrete)}</div>
-        </div>
-        <div style="background:rgba(34,197,94,.1);border:1px solid var(--green);border-radius:8px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">📦 Total NF Movimentada</div>
-          <div style="font-size:18px;font-weight:700;color:var(--green)">${fmtR(somaNF)}</div>
-        </div>
-      </div>
-      <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px">Leads do mês</div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse">
-          <thead><tr style="border-bottom:2px solid var(--border)">
-            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Nome</th>
-            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Rota</th>
-            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Etapa</th>
-            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Frete</th>
-            <th style="text-align:left;padding:8px 4px;font-size:11px;color:var(--text3)">Data</th>
-          </tr></thead>
-          <tbody>${linhas||'<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">Nenhum lead neste mês.</td></tr>'}</tbody>
-        </table>
-      </div>
-    </div>
-  `;
-}
-
-function gerarPDFMensal() {
-  const sel = document.getElementById('rel-mes');
-  const [ano, mes] = sel.value.split('-');
-  const nomeMes = new Date(ano, mes-1).toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
-  const area = document.getElementById('rel-pdf-area');
-  if (!area) return;
-
-  const w = window.open('', '_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório ${nomeMes}</title>
-  <style>
-    body{font-family:Arial,sans-serif;background:#fff;color:#1a1a2e;padding:30px;font-size:13px}
-    h1{color:#f97316;font-size:22px;margin:0 0 4px}
-    h2{font-size:15px;color:#555;margin:0 0 20px;font-weight:400}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-    .box{border:1px solid #ddd;border-radius:8px;padding:14px;text-align:center}
-    .box-num{font-size:28px;font-weight:800}
-    .box-label{font-size:11px;color:#888;margin-top:4px}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-    .box2{border:2px solid #f97316;border-radius:8px;padding:14px;text-align:center}
-    .box2-val{font-size:20px;font-weight:700;color:#f97316}
-    .box2-label{font-size:11px;color:#888;margin-bottom:6px}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th{text-align:left;padding:8px;font-size:11px;color:#888;border-bottom:2px solid #eee;text-transform:uppercase}
-    td{padding:8px;font-size:12px;border-bottom:1px solid #f0f0f0}
-    .frete{color:#f97316;font-weight:700}
-    @media print{body{padding:15px}}
-  </style></head><body>
-  <h1>MF ENVIOS</h1>
-  <h2>Relatório — ${nomeMes.charAt(0).toUpperCase()+nomeMes.slice(1)}</h2>
-  ${area.innerHTML.replace(/style="[^"]*color:var[^"]*"/g,'').replace(/class="[^"]*"/g,'')}
-  <script>window.onload=()=>window.print()<\/script>
-  </body></html>`);
-  w.document.close();
-}
-
-
-
-
 </script>
+
+<!-- OPERACIONAL VIEW -->
+<div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
+
+  <!-- Sub-tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
+    <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">✅ Tarefas</div>
+    <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
+    <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
+    <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📄 Documentos</div>
+  </div>
+
+  <!-- TAREFAS -->
+  <div id="op-view-tarefas">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Tarefas</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddTarefa()">+ Nova Tarefa</button>
+    </div>
+    <div id="tarefas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- FRETES KANBAN -->
+  <div id="op-view-fretes" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Fretes em andamento</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddFrete()">+ Novo Frete</button>
+    </div>
+    <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px" id="fretes-kanban"></div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="op-view-agenda" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Agenda</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddAgenda()">+ Novo Evento</button>
+    </div>
+    <div id="agenda-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- DOCUMENTOS -->
+  <div id="op-view-docs" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Documentos</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddDoc()">+ Novo Documento</button>
+    </div>
+    <div id="docs-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+</div>
+
+<!-- MODAIS OPERACIONAL -->
+<div id="modal-op" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:420px;max-width:95vw;box-shadow:var(--shadow)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <strong id="modal-op-title" style="font-size:15px"></strong>
+      <span onclick="closeModalOp()" style="cursor:pointer;color:var(--text3);font-size:18px">&times;</span>
+    </div>
+    <div id="modal-op-body"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="closeModalOp()">Cancelar</button>
+      <button class="btn btn-primary" id="modal-op-save" onclick="saveModalOp()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
