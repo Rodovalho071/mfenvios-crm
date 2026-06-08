@@ -128,6 +128,11 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 
 <div class="view active" id="view-kanban">
   <div class="kanban-toolbar">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 8px">
+      <button onclick="navMes(-1)" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0 4px">&#9664;</button>
+      <span id="mes-label" style="font-size:13px;font-weight:600;min-width:110px;text-align:center"></span>
+      <button onclick="navMes(1)" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0 4px">&#9654;</button>
+    </div>
     <div class="search-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Buscar lead..." id="kanban-search" oninput="renderKanban()"/></div>
     <select class="filter-select" id="kanban-agent" onchange="renderKanban()"><option value="">Todos os responsáveis</option></select>
   </div>
@@ -311,11 +316,13 @@ function updateAgentFilters(){
 }
 
 function renderKanban(){
+  atualizarLabelMes();
   const q=(document.getElementById('kanban-search')||{}).value?.toLowerCase()||'';
   const ag=(document.getElementById('kanban-agent')||{}).value||'';
   const board=document.getElementById('kanban-board');board.innerHTML='';
+  const leadsMes=getLeadsMes();
   STAGES.forEach(stage=>{
-    let cards=leads.filter(l=>l.stage===stage);
+    let cards=leadsMes.filter(l=>l.stage===stage);
     if(q)cards=cards.filter(l=>(l.name+l.prod+l.tel+l.obs+(l.rota||'')).toLowerCase().includes(q));
     if(ag)cards=cards.filter(l=>l.agent===ag);
     const col=document.createElement('div');col.className='kanban-col';
@@ -509,6 +516,12 @@ function saveLead(){
     ts:Date.now(),history:[],followups:[]
   };
   if(lead.obs)lead.history.push({text:lead.obs,ts:Date.now(),type:'note'});
+  // Ajustar timestamp para o mês do funil se não for o mês atual
+  if(kanbanMesOffset !== 0) {
+    const mesBase = getMesAtual();
+    mesBase.setDate(15);mesBase.setHours(12,0,0,0);
+    lead.ts = mesBase.getTime();
+  }
   leads.push(lead);saveLeads();addActivity(`Lead <strong>${lead.name}</strong> adicionado em <strong>${lead.stage}</strong>`);
   closeModal();renderKanban();updateAgentFilters();toast('Lead adicionado!');
 }
@@ -912,7 +925,8 @@ async function wppToLead(id,name,phone,text){
   try{
     await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
     const exists=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
-    if(!exists){const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);}
+    // Sempre cria novo lead (permite múltiplos leads por contato em meses diferentes)
+    const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);
     toast('Lead adicionado ao funil!');showView('kanban');renderKanban();
   }catch(e){toast('Erro ao adicionar.');}
 }
@@ -1149,6 +1163,38 @@ function closeModalOp() {
 
 // Carregar tarefas ao abrir aba
 const _origShowView = typeof showView === 'function' ? showView : null;
+
+
+// ─── FUNIL POR MÊS ───────────────────────────────────────────
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+let kanbanMesOffset = 0; // 0 = mes atual, -1 = mes anterior, etc.
+
+function getMesAtual() {
+  const d = new Date();
+  d.setDate(1);
+  d.setHours(0,0,0,0);
+  d.setMonth(d.getMonth() + kanbanMesOffset);
+  return d;
+}
+
+function navMes(dir) {
+  kanbanMesOffset += dir;
+  renderKanban();
+}
+
+function atualizarLabelMes() {
+  const d = getMesAtual();
+  const label = MESES[d.getMonth()] + ' ' + d.getFullYear();
+  const el = document.getElementById('mes-label');
+  if(el) el.textContent = label;
+}
+
+function getLeadsMes() {
+  const inicio = getMesAtual();
+  const fim = new Date(inicio);
+  fim.setMonth(fim.getMonth() + 1);
+  return leads.filter(l => l.ts >= inicio.getTime() && l.ts < fim.getTime());
+}
 
 // ─── INIT ───────────────────────────────────────────────
 updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
