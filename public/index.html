@@ -114,12 +114,26 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"/>
   </div>
 </div>
-<div class="stats-bar">
+<div class="stats-bar" id="stats-bar-principal">
   <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" id="stat-total">0</div><div class="stat-label" id="stat-total-label">Total do mês</div></div>
   <div class="stat-item" onclick="showView('kanban')"><div class="stat-val green" id="stat-ganho">R$ 0</div><div class="stat-label">💰 Valor Ganho</div></div>
   <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" style="color:var(--red)" id="stat-perdido">R$ 0</div><div class="stat-label">📉 Valor Perdido</div></div>
   <div class="stat-item" onclick="showView('kanban')"><div class="stat-val blue" id="stat-negociacao">R$ 0</div><div class="stat-label">🔄 Em Negociação</div></div>
   <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" style="color:var(--amber)" id="stat-semretorno">0</div><div class="stat-label">⏳ Sem Retorno</div></div>
+</div>
+<!-- STATS DO OUTRO PERFIL -->
+<div id="stats-bar-outro" style="display:none;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0">
+  <div style="padding:4px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <span id="stats-outro-label" style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap"></span>
+    <div style="display:flex;gap:0;flex:1;flex-wrap:wrap">
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--text)" id="outro-total">0</div><div style="font-size:10px;color:var(--text3)">Total</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--green)" id="outro-ganho">R$0</div><div style="font-size:10px;color:var(--text3)">💰 Ganho</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--red)" id="outro-perdido">R$0</div><div style="font-size:10px;color:var(--text3)">📉 Perdido</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--blue)" id="outro-neg">R$0</div><div style="font-size:10px;color:var(--text3)">🔄 Negociação</div></div>
+      <div style="padding:6px 20px"><div style="font-size:16px;font-weight:700;color:var(--amber)" id="outro-semretorno">0</div><div style="font-size:10px;color:var(--text3)">⏳ Sem Retorno</div></div>
+    </div>
+    <button onclick="alternarParaOutro()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text2);white-space:nowrap">Ver funil →</button>
+  </div>
 </div>
 <div class="tabs-bar">
   <div class="tab active" onclick="showView('kanban')" id="tab-kanban">🗂 Funil</div>
