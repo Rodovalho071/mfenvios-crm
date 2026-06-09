@@ -679,8 +679,10 @@ function abrirRelatorio(){
         <div class="lead-field"><label>Valor da NF</label><span>${l.valorNF?'R$ '+l.valorNF:'—'}</span></div>
       </div>
       <div class="lead-field" style="margin-bottom:8px"><label>Rota</label><span>${l.rota||'—'}</span></div>
-      <div class="lead-horario">Horário: ${fmtTime(l.ts)}${l.urgencia?' · Urgência: '+l.urgencia:''}</div>
-      ${l.obs?`<div class="lead-obs">${l.obs}</div>`:''}
+      <div class="lead-horario">Horário: ${fmtTime(l.ts)}${l.urgencia?' · Urgência: '+l.urgencia:''}${l.transportadora?' · '+l.transportadora:''}</div>
+      ${l.valorFrete?`<div style="font-size:13px;font-weight:700;color:#f97316;margin-bottom:8px">💰 Valor do Frete: R$ ${l.valorFrete}</div>`:''}
+      ${l.obs?`<div class="lead-obs"><strong>Obs:</strong> ${l.obs}</div>`:''}
+      ${(l.history&&l.history.length)?`<div style="margin-top:8px"><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Anotações</div>${l.history.slice(-3).reverse().map(h=>`<div style="font-size:12px;color:#444;background:#f1f5f9;padding:8px 10px;border-radius:6px;margin-bottom:4px;border-left:3px solid #f97316">${h.text}${h.agent?' <span style="color:#888;font-size:11px">· '+h.agent+'</span>':''}</div>`).join('')}</div>`:''}
     </div>`;
   }).join(''):'<p style="color:#888">Nenhum lead registrado hoje.</p>'}
   ${followupsPendentes.length?`
