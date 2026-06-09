@@ -105,6 +105,10 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <div class="wpp-status-badge"><span class="wpp-dot" id="wpp-dot"></span><span id="wpp-status-text">Verificando...</span></div>
     <span class="agent-badge" onclick="promptAgent()" id="agent-label">👤 Definir nome</span>
     <button class="btn btn-report btn-sm" onclick="abrirRelatorio()">📄 Relatório do Dia</button>
+    <div style="position:relative;display:inline-flex">
+      <button class="btn btn-sm" onclick="toggleLembretes()" id="btn-sino" title="Lembretes">🔔</button>
+      <span id="sino-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1">0</span>
+    </div>
     <button class="btn btn-sm" onclick="exportData()">↓ Exportar</button>
     <button class="btn btn-sm" onclick="document.getElementById('import-file').click()">↑ Importar</button>
     <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"/>
@@ -273,6 +277,62 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 
 <div class="modal-overlay" id="modal-overlay" style="display:none" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal-content"></div></div>
 <div class="toast" id="toast"></div>
+
+<!-- PAINEL LEMBRETES -->
+<div id="painel-lembretes" style="display:none;position:fixed;top:56px;right:16px;width:360px;max-height:80vh;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:500;overflow:hidden;flex-direction:column">
+  <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+    <strong style="font-size:14px">🔔 Lembretes</strong>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary btn-sm" onclick="abrirModalLembrete()">+ Novo</button>
+      <span onclick="toggleLembretes()" style="cursor:pointer;color:var(--text3);font-size:18px;line-height:1">&times;</span>
+    </div>
+  </div>
+  <div style="overflow-y:auto;flex:1" id="lembretes-lista"></div>
+</div>
+
+<!-- MODAL NOVO LEMBRETE -->
+<div id="modal-lembrete" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:400px;max-width:95vw;box-shadow:var(--shadow-md)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <strong style="font-size:15px">Novo Lembrete</strong>
+      <span onclick="document.getElementById('modal-lembrete').style.display='none'" style="cursor:pointer;color:var(--text3);font-size:20px">&times;</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">TIPO</label>
+        <select id="lemb-tipo" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+          <option value="cobranca">💰 Cobrar cliente</option>
+          <option value="coleta">📦 Coleta agendada</option>
+          <option value="entrega">🚚 Entrega prevista</option>
+          <option value="reuniao">🤝 Reunião / Ligação</option>
+          <option value="outro">📌 Outro</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">DESCRIÇÃO *</label>
+        <input id="lemb-desc" placeholder="Ex: Ligar para João sobre proposta" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">CLIENTE (opcional)</label>
+        <input id="lemb-cliente" placeholder="Nome do cliente" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">DATA *</label>
+          <input id="lemb-data" type="date" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">HORA</label>
+          <input id="lemb-hora" type="time" value="08:00" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="document.getElementById('modal-lembrete').style.display='none'">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarLembrete()">Salvar</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const STAGES=['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'];
@@ -1233,8 +1293,163 @@ function getLeadsMes() {
   return leads.filter(l => l.ts >= inicio.getTime() && l.ts < fim.getTime());
 }
 
+
+// ═══════════════════════════════════════════
+//  LEMBRETES
+// ═══════════════════════════════════════════
+let lembretes = JSON.parse(localStorage.getItem('crm-lembretes')||'[]');
+let painelAberto = false;
+
+function salvarLembretes() { localStorage.setItem('crm-lembretes', JSON.stringify(lembretes)); }
+
+function toggleLembretes() {
+  painelAberto = !painelAberto;
+  const p = document.getElementById('painel-lembretes');
+  p.style.display = painelAberto ? 'flex' : 'none';
+  if(painelAberto) renderLembretes();
+}
+
+function abrirModalLembrete() {
+  const hoje = new Date().toISOString().slice(0,10);
+  document.getElementById('lemb-data').value = hoje;
+  document.getElementById('lemb-desc').value = '';
+  document.getElementById('lemb-cliente').value = '';
+  document.getElementById('modal-lembrete').style.display = 'flex';
+}
+
+function salvarLembrete() {
+  const desc = document.getElementById('lemb-desc').value.trim();
+  const data = document.getElementById('lemb-data').value;
+  if(!desc || !data) { alert('Preencha descrição e data.'); return; }
+  const lemb = {
+    id: Date.now().toString(36),
+    tipo: document.getElementById('lemb-tipo').value,
+    desc,
+    cliente: document.getElementById('lemb-cliente').value.trim(),
+    data,
+    hora: document.getElementById('lemb-hora').value || '08:00',
+    done: false,
+    ts: Date.now()
+  };
+  lembretes.unshift(lemb);
+  salvarLembretes();
+  document.getElementById('modal-lembrete').style.display = 'none';
+  renderLembretes();
+  atualizarSino();
+  toast('Lembrete salvo!');
+}
+
+const LEMB_TIPOS = {
+  cobranca: {icon:'💰', label:'Cobrar cliente', cor:'var(--green)'},
+  coleta:   {icon:'📦', label:'Coleta', cor:'var(--orange)'},
+  entrega:  {icon:'🚚', label:'Entrega', cor:'var(--blue)'},
+  reuniao:  {icon:'🤝', label:'Reunião', cor:'var(--purple)'},
+  outro:    {icon:'📌', label:'Outro', cor:'var(--text3)'}
+};
+
+function renderLembretes() {
+  const el = document.getElementById('lembretes-lista');
+  if(!el) return;
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const amanha = new Date(hoje); amanha.setDate(amanha.getDate()+1);
+  
+  const pendentes = lembretes.filter(l=>!l.done).sort((a,b)=>a.data.localeCompare(b.data));
+  const concluidos = lembretes.filter(l=>l.done).slice(0,5);
+  
+  if(!pendentes.length && !concluidos.length) {
+    el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text3);font-size:13px">Nenhum lembrete ainda.<br>Clique em + Novo para criar.</div>';
+    return;
+  }
+  
+  const renderItem = l => {
+    const t = LEMB_TIPOS[l.tipo] || LEMB_TIPOS.outro;
+    const dataLemb = new Date(l.data+'T'+l.hora);
+    const dataBase = new Date(l.data); dataBase.setHours(0,0,0,0);
+    const atrasado = !l.done && dataBase < hoje;
+    const hoje_ = !l.done && dataBase.getTime() === hoje.getTime();
+    const amanha_ = !l.done && dataBase.getTime() === amanha.getTime();
+    const statusCor = atrasado ? '#ef4444' : hoje_ ? '#f97316' : amanha_ ? '#f59e0b' : 'var(--text3)';
+    const statusTxt = atrasado ? '⚠️ Atrasado' : hoje_ ? '🔴 Hoje' : amanha_ ? '🟡 Amanhã' : l.data.split('-').reverse().slice(0,2).join('/');
+    return `<div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;${l.done?'opacity:.5':''}">
+      <div style="font-size:20px;flex-shrink:0">${t.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;${l.done?'text-decoration:line-through;color:var(--text3)':''}">${l.desc}</div>
+        ${l.cliente?`<div style="font-size:12px;color:var(--text2);margin-top:2px">👤 ${l.cliente}</div>`:''}
+        <div style="font-size:11px;color:${statusCor};margin-top:4px;font-weight:600">${statusTxt} ${l.hora?'às '+l.hora:''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+        ${!l.done?`<button onclick="concluirLembrete('${l.id}')" style="font-size:10px;padding:3px 8px;background:rgba(34,197,94,.2);border:1px solid var(--green);border-radius:4px;cursor:pointer;color:var(--green)">✓ Ok</button>`:''}
+        <button onclick="deletarLembrete('${l.id}')" style="font-size:10px;padding:3px 8px;background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:4px;cursor:pointer;color:var(--red)">🗑</button>
+      </div>
+    </div>`;
+  };
+
+  let html = '';
+  if(pendentes.length) {
+    html += `<div style="padding:8px 16px;font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)">Pendentes (${pendentes.length})</div>`;
+    html += pendentes.map(renderItem).join('');
+  }
+  if(concluidos.length) {
+    html += `<div style="padding:8px 16px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)">Concluídos</div>`;
+    html += concluidos.map(renderItem).join('');
+  }
+  el.innerHTML = html;
+}
+
+function concluirLembrete(id) {
+  const l = lembretes.find(x=>x.id===id);
+  if(l) { l.done=true; salvarLembretes(); renderLembretes(); atualizarSino(); toast('Lembrete concluído!'); }
+}
+function deletarLembrete(id) {
+  lembretes = lembretes.filter(x=>x.id!==id);
+  salvarLembretes(); renderLembretes(); atualizarSino();
+}
+
+function atualizarSino() {
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const amanha = new Date(hoje); amanha.setDate(amanha.getDate()+1);
+  const urgentes = lembretes.filter(l => {
+    if(l.done) return false;
+    const d = new Date(l.data); d.setHours(0,0,0,0);
+    return d <= amanha;
+  });
+  const badge = document.getElementById('sino-badge');
+  if(badge) {
+    if(urgentes.length > 0) {
+      badge.style.display = 'flex';
+      badge.textContent = urgentes.length;
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+}
+
+function verificarLembretes() {
+  const agora = new Date();
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  lembretes.filter(l=>!l.done).forEach(l => {
+    const prazo = new Date(l.data+'T'+(l.hora||'08:00'));
+    const diff = prazo - agora;
+    // Disparar se estiver entre -1min e +5min do prazo
+    if(diff >= -60000 && diff <= 300000 && !l._notificado) {
+      l._notificado = true;
+      const t = LEMB_TIPOS[l.tipo]||LEMB_TIPOS.outro;
+      toast(t.icon+' '+l.desc+(l.cliente?' — '+l.cliente:''));
+      atualizarSino();
+      // Abrir painel automaticamente
+      if(!painelAberto) toggleLembretes();
+    }
+  });
+}
+
+// Verificar a cada 60 segundos
+setInterval(verificarLembretes, 60000);
+setInterval(atualizarSino, 300000);
+
 // ─── INIT ───────────────────────────────────────────────
 updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
+atualizarSino();
+verificarLembretes();
 if(!leads.length){
   const demo=[
     {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'Macapá/AP',rota:'Tijucas/SC → Macapá/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 · 2 a 3 dias úteis. Intermediário — aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
