@@ -378,18 +378,49 @@ function somaFrete(arr){
   },0);
 }
 function updateStats(){
-  const leadsMes = typeof getLeadsMes === 'function' ? getLeadsMes() : leads;
+  const todosMes = typeof getLeadsMes === 'function' ? getLeadsMes() : leads;
   const mes = typeof getMesAtual === 'function' ? getMesAtual() : new Date();
   const nomeMes = typeof MESES !== 'undefined' ? MESES[mes.getMonth()]+' '+mes.getFullYear() : '';
+  const el = id => document.getElementById(id);
+
+  // Filtrar por perfil ativo
+  let leadsMes = todosMes;
+  if(typeof perfilAtivo !== 'undefined' && perfilAtivo && typeof PERFIS !== 'undefined' && !verTodos) {
+    const p = PERFIS[perfilAtivo];
+    const outro = perfilAtivo === 'beatriz' ? 'davi' : 'beatriz';
+    const pOutro = PERFIS[outro];
+    // Leads do perfil ativo: por agente ou por etapa
+    leadsMes = todosMes.filter(l => l.agent === p.nome || (!l.agent && p.stages.includes(l.stage)));
+    const leadsOutro = todosMes.filter(l => l.agent === pOutro.nome || (!l.agent && pOutro.stages.includes(l.stage)));
+    // Mini barra do outro perfil
+    const stagesNegOutro = pOutro.stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido');
+    const ganhosOutro = leadsOutro.filter(l=>l.stage==='Fechado / Ganho');
+    const perdidosOutro = leadsOutro.filter(l=>l.stage==='Perdido');
+    const negOutro = leadsOutro.filter(l=>stagesNegOutro.includes(l.stage));
+    const srOutro = leadsOutro.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
+    if(el('stats-bar-outro')) el('stats-bar-outro').style.display='flex';
+    if(el('stats-outro-label')) el('stats-outro-label').textContent = pOutro.emoji+' '+pOutro.nome;
+    if(el('outro-total')) el('outro-total').textContent = leadsOutro.length;
+    if(el('outro-ganho')) el('outro-ganho').textContent = fmtValorStat(somaFrete(ganhosOutro));
+    if(el('outro-perdido')) el('outro-perdido').textContent = fmtValorStat(somaFrete(perdidosOutro));
+    if(el('outro-neg')) el('outro-neg').textContent = fmtValorStat(somaFrete(negOutro));
+    if(el('outro-semretorno')) el('outro-semretorno').textContent = srOutro.length;
+    if(el('stat-total-label')) el('stat-total-label').textContent = p.emoji+' '+p.nome+' · '+nomeMes;
+  } else {
+    if(el('stats-bar-outro')) el('stats-bar-outro').style.display='none';
+    if(el('stat-total-label')) el('stat-total-label').textContent = nomeMes||'Total do mês';
+  }
+
+  const stagesNeg = typeof PERFIS !== 'undefined' && perfilAtivo && PERFIS[perfilAtivo]
+    ? PERFIS[perfilAtivo].stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido')
+    : ['Proposta enviada','Negociação','Qualificação','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal'];
 
   const ganhos = leadsMes.filter(l=>l.stage==='Fechado / Ganho');
   const perdidos = leadsMes.filter(l=>l.stage==='Perdido');
-  const emNeg = leadsMes.filter(l=>['Proposta enviada','Negociação','Qualificação'].includes(l.stage));
+  const emNeg = leadsMes.filter(l=>stagesNeg.includes(l.stage));
   const semRetorno = leadsMes.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
 
-  const el = id => document.getElementById(id);
   if(el('stat-total')) el('stat-total').textContent = leadsMes.length;
-  if(el('stat-total-label')) el('stat-total-label').textContent = nomeMes||'Total do mês';
   if(el('stat-ganho')) el('stat-ganho').textContent = fmtValorStat(somaFrete(ganhos));
   if(el('stat-perdido')) el('stat-perdido').textContent = fmtValorStat(somaFrete(perdidos));
   if(el('stat-negociacao')) el('stat-negociacao').textContent = fmtValorStat(somaFrete(emNeg));
@@ -421,7 +452,13 @@ function renderKanban(){
   const leadsMes=getLeadsMes();
   const stagesAtivos = window.STAGES || STAGES;
   const stageColorsAtivos = window.STAGE_COLORS || STAGE_COLORS;
-  const leadsPerfilMes = getLeadsPerfil ? getLeadsPerfil().filter(l => { const inicio=getMesAtual(),fim=new Date(inicio);fim.setMonth(fim.getMonth()+1);return l.ts>=inicio.getTime()&&l.ts<fim.getTime(); }) : leadsMes;
+  // Filtrar por perfil ativo
+  let leadsParaFiltrar = leadsMes;
+  if(typeof perfilAtivo !== 'undefined' && perfilAtivo && typeof PERFIS !== 'undefined' && !verTodos) {
+    const pAtivo = PERFIS[perfilAtivo];
+    leadsParaFiltrar = leadsMes.filter(l => l.agent === pAtivo.nome || (!l.agent && pAtivo.stages.includes(l.stage)));
+  }
+  const leadsPerfilMes = leadsParaFiltrar;
   stagesAtivos.forEach(stage=>{
     let cards=leadsPerfilMes.filter(l=>l.stage===stage);
     if(q)cards=cards.filter(l=>(l.name+l.prod+l.tel+l.obs+(l.rota||'')).toLowerCase().includes(q));
