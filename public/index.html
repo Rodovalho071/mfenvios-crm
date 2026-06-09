@@ -390,12 +390,10 @@ function updateStats(){
     const outro = perfilAtivo === 'beatriz' ? 'davi' : 'beatriz';
     const pOutro = PERFIS[outro];
     // Leads do perfil ativo: por agente ou por etapa
-    // Leads do perfil ativo: por agente (prioritário) OU por etapa (compatibilidade)
     leadsMes = todosMes.filter(l => {
       if(l.agent && l.agent !== '') return l.agent === p.nome;
       return p.stages.includes(l.stage);
     });
-    // Leads do outro perfil
     const leadsOutro = todosMes.filter(l => {
       if(l.agent && l.agent !== '') return l.agent === pOutro.nome;
       return pOutro.stages.includes(l.stage) && !p.stages.includes(l.stage);
@@ -460,7 +458,7 @@ function renderKanban(){
   const leadsMes=getLeadsMes();
   const stagesAtivos = window.STAGES || STAGES;
   const stageColorsAtivos = window.STAGE_COLORS || STAGE_COLORS;
-  // Filtrar por perfil ativo (consistente com getLeadsPerfil)
+  // Filtrar por perfil ativo
   let leadsPerfilMes;
   if(verTodos || !perfilAtivo) {
     leadsPerfilMes = leadsMes;
@@ -841,7 +839,11 @@ function abrirRelatorio(){
     ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
   </div>`:''}
   <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
+</body></html>`;
 
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+  setTimeout(()=>w.print(),500);
+}
 
 <!-- OPERACIONAL VIEW -->
 <div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
@@ -930,7 +932,6 @@ function abrirRelatorio(){
     <div style="margin-top:24px;font-size:12px;color:var(--text3)">Você pode alternar o perfil a qualquer momento clicando no seu nome</div>
   </div>
 </div>
-
 
 
 // ─── IA ───────────────────────────────────────────────
@@ -1091,7 +1092,7 @@ async function enviarMsg(phone){
 async function loadWppMessages(){
   const dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
   try{
-    const _inst=getInstanciaAtiva(); const res=await fetch(WPP_SERVER+'/messages'+(_inst?'?instance='+_inst:''));if(!res.ok)throw new Error();
+    const res=await fetch(WPP_SERVER+'/messages');if(!res.ok)throw new Error();
     wppMsgs=await res.json();
     dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
     const badge=document.getElementById('wpp-badge');
@@ -1117,7 +1118,7 @@ async function wppToLead(id,name,phone,text){
 async function deleteWppMsg(id){try{await fetch(WPP_SERVER+'/messages/'+id,{method:'DELETE'});loadWppMessages();}catch(e){}}
 function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',()=>loadWppMessages());es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
 conectarSSE();
-setInterval(()=>{const _i=getInstanciaAtiva();fetch(WPP_SERVER+'/messages'+(_i?'?instance='+_i:'')).then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
+setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
 
 // ═══════════════════════════════════════════
@@ -1558,13 +1559,6 @@ const PERFIS = {
   }
 };
 
-// Mapeamento perfil → instância WhatsApp
-const PERFIL_INSTANCIA = { beatriz: 'mfenvios', davi: 'mfenvios-davi' };
-function getInstanciaAtiva() {
-  if (!perfilAtivo || verTodos) return null;
-  return PERFIL_INSTANCIA[perfilAtivo] || null;
-}
-
 let perfilAtivo = localStorage.getItem('crm-perfil') || null;
 let verTodos = false;
 
@@ -1648,7 +1642,6 @@ function getLeadsPerfil() {
   if(verTodos || !perfilAtivo) return leads;
   const p = PERFIS[perfilAtivo];
   if(!p) return leads;
-  // Filtra por agent quando definido, usa etapa como fallback para leads antigos
   return leads.filter(l => {
     if(l.agent && l.agent !== '') return l.agent === p.nome;
     return p.stages.includes(l.stage);
