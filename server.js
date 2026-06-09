@@ -230,6 +230,20 @@ app.post('/analisar',async function(req,res){
   }catch(e){res.status(500).json({error:e.message});}
 });
 
+app.post('/kanban-import',async function(req,res){
+  const lead = req.body;
+  if(!lead||!lead.id) return res.status(400).json({error:'lead invalido'});
+  try {
+    if(kanbanCol) {
+      await kanbanCol.updateOne({id:lead.id},{$set:lead},{upsert:true});
+    } else {
+      const i = memKanban.cards.findIndex(c=>c.id===lead.id);
+      if(i>=0) memKanban.cards[i]=lead; else memKanban.cards.push(lead);
+    }
+    res.json({ok:true});
+  } catch(e) { res.status(500).json({error:e.message}); }
+});
+
 app.get('/tarefas',async function(req,res){res.json(await colFind(tarefasCol,memTarefas));});
 app.post('/tarefas',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(tarefasCol,memTarefas,item);res.json({ok:true,item});});
 app.put('/tarefas/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(tarefasCol,memTarefas,item);res.json({ok:true,item});});
