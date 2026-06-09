@@ -845,6 +845,112 @@ function abrirRelatorio(){
   setTimeout(()=>w.print(),500);
 }
 
+
+let perfilAtivo = localStorage.getItem('crm-perfil') || null;
+let verTodos = false;
+
+function selecionarPerfil(perfil) {
+  perfilAtivo = perfil;
+  localStorage.setItem('crm-perfil', perfil);
+  document.getElementById('splash-perfil').style.display = 'none';
+  aplicarPerfil();
+}
+
+function aplicarPerfil() {
+  if(!perfilAtivo) return;
+  const p = PERFIS[perfilAtivo];
+  
+  // Atualizar label
+  const label = document.getElementById('agent-label');
+  if(label) label.textContent = p.emoji + ' ' + p.nome;
+  
+  // Atualizar STAGES global
+  window.STAGES = p.stages;
+  window.STAGE_COLORS = p.stageColors;
+  
+  // Atualizar STAGE_PILL
+  window.STAGE_PILL = {};
+  Object.entries(p.stageColors).forEach(([k,v]) => {
+    window.STAGE_PILL[k] = 'background:'+v+'33;color:'+v;
+  });
+  
+  // Atualizar agentName
+  if(!agentName) { agentName = p.nome; save('crm-agent', p.nome); }
+  
+  // Atualizar WPP_SERVER instance (para envio de msgs)
+  window.WPP_INSTANCE = p.instancia;
+  window.WPP_APIKEY = p.apikey;
+  
+  renderKanban();
+  updateStats();
+  updateAgentFilters();
+  atualizarSino();
+}
+
+function mostrarTrocaPerfil() {
+  const outro = perfilAtivo === 'beatriz' ? 'davi' : 'beatriz';
+  const pOutro = PERFIS[outro];
+  
+  const opcoes = document.createElement('div');
+  opcoes.style.cssText = 'position:fixed;top:56px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:500;padding:8px;min-width:220px';
+  opcoes.innerHTML = `
+    <div style="padding:8px 12px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Trocar perfil</div>
+    <div onclick="selecionarPerfil('${outro}');this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-size:20px">${pOutro.emoji}</span>
+      <div><div style="font-size:13px;font-weight:600">${pOutro.nome}</div><div style="font-size:11px;color:var(--text3)">${pOutro.instancia}</div></div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0">
+    <div onclick="verTodosLeads();this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-size:20px">👥</span>
+      <div><div style="font-size:13px;font-weight:600">Ver todos os leads</div><div style="font-size:11px;color:var(--text3)">Beatriz + Davi</div></div>
+    </div>
+    <div onclick="this.parentElement.remove()" style="padding:8px 12px;font-size:12px;color:var(--text3);cursor:pointer;text-align:center">Fechar</div>
+  `;
+  document.body.appendChild(opcoes);
+  setTimeout(() => { document.addEventListener('click', function rm(e){ if(!opcoes.contains(e.target)){opcoes.remove();document.removeEventListener('click',rm);} }); }, 100);
+}
+
+function verTodosLeads() {
+  verTodos = true;
+  // Mostrar todos os estágios dos dois perfis
+  const allStages = [...new Set([...PERFIS.beatriz.stages, ...PERFIS.davi.stages])];
+  window.STAGES = allStages;
+  const allColors = {...PERFIS.beatriz.stageColors, ...PERFIS.davi.stageColors};
+  window.STAGE_COLORS = allColors;
+  const label = document.getElementById('agent-label');
+  if(label) label.textContent = '👥 Todos os leads';
+  renderKanban();
+  updateStats();
+  toast('Mostrando leads de todos os usuários');
+}
+
+// Filtrar leads por perfil no renderKanban
+function getLeadsPerfil() {
+  if(verTodos || !perfilAtivo) return leads;
+  const p = PERFIS[perfilAtivo];
+  if(!p) return leads;
+  return leads.filter(l => {
+    if(l.agent && l.agent !== '') return l.agent === p.nome;
+    return p.stages.includes(l.stage);
+  });
+}
+
+// ─── INIT ───────────────────────────────────────────────
+updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
+atualizarSino();
+verificarLembretes();
+// Inicializar perfil
+if(perfilAtivo) { document.getElementById('splash-perfil').style.display='none'; aplicarPerfil(); }
+if(!leads.length){
+  const demo=[
+    {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'Macapá/AP',rota:'Tijucas/SC → Macapá/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 · 2 a 3 dias úteis. Intermediário — aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
+    {id:uid(),name:'Isabella Guarnier',tel:'5511982517687',material:'Volumes',origem:'São Paulo/SP',destino:'Itacoatiara/AM',rota:'São Paulo/SP → Itacoatiara/AM',volumes:'2 volumes',peso:'42kg',medidas:'47x47x50cm',valorNF:'3.258,75',stage:'Negociação',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 1.717,00 · 6 dias úteis. Lead disse "Perfeito. Obrigada!" Aguardando confirmação.',urgencia:'',hot:true,ts:Date.now()-7200000,followups:[{text:'Confirmar fechamento — R$ 1.717,00',date:'',done:false}],history:[{text:'Proposta enviada.',ts:Date.now()-7200000,agent:'Beatriz'}]},
+  ];
+  leads=demo;saveLeads();activity=[{msg:'Lead <strong>Wanderley Cruz</strong> em proposta',ts:Date.now()-3600000},{msg:'Lead <strong>Isabella Guarnier</strong> em negociação 🔥',ts:Date.now()-7200000}];saveActivity();updateAgentFilters();updateStats();
+}
+renderKanban();
+</script>
+
 <!-- OPERACIONAL VIEW -->
 <div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
 
@@ -1558,110 +1664,6 @@ const PERFIS = {
     stageColors: {'Novo':'#3b82f6','Aguardando Retorno':'#f59e0b','Cotação Enviada':'#8b5cf6','Emissão':'#f97316','Coleta':'#06b6d4','Cobrança':'#ec4899','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
   }
 };
-
-let perfilAtivo = localStorage.getItem('crm-perfil') || null;
-let verTodos = false;
-
-function selecionarPerfil(perfil) {
-  perfilAtivo = perfil;
-  localStorage.setItem('crm-perfil', perfil);
-  document.getElementById('splash-perfil').style.display = 'none';
-  aplicarPerfil();
-}
-
-function aplicarPerfil() {
-  if(!perfilAtivo) return;
-  const p = PERFIS[perfilAtivo];
-  
-  // Atualizar label
-  const label = document.getElementById('agent-label');
-  if(label) label.textContent = p.emoji + ' ' + p.nome;
-  
-  // Atualizar STAGES global
-  window.STAGES = p.stages;
-  window.STAGE_COLORS = p.stageColors;
-  
-  // Atualizar STAGE_PILL
-  window.STAGE_PILL = {};
-  Object.entries(p.stageColors).forEach(([k,v]) => {
-    window.STAGE_PILL[k] = 'background:'+v+'33;color:'+v;
-  });
-  
-  // Atualizar agentName
-  if(!agentName) { agentName = p.nome; save('crm-agent', p.nome); }
-  
-  // Atualizar WPP_SERVER instance (para envio de msgs)
-  window.WPP_INSTANCE = p.instancia;
-  window.WPP_APIKEY = p.apikey;
-  
-  renderKanban();
-  updateStats();
-  updateAgentFilters();
-  atualizarSino();
-}
-
-function mostrarTrocaPerfil() {
-  const outro = perfilAtivo === 'beatriz' ? 'davi' : 'beatriz';
-  const pOutro = PERFIS[outro];
-  
-  const opcoes = document.createElement('div');
-  opcoes.style.cssText = 'position:fixed;top:56px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:500;padding:8px;min-width:220px';
-  opcoes.innerHTML = `
-    <div style="padding:8px 12px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Trocar perfil</div>
-    <div onclick="selecionarPerfil('${outro}');this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
-      <span style="font-size:20px">${pOutro.emoji}</span>
-      <div><div style="font-size:13px;font-weight:600">${pOutro.nome}</div><div style="font-size:11px;color:var(--text3)">${pOutro.instancia}</div></div>
-    </div>
-    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0">
-    <div onclick="verTodosLeads();this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
-      <span style="font-size:20px">👥</span>
-      <div><div style="font-size:13px;font-weight:600">Ver todos os leads</div><div style="font-size:11px;color:var(--text3)">Beatriz + Davi</div></div>
-    </div>
-    <div onclick="this.parentElement.remove()" style="padding:8px 12px;font-size:12px;color:var(--text3);cursor:pointer;text-align:center">Fechar</div>
-  `;
-  document.body.appendChild(opcoes);
-  setTimeout(() => { document.addEventListener('click', function rm(e){ if(!opcoes.contains(e.target)){opcoes.remove();document.removeEventListener('click',rm);} }); }, 100);
-}
-
-function verTodosLeads() {
-  verTodos = true;
-  // Mostrar todos os estágios dos dois perfis
-  const allStages = [...new Set([...PERFIS.beatriz.stages, ...PERFIS.davi.stages])];
-  window.STAGES = allStages;
-  const allColors = {...PERFIS.beatriz.stageColors, ...PERFIS.davi.stageColors};
-  window.STAGE_COLORS = allColors;
-  const label = document.getElementById('agent-label');
-  if(label) label.textContent = '👥 Todos os leads';
-  renderKanban();
-  updateStats();
-  toast('Mostrando leads de todos os usuários');
-}
-
-// Filtrar leads por perfil no renderKanban
-function getLeadsPerfil() {
-  if(verTodos || !perfilAtivo) return leads;
-  const p = PERFIS[perfilAtivo];
-  if(!p) return leads;
-  return leads.filter(l => {
-    if(l.agent && l.agent !== '') return l.agent === p.nome;
-    return p.stages.includes(l.stage);
-  });
-}
-
-// ─── INIT ───────────────────────────────────────────────
-updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
-atualizarSino();
-verificarLembretes();
-// Inicializar perfil
-if(perfilAtivo) { document.getElementById('splash-perfil').style.display='none'; aplicarPerfil(); }
-if(!leads.length){
-  const demo=[
-    {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'Macapá/AP',rota:'Tijucas/SC → Macapá/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 · 2 a 3 dias úteis. Intermediário — aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
-    {id:uid(),name:'Isabella Guarnier',tel:'5511982517687',material:'Volumes',origem:'São Paulo/SP',destino:'Itacoatiara/AM',rota:'São Paulo/SP → Itacoatiara/AM',volumes:'2 volumes',peso:'42kg',medidas:'47x47x50cm',valorNF:'3.258,75',stage:'Negociação',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 1.717,00 · 6 dias úteis. Lead disse "Perfeito. Obrigada!" Aguardando confirmação.',urgencia:'',hot:true,ts:Date.now()-7200000,followups:[{text:'Confirmar fechamento — R$ 1.717,00',date:'',done:false}],history:[{text:'Proposta enviada.',ts:Date.now()-7200000,agent:'Beatriz'}]},
-  ];
-  leads=demo;saveLeads();activity=[{msg:'Lead <strong>Wanderley Cruz</strong> em proposta',ts:Date.now()-3600000},{msg:'Lead <strong>Isabella Guarnier</strong> em negociação 🔥',ts:Date.now()-7200000}];saveActivity();updateAgentFilters();updateStats();
-}
-renderKanban();
 </script>
 
 <!-- OPERACIONAL VIEW -->
