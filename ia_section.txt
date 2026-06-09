@@ -1,0 +1,74 @@
+view-ia">
+  <div class="ia-content">
+    <div class="ia-left">
+      <div class="ia-card">
+        <div class="ia-card-title">Mensagem do WhatsApp</div>
+        <div class="form-group"><textarea id="ia-msg" rows="6" placeholder="Cole aqui a mensagem recebida no WhatsApp..."></textarea></div>
+        
+        <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="analisarMsg()">Analisar com IA â</button><button class="btn" onclick="document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none'">Limpar</button></div>
+      </div>
+      <div class="ia-card" id="ia-output" style="display:none">
+        <div class="ia-card-title">Resultado</div><div id="ia-result-content"></div><div id="ia-add-btn" style="margin-top:12px;display:none"></div>
+      </div>
+    </div>
+    <div class="ia-right">
+      <div class="ia-card"><div class="ia-card-title">Como usar</div><div style="font-size:13px;color:var(--text2);line-height:1.7"><p style="margin-bottom:10px">1. Cole a mensagem do WhatsApp.</p><p style="margin-bottom:10px">2. A IA extrai nome, telefone, produto, etapa e observaÃ§Ãµes.</p><p>3. Revise e clique em Adicionar ao funil.</p></div></div>
+      <div class="ia-card" style="margin-top:12px"><div class="ia-card-title">Ãltimas anÃ¡lises</div><div id="ia-history"></div></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="view" id="view-operacional">
+  <div class="op-tabs">
+    <div class="op-tab active" onclick="showOpTab('fretes')" id="optab-fretes">ð Fretes</div>
+    <div class="op-tab" onclick="showOpTab('tarefas')" id="optab-tarefas">â Tarefas</div>
+    <div class="op-tab" onclick="showOpTab('agenda')" id="optab-agenda">ð Agenda</div>
+    <div class="op-tab" onclick="showOpTab('documentos')" id="optab-documentos">ð Documentos</div>
+  </div>
+  <div class="op-content">
+
+    <!-- FRETES -->
+    <div id="op-fretes">
+      <div class="op-header">
+        <span class="op-title">Fretes em andamento</span>
+        <button class="btn btn-primary btn-sm" onclick="openNovoFrete()">+ Novo Frete</button>
+      </div>
+      <div class="frete-kanban" id="frete-kanban"></div>
+    </div>
+
+    <!-- TAREFAS -->
+    <div id="op-tarefas" style="display:none">
+      <div class="op-header">
+        <span class="op-title">Tarefas da equipe</span>
+        <button class="btn btn-primary btn-sm" onclick="openNovaTarefa()">+ Nova Tarefa</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="btn btn-sm" onclick="filtrarTarefas('todas')" id="tf-todas" style="background:var(--surface2)">Todas</button>
+        <button class="btn btn-sm" onclick="filtrarTarefas('pendentes')" id="tf-pendentes">Pendentes</button>
+        <button class="btn btn-sm" onclick="filtrarTarefas('concluidas')" id="tf-concluidas">ConcluÃ­das</button>
+      </div>
+      <div id="tarefas-list"></div>
+    </div>
+
+    <!-- AGENDA -->
+    <div id="op-agenda" style="display:none">
+      <div class="op-header">
+        <span class="op-title">Coletas e Entregas</span>
+        <button class="btn btn-primary btn-sm" onclick="openNovoAgendamento()">+ Agendar</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <input type="date" id="agenda-data" onchange="renderAgenda()" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px"/>
+        <span style="font-size:13px;color:var(--text3)" id="agenda-dia-label"></span>
+      </div>
+      <div id="agenda-list"></div>
+    </div>
+
+    <!-- DOCUMENTOS -->
+    <div id="op-documentos" style="display:none">
+      <div class="op-header">
+        <span class="op-title">Documentos</span>
+        <button class="btn btn-primary btn-sm" onclick="openNovoDoc()">+ Novo Documento</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <select id="doc-filtro-tipo" onchange="renderDocs()" style="pa
