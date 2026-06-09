@@ -166,7 +166,7 @@ app.post('/webhook',async function(req,res){
     const m=b.data;
     if(m.key&&!m.key.fromMe){
       const texto=m.message&&(m.message.conversation||m.message.extendedTextMessage&&m.message.extendedTextMessage.text)||'[midia]';
-      const msg={id:m.key.id||Date.now().toString(),name:m.pushName||'Desconhecido',phone:cleanPhone(m.key.remoteJid),text:texto,ts:Date.now()};
+      const msg={id:m.key.id||Date.now().toString(),name:m.pushName||'Desconhecido',phone:cleanPhone(m.key.remoteJid),text:texto,ts:Date.now(),instance:b.instance||''};
       await saveMessage(msg);
       broadcast('nova-mensagem',msg);
       console.log('[WH] Msg de',msg.name,':',msg.text.substring(0,60));
@@ -189,7 +189,14 @@ app.post('/webhook',async function(req,res){
   res.json({ok:true});
 });
 
-app.get('/messages',async function(req,res){res.json(await getMessages());});
+app.get('/messages',async function(req,res){
+  const inst = req.query.instance;
+  if(inst && messagesCol) {
+    const msgs = await messagesCol.find({instance:inst}).sort({ts:-1}).limit(500).toArray();
+    return res.json(msgs);
+  }
+  res.json(await getMessages());
+});
 app.delete('/messages/:id',async function(req,res){await deleteMessage(req.params.id);res.json({ok:true});});
 
 app.post('/send',async function(req,res){

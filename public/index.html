@@ -390,8 +390,16 @@ function updateStats(){
     const outro = perfilAtivo === 'beatriz' ? 'davi' : 'beatriz';
     const pOutro = PERFIS[outro];
     // Leads do perfil ativo: por agente ou por etapa
-    leadsMes = todosMes.filter(l => l.agent === p.nome || (!l.agent && p.stages.includes(l.stage)));
-    const leadsOutro = todosMes.filter(l => l.agent === pOutro.nome || (!l.agent && pOutro.stages.includes(l.stage)));
+    // Leads do perfil ativo: por agente (prioritário) OU por etapa (compatibilidade)
+    leadsMes = todosMes.filter(l => {
+      if(l.agent && l.agent !== '') return l.agent === p.nome;
+      return p.stages.includes(l.stage);
+    });
+    // Leads do outro perfil
+    const leadsOutro = todosMes.filter(l => {
+      if(l.agent && l.agent !== '') return l.agent === pOutro.nome;
+      return pOutro.stages.includes(l.stage) && !p.stages.includes(l.stage);
+    });
     // Mini barra do outro perfil
     const stagesNegOutro = pOutro.stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido');
     const ganhosOutro = leadsOutro.filter(l=>l.stage==='Fechado / Ganho');
@@ -452,13 +460,17 @@ function renderKanban(){
   const leadsMes=getLeadsMes();
   const stagesAtivos = window.STAGES || STAGES;
   const stageColorsAtivos = window.STAGE_COLORS || STAGE_COLORS;
-  // Filtrar por perfil ativo
-  let leadsParaFiltrar = leadsMes;
-  if(typeof perfilAtivo !== 'undefined' && perfilAtivo && typeof PERFIS !== 'undefined' && !verTodos) {
+  // Filtrar por perfil ativo (consistente com getLeadsPerfil)
+  let leadsPerfilMes;
+  if(verTodos || !perfilAtivo) {
+    leadsPerfilMes = leadsMes;
+  } else {
     const pAtivo = PERFIS[perfilAtivo];
-    leadsParaFiltrar = leadsMes.filter(l => l.agent === pAtivo.nome || (!l.agent && pAtivo.stages.includes(l.stage)));
+    leadsPerfilMes = pAtivo ? leadsMes.filter(l => {
+      if(l.agent && l.agent !== '') return l.agent === pAtivo.nome;
+      return pAtivo.stages.includes(l.stage);
+    }) : leadsMes;
   }
-  const leadsPerfilMes = leadsParaFiltrar;
   stagesAtivos.forEach(stage=>{
     let cards=leadsPerfilMes.filter(l=>l.stage===stage);
     if(q)cards=cards.filter(l=>(l.name+l.prod+l.tel+l.obs+(l.rota||'')).toLowerCase().includes(q));
@@ -829,7 +841,8 @@ function abrirRelatorio(){
     ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
   </div>`:''}
   <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
-  
+
+
 <!-- OPERACIONAL VIEW -->
 <div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
 
@@ -918,11 +931,7 @@ function abrirRelatorio(){
   </div>
 </div>
 
-</body></html>`;
 
-  const w=window.open('','_blank');w.document.write(html);w.document.close();
-  setTimeout(()=>w.print(),500);
-}
 
 // ─── IA ───────────────────────────────────────────────
 function saveKey(){iaKey=document.getElementById('ia-key').value;save('crm-ia-key',iaKey);}
@@ -1082,7 +1091,7 @@ async function enviarMsg(phone){
 async function loadWppMessages(){
   const dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
   try{
-    const res=await fetch(WPP_SERVER+'/messages');if(!res.ok)throw new Error();
+    const _inst=getInstanciaAtiva(); const res=await fetch(WPP_SERVER+'/messages'+(_inst?'?instance='+_inst:''));if(!res.ok)throw new Error();
     wppMsgs=await res.json();
     dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
     const badge=document.getElementById('wpp-badge');
@@ -1108,7 +1117,7 @@ async function wppToLead(id,name,phone,text){
 async function deleteWppMsg(id){try{await fetch(WPP_SERVER+'/messages/'+id,{method:'DELETE'});loadWppMessages();}catch(e){}}
 function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',()=>loadWppMessages());es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
 conectarSSE();
-setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
+setInterval(()=>{const _i=getInstanciaAtiva();fetch(WPP_SERVER+'/messages'+(_i?'?instance='+_i:'')).then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
 
 // ═══════════════════════════════════════════
@@ -1549,6 +1558,13 @@ const PERFIS = {
   }
 };
 
+// Mapeamento perfil → instância WhatsApp
+const PERFIL_INSTANCIA = { beatriz: 'mfenvios', davi: 'mfenvios-davi' };
+function getInstanciaAtiva() {
+  if (!perfilAtivo || verTodos) return null;
+  return PERFIL_INSTANCIA[perfilAtivo] || null;
+}
+
 let perfilAtivo = localStorage.getItem('crm-perfil') || null;
 let verTodos = false;
 
@@ -1629,12 +1645,14 @@ function verTodosLeads() {
 
 // Filtrar leads por perfil no renderKanban
 function getLeadsPerfil() {
-  if(verTodos) return leads;
-  if(!perfilAtivo) return leads;
-  // Filtra por responsável se definido, senão mostra todos
+  if(verTodos || !perfilAtivo) return leads;
   const p = PERFIS[perfilAtivo];
-  const doMeuPerfil = leads.filter(l => !l.agent || l.agent === p.nome || l.agent === '');
-  return doMeuPerfil.length > 0 ? doMeuPerfil : leads;
+  if(!p) return leads;
+  // Filtra por agent quando definido, usa etapa como fallback para leads antigos
+  return leads.filter(l => {
+    if(l.agent && l.agent !== '') return l.agent === p.nome;
+    return p.stages.includes(l.stage);
+  });
 }
 
 // ─── INIT ───────────────────────────────────────────────
