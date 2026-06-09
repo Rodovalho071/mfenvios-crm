@@ -344,7 +344,7 @@ function renderKanban(){
           ${lead.urgencia==='Alta'?'<span class="tag tag-urgente">⚡ Urgente</span>':''}
         </div>
         <div class="card-footer">
-          <span style="font-size:11px;color:var(--text3)">${lead.agent||''}</span>
+          <span style="font-size:11px;color:var(--text3)">${lead.agent||''}${lead.valorFrete?' · <span style="color:var(--green)">R$ '+lead.valorFrete+'</span>':''}</span>
           <span class="card-time">${fmtDate(lead.ts)}</span>
         </div>`;
       card.onclick=()=>openLead(lead.id);container.appendChild(card);
@@ -477,6 +477,10 @@ function openNewLead(stage='Primeiro contato'){
         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="nl-valorNF" placeholder="Ex: 15.000,00"/></div>
       </div>
       <div class="form-row">
+        <div class="form-group"><label class="form-label">Valor do Frete (R$)</label><input id="nl-valorFrete" placeholder="Ex: 1.200,00"/></div>
+        <div class="form-group"><label class="form-label">Transportadora</label><select id="nl-transportadora"><option value="">—</option><option value="FedEx">FedEx</option><option value="DHL">DHL</option><option value="Correios">Correios</option><option value="Jadlog">Jadlog</option><option value="Próprio">Próprio</option><option value="Outro">Outro</option></select></div>
+      </div>
+      <div class="form-row">
         <div class="form-group"><label class="form-label">Origem (cidade/UF)</label><input id="nl-origem" placeholder="Ex: São Paulo/SP"/></div>
         <div class="form-group"><label class="form-label">Destino (cidade/UF)</label><input id="nl-destino" placeholder="Ex: Manaus/AM"/></div>
       </div>
@@ -507,6 +511,8 @@ function saveLead(){
     source:document.getElementById('nl-source').value,urgencia:document.getElementById('nl-urgencia').value,
     material:document.getElementById('nl-material').value.trim(),
     valorNF:document.getElementById('nl-valorNF').value.trim(),
+    valorFrete:document.getElementById('nl-valorFrete').value.trim(),
+    transportadora:document.getElementById('nl-transportadora').value,
     origem,destino,rota,
     volumes:document.getElementById('nl-volumes').value.trim(),
     peso:document.getElementById('nl-peso').value.trim(),
@@ -559,6 +565,10 @@ function renderLeadModal(l){
       <div class="form-row">
         <div class="form-group"><label class="form-label">Material / Produto</label><input id="d-material" value="${l.material||''}" onblur="updateLeadField('${l.id}','material',this.value)"/></div>
         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="d-valorNF" value="${l.valorNF||''}" onblur="updateLeadField('${l.id}','valorNF',this.value)"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Valor do Frete (R$)</label><input id="d-valorFrete" value="${l.valorFrete||''}" onblur="updateLeadField('${l.id}','valorFrete',this.value)" placeholder="Ex: 1.200,00"/></div>
+        <div class="form-group"><label class="form-label">Transportadora</label><select id="d-transportadora" onchange="updateLeadField('${l.id}','transportadora',this.value)"><option value="" ${!l.transportadora?'selected':''}>—</option><option value="FedEx" ${l.transportadora==='FedEx'?'selected':''}>FedEx</option><option value="DHL" ${l.transportadora==='DHL'?'selected':''}>DHL</option><option value="Correios" ${l.transportadora==='Correios'?'selected':''}>Correios</option><option value="Jadlog" ${l.transportadora==='Jadlog'?'selected':''}>Jadlog</option><option value="Próprio" ${l.transportadora==='Próprio'?'selected':''}>Próprio</option><option value="Outro" ${l.transportadora==='Outro'?'selected':''}>Outro</option></select></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Origem</label><input id="d-origem" value="${l.origem||''}" onblur="updateRotaField('${l.id}')"/></div>
