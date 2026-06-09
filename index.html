@@ -103,7 +103,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="logo">MF <span class="envios">Envios</span><span class="crm"> CRM</span></div>
   <div class="topbar-right">
     <div class="wpp-status-badge"><span class="wpp-dot" id="wpp-dot"></span><span id="wpp-status-text">Verificando...</span></div>
-    <span class="agent-badge" onclick="promptAgent()" id="agent-label">👤 Definir nome</span>
+    <span class="agent-badge" onclick="mostrarTrocaPerfil()" id="agent-label" style="cursor:pointer">👤 Carregando...</span>
     <button class="btn btn-report btn-sm" onclick="abrirRelatorio()">📄 Relatório do Dia</button>
     <div style="position:relative;display:inline-flex">
       <button class="btn btn-sm" onclick="toggleLembretes()" id="btn-sino" title="Lembretes">🔔</button>
@@ -405,12 +405,15 @@ function renderKanban(){
   const ag=(document.getElementById('kanban-agent')||{}).value||'';
   const board=document.getElementById('kanban-board');board.innerHTML='';
   const leadsMes=getLeadsMes();
-  STAGES.forEach(stage=>{
-    let cards=leadsMes.filter(l=>l.stage===stage);
+  const stagesAtivos = window.STAGES || STAGES;
+  const stageColorsAtivos = window.STAGE_COLORS || STAGE_COLORS;
+  const leadsPerfilMes = getLeadsPerfil ? getLeadsPerfil().filter(l => { const inicio=getMesAtual(),fim=new Date(inicio);fim.setMonth(fim.getMonth()+1);return l.ts>=inicio.getTime()&&l.ts<fim.getTime(); }) : leadsMes;
+  stagesAtivos.forEach(stage=>{
+    let cards=leadsPerfilMes.filter(l=>l.stage===stage);
     if(q)cards=cards.filter(l=>(l.name+l.prod+l.tel+l.obs+(l.rota||'')).toLowerCase().includes(q));
     if(ag)cards=cards.filter(l=>l.agent===ag);
     const col=document.createElement('div');col.className='kanban-col';
-    col.innerHTML=`<div class="col-header"><div class="col-dot" style="background:${STAGE_COLORS[stage]}"></div><span class="col-title">${stage}</span><span class="col-count">${cards.length}</span></div><div class="col-cards" id="col-${stage.replace(/[\s\/]/g,'_')}"></div><button class="add-col-btn" onclick="openNewLead('${stage}')">+ Adicionar lead</button>`;
+    col.innerHTML=`<div class="col-header"><div class="col-dot" style="background:${stageColorsAtivos[stage]||'#666'}"></div><span class="col-title">${stage}</span><span class="col-count">${cards.length}</span></div><div class="col-cards" id="col-${stage.replace(/[\s\/]/g,'_')}"></div><button class="add-col-btn" onclick="openNewLead('${stage}')">+ Adicionar lead</button>`;
     board.appendChild(col);
     const container=col.querySelector('.col-cards');
     cards.sort((a,b)=>b.ts-a.ts).forEach(lead=>{
@@ -837,6 +840,30 @@ function abrirRelatorio(){
       <button class="btn" onclick="closeModalOp()">Cancelar</button>
       <button class="btn btn-primary" id="modal-op-save" onclick="saveModalOp()">Salvar</button>
     </div>
+  </div>
+</div>
+
+
+<!-- SPLASH PERFIL -->
+<div id="splash-perfil" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center">
+  <div style="text-align:center;max-width:480px;padding:32px">
+    <div style="font-size:28px;font-weight:800;margin-bottom:4px">MF <span style="color:var(--orange)">Envios</span> <span style="color:var(--text3);font-weight:400;font-size:18px">CRM</span></div>
+    <div style="font-size:14px;color:var(--text3);margin-bottom:40px">Selecione seu perfil para continuar</div>
+    <div style="display:flex;gap:16px;justify-content:center">
+      <div onclick="selecionarPerfil('beatriz')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--orange)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+        <div style="font-size:40px;margin-bottom:12px">👩‍💼</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">Beatriz</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">Comercial</div>
+        <div style="font-size:11px;color:var(--orange);margin-top:8px;font-weight:600">mfenvios</div>
+      </div>
+      <div onclick="selecionarPerfil('davi')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+        <div style="font-size:40px;margin-bottom:12px">👨‍💼</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">Davi</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">Operacional</div>
+        <div style="font-size:11px;color:var(--blue);margin-top:8px;font-weight:600">mfenvios-davi</div>
+      </div>
+    </div>
+    <div style="margin-top:24px;font-size:12px;color:var(--text3)">Você pode alternar o perfil a qualquer momento clicando no seu nome</div>
   </div>
 </div>
 
@@ -1446,10 +1473,125 @@ function verificarLembretes() {
 setInterval(verificarLembretes, 60000);
 setInterval(atualizarSino, 300000);
 
+
+// ═══════════════════════════════════════════
+//  PERFIS — Beatriz e Davi
+// ═══════════════════════════════════════════
+const PERFIS = {
+  beatriz: {
+    nome: 'Beatriz',
+    emoji: '👩‍💼',
+    cor: 'var(--orange)',
+    instancia: 'mfenvios',
+    apikey: 'mfenvios2024',
+    stages: ['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'],
+    stageColors: {'Primeiro contato':'#3b82f6','Qualificação':'#8b5cf6','Proposta enviada':'#f59e0b','Negociação':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
+  },
+  davi: {
+    nome: 'Davi',
+    emoji: '👨‍💼',
+    cor: 'var(--blue)',
+    instancia: 'mfenvios-davi',
+    apikey: 'mfenvios2024',
+    stages: ['Novo','Aguardando Retorno','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal','Fechado / Ganho','Perdido'],
+    stageColors: {'Novo':'#3b82f6','Aguardando Retorno':'#f59e0b','Cotação Enviada':'#8b5cf6','Emissão':'#f97316','Coleta':'#06b6d4','Cobrança':'#ec4899','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
+  }
+};
+
+let perfilAtivo = localStorage.getItem('crm-perfil') || null;
+let verTodos = false;
+
+function selecionarPerfil(perfil) {
+  perfilAtivo = perfil;
+  localStorage.setItem('crm-perfil', perfil);
+  document.getElementById('splash-perfil').style.display = 'none';
+  aplicarPerfil();
+}
+
+function aplicarPerfil() {
+  if(!perfilAtivo) return;
+  const p = PERFIS[perfilAtivo];
+  
+  // Atualizar label
+  const label = document.getElementById('agent-label');
+  if(label) label.textContent = p.emoji + ' ' + p.nome;
+  
+  // Atualizar STAGES global
+  window.STAGES = p.stages;
+  window.STAGE_COLORS = p.stageColors;
+  
+  // Atualizar STAGE_PILL
+  window.STAGE_PILL = {};
+  Object.entries(p.stageColors).forEach(([k,v]) => {
+    window.STAGE_PILL[k] = 'background:'+v+'33;color:'+v;
+  });
+  
+  // Atualizar agentName
+  if(!agentName) { agentName = p.nome; save('crm-agent', p.nome); }
+  
+  // Atualizar WPP_SERVER instance (para envio de msgs)
+  window.WPP_INSTANCE = p.instancia;
+  window.WPP_APIKEY = p.apikey;
+  
+  renderKanban();
+  updateStats();
+  updateAgentFilters();
+  atualizarSino();
+}
+
+function mostrarTrocaPerfil() {
+  const outro = perfilAtivo === 'beatriz' ? 'davi' : 'beatriz';
+  const pOutro = PERFIS[outro];
+  
+  const opcoes = document.createElement('div');
+  opcoes.style.cssText = 'position:fixed;top:56px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:500;padding:8px;min-width:220px';
+  opcoes.innerHTML = `
+    <div style="padding:8px 12px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Trocar perfil</div>
+    <div onclick="selecionarPerfil('${outro}');this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-size:20px">${pOutro.emoji}</span>
+      <div><div style="font-size:13px;font-weight:600">${pOutro.nome}</div><div style="font-size:11px;color:var(--text3)">${pOutro.instancia}</div></div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0">
+    <div onclick="verTodosLeads();this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-size:20px">👥</span>
+      <div><div style="font-size:13px;font-weight:600">Ver todos os leads</div><div style="font-size:11px;color:var(--text3)">Beatriz + Davi</div></div>
+    </div>
+    <div onclick="this.parentElement.remove()" style="padding:8px 12px;font-size:12px;color:var(--text3);cursor:pointer;text-align:center">Fechar</div>
+  `;
+  document.body.appendChild(opcoes);
+  setTimeout(() => { document.addEventListener('click', function rm(e){ if(!opcoes.contains(e.target)){opcoes.remove();document.removeEventListener('click',rm);} }); }, 100);
+}
+
+function verTodosLeads() {
+  verTodos = true;
+  // Mostrar todos os estágios dos dois perfis
+  const allStages = [...new Set([...PERFIS.beatriz.stages, ...PERFIS.davi.stages])];
+  window.STAGES = allStages;
+  const allColors = {...PERFIS.beatriz.stageColors, ...PERFIS.davi.stageColors};
+  window.STAGE_COLORS = allColors;
+  const label = document.getElementById('agent-label');
+  if(label) label.textContent = '👥 Todos os leads';
+  renderKanban();
+  updateStats();
+  toast('Mostrando leads de todos os usuários');
+}
+
+// Filtrar leads por perfil no renderKanban
+function getLeadsPerfil() {
+  if(verTodos) return leads;
+  if(!perfilAtivo) return leads;
+  // Filtra por responsável se definido, senão mostra todos
+  const p = PERFIS[perfilAtivo];
+  const doMeuPerfil = leads.filter(l => !l.agent || l.agent === p.nome || l.agent === '');
+  return doMeuPerfil.length > 0 ? doMeuPerfil : leads;
+}
+
 // ─── INIT ───────────────────────────────────────────────
 updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
 atualizarSino();
 verificarLembretes();
+// Inicializar perfil
+if(perfilAtivo) { document.getElementById('splash-perfil').style.display='none'; aplicarPerfil(); }
 if(!leads.length){
   const demo=[
     {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'Macapá/AP',rota:'Tijucas/SC → Macapá/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 · 2 a 3 dias úteis. Intermediário — aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
@@ -1521,6 +1663,30 @@ renderKanban();
       <button class="btn" onclick="closeModalOp()">Cancelar</button>
       <button class="btn btn-primary" id="modal-op-save" onclick="saveModalOp()">Salvar</button>
     </div>
+  </div>
+</div>
+
+
+<!-- SPLASH PERFIL -->
+<div id="splash-perfil" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center">
+  <div style="text-align:center;max-width:480px;padding:32px">
+    <div style="font-size:28px;font-weight:800;margin-bottom:4px">MF <span style="color:var(--orange)">Envios</span> <span style="color:var(--text3);font-weight:400;font-size:18px">CRM</span></div>
+    <div style="font-size:14px;color:var(--text3);margin-bottom:40px">Selecione seu perfil para continuar</div>
+    <div style="display:flex;gap:16px;justify-content:center">
+      <div onclick="selecionarPerfil('beatriz')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--orange)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+        <div style="font-size:40px;margin-bottom:12px">👩‍💼</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">Beatriz</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">Comercial</div>
+        <div style="font-size:11px;color:var(--orange);margin-top:8px;font-weight:600">mfenvios</div>
+      </div>
+      <div onclick="selecionarPerfil('davi')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+        <div style="font-size:40px;margin-bottom:12px">👨‍💼</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">Davi</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">Operacional</div>
+        <div style="font-size:11px;color:var(--blue);margin-top:8px;font-weight:600">mfenvios-davi</div>
+      </div>
+    </div>
+    <div style="margin-top:24px;font-size:12px;color:var(--text3)">Você pode alternar o perfil a qualquer momento clicando no seu nome</div>
   </div>
 </div>
 
