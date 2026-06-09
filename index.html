@@ -1562,11 +1562,16 @@ function getLeadsPerfil() {
 }
 
 // ─── INIT ───────────────────────────────────────────────
-updateAgentLabel();updateAgentFilters();updateStats();document.getElementById('ia-key').value=iaKey;
-atualizarSino();
-verificarLembretes();
+document.addEventListener('DOMContentLoaded', function() {
+  updateAgentLabel();updateAgentFilters();updateStats();
+  var iaKeyEl=document.getElementById('ia-key'); if(iaKeyEl) iaKeyEl.value=iaKey;
+  atualizarSino();
+  verificarLembretes();
+});
 // Inicializar perfil
-if(perfilAtivo) { document.getElementById('splash-perfil').style.display='none'; aplicarPerfil(); }
+document.addEventListener('DOMContentLoaded', function() {
+  if(perfilAtivo) { var el=document.getElementById('splash-perfil'); if(el) el.style.display='none'; aplicarPerfil(); }
+});
 if(!leads.length){
   const demo=[
     {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'Macapá/AP',rota:'Tijucas/SC → Macapá/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 · 2 a 3 dias úteis. Intermediário — aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
