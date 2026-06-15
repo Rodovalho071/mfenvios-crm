@@ -407,16 +407,11 @@ function calcVencimento(dias) {
   return d.toISOString().split('T')[0];
 }
 
-function formatMoeda(v) {
-  var n = parseMoeda(v);
-  if(isNaN(n)) return 'R$ 0,00';
-  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+function formatMoeda(v){var n=parseMoeda(v);if(isNaN(n))return 'R$ 0,00';return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});});
 });
 }
 
-function parseMoeda(v){
-  if(v===null||v===undefined||v==='')return 0;
-  if(typeof v==='number'){if(Number.isInteger(v)&&v>=1000)return v/100;return v;}
+function parseMoeda(v){if(v===null||v===undefined||v==='')return 0;if(typeof v==='number')return v;var s=v.toString().replace(/R[$]\s*/g,'').replace(/\s/g,'').trim();if(!s)return 0;if(s.indexOf(',')!==-1){s=s.replace(/[.]/g,'').replace(',','.');return parseFloat(s)||0;}if(s.indexOf('.')!==-1){var p=s.split('.');if(p.length===2&&p[1].length<=2)return parseFloat(s)||0;s=s.replace(/[.]/g,'');}return parseFloat(s)||0;}
   var s=v.toString().replace(/R\$\s*/g,'').replace(/\s/g,'').trim();
   if(s.indexOf(',')!==-1){s=s.replace(/\./g,'').replace(',','.');return parseFloat(s)||0;}
   if(s.indexOf('.')!==-1){var p=s.split('.');if(p.length===2&&p[1].length<=2)return parseFloat(s)||0;s=s.replace(/\./g,'');}
@@ -674,9 +669,7 @@ function fmtValorStat(v){
   if(v>=1000) return 'R$'+(v/1000).toFixed(0)+'k';
   return 'R$'+Math.round(v);
 }
-function somaFrete(arr){
-  return arr.reduce((s,l)=>s+parseMoeda(l.valorFrete||0),0);
-}
+function somaFrete(arr){return arr.reduce(function(s,l){return s+parseMoeda(l.valorFrete||0);},0);}
 function updateStats(){
   const todosMes = typeof getLeadsMes === 'function' ? getLeadsMes() : leads;
   const mes = typeof getMesAtual === 'function' ? getMesAtual() : new Date();
