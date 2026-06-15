@@ -400,7 +400,17 @@ function formatMoeda(v) {
 }
 
 function parseMoeda(v) {
-  return parseFloat((v||'0').replace(/\./g,'').replace(',','.')) || 0;
+  if(!v) return 0;
+  var s = v.toString().replace(/[R$\s]/g,'').trim();
+  // Formato brasileiro: 1.234,56 → remover pontos, trocar vírgula por ponto
+  if(s.indexOf(',') > s.indexOf('.')) {
+    s = s.replace(/\./g,'').replace(',','.');
+  } else {
+    // Formato americano ou sem separador de milhar
+    s = s.replace(',','');
+  }
+  var n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
 }
 
 function statusVenda(venda) {
@@ -525,10 +535,7 @@ function fecharModalVenda() {
   document.getElementById('modal-financeiro').style.display = 'none';
 }
 
-function finAtualizarVencimento() {
-  var prazo = parseInt(document.getElementById('fin-prazo').value) || 0;
-  document.getElementById('fin-vencimento').value = calcVencimento(prazo);
-}
+function finAtualizarVencimento() { /* prazo agora é select de atalho */ }
 
 function finSalvar() {
   var cliente = document.getElementById('fin-cliente').value.trim();
@@ -1349,15 +1356,16 @@ function abrirRelatorio(){
           </select></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Prazo (dias)</label>
-          <select id="fin-prazo" onchange="finAtualizarVencimento()" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
-            <option value="0">A vista</option>
-            <option value="7">7 dias</option>
-            <option value="10">10 dias</option>
-            <option value="15">15 dias</option>
-            <option value="30">30 dias</option>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Data de Vencimento *</label><input id="fin-vencimento" type="date" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Prazo rápido</label>
+          <select onchange="if(this.value){var d=new Date();d.setDate(d.getDate()+parseInt(this.value));document.getElementById('fin-vencimento').value=d.toISOString().split('T')[0];this.value='';}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
+            <option value="">Selecionar prazo...</option>
+            <option value="0">Hoje (à vista)</option>
+            <option value="7">+7 dias</option>
+            <option value="10">+10 dias</option>
+            <option value="15">+15 dias</option>
+            <option value="30">+30 dias</option>
           </select></div>
-          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Vencimento</label><input id="fin-vencimento" type="date" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
         </div>
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Observacoes</label><input id="fin-obs" type="text" placeholder="Informacoes adicionais" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
       </div>
