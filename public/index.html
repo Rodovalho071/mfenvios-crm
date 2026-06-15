@@ -374,24 +374,13 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 <script>
 
 // ═══════════════════════════════════════════════════════
-// MÓDULO FINANCEIRO — Lançamento de Vendas (MongoDB)
+// MÓDULO FINANCEIRO — Lançamento de Vendas
 // ═══════════════════════════════════════════════════════
-var vendas = [];
+var vendas = JSON.parse(localStorage.getItem('crm-vendas') || '[]');
 var vendaEditando = null;
 
 function salvarVendas() {
-  // Salvo via API — não usa localStorage
-}
-
-async function carregarVendas() {
-  try {
-    var r = await fetch('/vendas');
-    vendas = await r.json();
-    if(!Array.isArray(vendas)) vendas = [];
-  } catch(e) {
-    console.error('Erro ao carregar vendas:', e);
-    vendas = [];
-  }
+  localStorage.setItem('crm-vendas', JSON.stringify(vendas));
 }
 
 function uid_fin() {
@@ -562,35 +551,34 @@ function finSalvar() {
     return;
   }
 
-  var dadosVenda = {
-    cliente: cliente,
-    valor: valor,
-    formaPag: forma,
-    vencimento: venc,
-    descricao: desc,
-    obs: obs,
-    leadId: leadId
-  };
-
   if(vendaEditando) {
-    fetch('/vendas/' + vendaEditando, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(dadosVenda)
-    }).then(function(){ 
-      carregarVendas().then(function(){ renderFinanceiro(); }); 
-    });
+    var idx = vendas.findIndex(function(v){ return v.id===vendaEditando; });
+    if(idx >= 0) {
+      vendas[idx].cliente = cliente;
+      vendas[idx].valor = valor;
+      vendas[idx].formaPag = forma;
+      vendas[idx].vencimento = venc;
+      vendas[idx].descricao = desc;
+      vendas[idx].obs = obs;
+    }
   } else {
-    fetch('/vendas', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(dadosVenda)
-    }).then(function(){ 
-      carregarVendas().then(function(){ renderFinanceiro(); renderFinLeadsProntos(); }); 
+    vendas.push({
+      id: uid_fin(),
+      cliente: cliente,
+      valor: valor,
+      formaPag: forma,
+      vencimento: venc,
+      descricao: desc,
+      obs: obs,
+      leadId: leadId,
+      pago: false,
+      ts: Date.now()
     });
   }
 
+  salvarVendas();
   fecharModalVenda();
+  renderFinanceiro();
   if(typeof showToast === 'function') showToast('Venda salva — ' + cliente);
 }
 
@@ -598,13 +586,10 @@ function finDarBaixa(id) {
   var v = vendas.find(function(x){ return x.id===id; });
   if(!v) return;
   if(confirm('Confirmar recebimento de ' + formatMoeda(v.valor) + ' de ' + v.cliente + '?')) {
-    fetch('/vendas/' + id, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({pago:true, dataPagamento:new Date().toISOString().split('T')[0]})
-    }).then(function(){ 
-      carregarVendas().then(function(){ renderFinanceiro(); }); 
-    });
+    v.pago = true;
+    v.dataPagamento = new Date().toISOString().split('T')[0];
+    salvarVendas();
+    renderFinanceiro();
     if(typeof showToast === 'function') showToast('Pagamento registrado!');
   }
 }
@@ -627,9 +612,9 @@ function finEditar(id) {
 
 function finExcluir(id) {
   if(!confirm('Excluir esta venda?')) return;
-  fetch('/vendas/' + id, {method:'DELETE'}).then(function(){
-    carregarVendas().then(function(){ renderFinanceiro(); });
-  });
+  vendas = vendas.filter(function(v){ return v.id!==id; });
+  salvarVendas();
+  renderFinanceiro();
 }
 
 
@@ -1591,15 +1576,42 @@ let opModalMode = null, opModalId = null;
 
 function opTab(tab) {
   opCurrentTab = tab;
-  ['tarefas','fretes','agenda','docs'].forEach(t => {
-    document.getElementById('op-view-'+t).style.display = t===tab ? '' : 'none';
-    const el = document.getElementById('op-tab-'+t);
-    if(el) { el.style.borderBottomColor = t===tab ? 'var(--orange)' : 'transparent'; el.style.color = t===tab ? 'var(--text)' : ''; }
+  // Esconder todos os conteúdos
+  ['tarefas','fretes','agenda','docs'].forEach(function(t) {
+    var v = document.getElementById('op-view-'+t);
+    if(v) v.style.display = 'none';
+    var el = document.getElementById('op-tab-'+t);
+    if(el) { el.style.borderBottomColor='transparent'; el.style.color=''; }
   });
+  ['nfse','financeiro'].forEach(function(t) {
+    var c = document.getElementById('op-content-'+t);
+    if(c) c.style.display = 'none';
+    var el = document.getElementById('op-tab-'+t);
+    if(el) { el.style.borderBottomColor='transparent'; el.style.color=''; }
+  });
+  // Mostrar a aba selecionada
+  if(['tarefas','fretes','agenda','docs'].indexOf(tab) >= 0) {
+    var v = document.getElementById('op-view-'+tab);
+    if(v) v.style.display = '';
+  } else {
+    var c = document.getElementById('op-content-'+tab);
+    if(c) c.style.display = 'block';
+  }
+  // Destacar tab ativa
+  var el = document.getElementById('op-tab-'+tab);
+  if(el) { el.style.borderBottomColor='var(--orange)'; el.style.color='var(--orange)'; }
+  // Carregar dados
   if(tab==='tarefas') loadTarefas();
   if(tab==='fretes') loadFretes();
   if(tab==='agenda') loadAgenda();
   if(tab==='docs') loadDocs();
+  if(tab==='nfse') { if(typeof renderNFSeLeads==='function') renderNFSeLeads(); }
+  if(tab==='financeiro') { 
+    if(typeof carregarVendas==='function') carregarVendas().then(function(){ 
+      if(typeof renderFinanceiro==='function') renderFinanceiro(); 
+      if(typeof renderFinLeadsProntos==='function') renderFinLeadsProntos(); 
+    }); 
+  }
 }
 
 // ── TAREFAS ─────────────────────────────────
@@ -2147,7 +2159,7 @@ function opTab(tab) {
   if(tabEl) { tabEl.style.borderBottomColor = 'var(--orange)'; tabEl.style.color = 'var(--orange)'; }
   if(contEl) { contEl.style.display = 'block'; }
   if(tab === 'nfse') renderNFSeLeads();
-  if(tab === 'financeiro') { if(typeof carregarVendas==='function') carregarVendas().then(function(){ if(typeof renderFinanceiro==='function') renderFinanceiro(); if(typeof renderFinLeadsProntos==='function') renderFinLeadsProntos(); }); }
+  if(tab === 'financeiro') { renderFinanceiro(); renderFinLeadsProntos(); }
 }
 
 function renderNFSeLeads() {
