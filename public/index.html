@@ -372,6 +372,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 </div>
 
 <script>
+
 // ═══════════════════════════════════════════════════════
 // MÓDULO FINANCEIRO — Lançamento de Vendas
 // ═══════════════════════════════════════════════════════
@@ -1101,8 +1102,14 @@ function abrirRelatorio(){
     ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
   </div>`:''}
   <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
+</body></html>`;
 
-  </script>
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+</script>
+
+
 
 <!-- OPERACIONAL VIEW -->
 
@@ -1361,12 +1368,9 @@ function abrirRelatorio(){
     </div>
   </div>
 
-</body></html>`;
 
-  const w=window.open('','_blank');w.document.write(html);w.document.close();
-  setTimeout(()=>w.print(),500);
-}
 
+<script>
 
 // ─── IA ───────────────────────────────────────────────
 function saveKey(){iaKey=document.getElementById('ia-key').value;save('crm-ia-key',iaKey);}
@@ -2320,5 +2324,7 @@ function renderFinLeadsProntos() {
 }
 
 
+
+</script>
 </body>
 </html>
