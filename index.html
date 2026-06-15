@@ -379,9 +379,19 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 var vendas = [];
 var vendaEditando = null;
 function salvarVendas() {localStorage.setItem('crm-vendas',JSON.stringify(vendas));}
+function salvarVendaAPI(venda) {
+  return fetch('/vendas', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(venda)});
+}
+function deletarVendaAPI(id) {
+  return fetch('/vendas/'+id, {method:'DELETE'});
+}
 function carregarVendas() {
   return fetch('/vendas').then(function(r){return r.json();}).then(function(data){
-    vendas = Array.isArray(data) ? data : [];
+    vendas = (Array.isArray(data) ? data : []).map(function(v){
+      if(typeof v.valor === 'number' && Number.isInteger(v.valor) && v.valor >= 1000) v.valor = v.valor/100;
+      return v;
+    });
+    localStorage.removeItem('crm-vendas');
   }).catch(function(){
     vendas = JSON.parse(localStorage.getItem('crm-vendas')||'[]');
   });
@@ -582,6 +592,8 @@ function finSalvar() {
     });
   }
 
+  salvarVendaAPI(vendaEditando ? vendas.find(function(v){return v.id===vendaEditando;}) : vendas[vendas.length-1])
+    .catch(function(){});
   salvarVendas();
   fecharModalVenda();
   renderFinanceiro();
