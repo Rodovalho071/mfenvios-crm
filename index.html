@@ -645,10 +645,7 @@ function fmtValorStat(v){
   return 'R$'+Math.round(v);
 }
 function somaFrete(arr){
-  return arr.reduce((s,l)=>{
-    const v=parseFloat((l.valorFrete||'0').replace(/\./g,'').replace(',','.'));
-    return s+(isNaN(v)?0:v);
-  },0);
+  return arr.reduce((s,l)=>s+parseMoeda(l.valorFrete||0),0);
 }
 function updateStats(){
   const todosMes = typeof getLeadsMes === 'function' ? getLeadsMes() : leads;
