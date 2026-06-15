@@ -863,6 +863,97 @@ function abrirRelatorio(){
     ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
   </div>`:''}
   <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
+
+  <!-- NFSe SUB-TAB -->
+  <div id="op-content-nfse" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <div style="font-size:16px;font-weight:700;">🧾 Notas Fiscais de Serviço</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px;">Prepare e emita NFSe no sistema Metrópole de Lauro de Freitas</div>
+      </div>
+      <button onclick="abrirModalNFSe(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">+ Nova NFSe</button>
+    </div>
+    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Leads prontos para emissão (Fechado/Ganho)</div>
+    <div id="nfse-leads-lista" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;"></div>
+    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Notas emitidas este mês</div>
+    <div id="nfse-historico" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Clique em "Marcar como Emitida" após emitir no Metrópole.</div>
+    </div>
+  </div>
+
+  <!-- MODAL NFSe -->
+  <div id="modal-nfse" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5);">
+      <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1;">
+        <div style="font-size:16px;font-weight:700;">🧾 Emitir <span style="color:var(--orange)">NFSe</span></div>
+        <button onclick="fecharModalNFSe()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;">✕</button>
+      </div>
+      <div style="padding:16px 24px 0;">
+        <div style="display:flex;gap:0;background:var(--bg3);border-radius:8px;padding:4px;">
+          <div id="nfse-step-1" onclick="nfseIrStep(1)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:var(--orange);color:white;">1 · Tomador</div>
+          <div id="nfse-step-2" onclick="nfseIrStep(2)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);">2 · Serviço</div>
+          <div id="nfse-step-3" onclick="nfseIrStep(3)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);">3 · Emitir</div>
+        </div>
+      </div>
+      <div style="padding:24px;">
+        <!-- Step 1 -->
+        <div id="nfse-content-1">
+          <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text2);margin-bottom:16px;">ℹ Confirme os dados do tomador (quem contratou o serviço).</div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px;">Tipo de Pessoa</div>
+            <div style="display:flex;gap:8px;">
+              <div id="nfse-tipo-jur" onclick="nfseTipo('juridica')" style="flex:1;padding:8px;background:var(--orange);border:1px solid var(--orange);border-radius:6px;color:white;font-size:12px;font-weight:600;cursor:pointer;text-align:center;">🏢 Jurídica</div>
+              <div id="nfse-tipo-fis" onclick="nfseTipo('fisica')" style="flex:1;padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;text-align:center;">👤 Física</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CNPJ/CPF *</label><input id="nf-cnpj" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="00.000.000/0000-00"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Razão Social *</label><input id="nf-razao" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          </div>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Endereço</label><input id="nf-end" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 130px;gap:12px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Município *</label><input id="nf-mun" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">UF *</label><input id="nf-uf" type="text" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;text-transform:uppercase;"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CEP</label><input id="nf-cep" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="00000-000"></div>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div id="nfse-content-2" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Competência (MM/AAAA) *</label><input id="nf-comp" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="06/2026"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Valor Total R$ *</label><input id="nf-valor" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="0,00"></div>
+          </div>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Discriminação do Serviço *</label><textarea id="nf-disc" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;resize:vertical;min-height:72px;font-family:inherit;" placeholder="Ex: Coleta em Sao Paulo/SP e entrega em Salvador/BA"></textarea></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Atividade *</label>
+            <select id="nf-ativ" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
+              <option value="0005120000">0005120000 - Transporte Aereo De Carga</option>
+              <option value="0005110000">0005110000 - Transporte Rodoviario De Carga</option>
+            </select></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Alíquota (%) *</label><input id="nf-aliq" type="text" value="3,00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Informações Complementares</label><input id="nf-info" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+        </div>
+        <!-- Step 3 -->
+        <div id="nfse-content-3" style="display:none;">
+          <div id="nf-valor-dest" style="font-size:24px;font-weight:800;color:var(--orange);text-align:center;padding:16px;background:rgba(249,115,22,.08);border-radius:8px;margin-bottom:16px;">R$ 0,00</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;">
+            <div style="padding:12px 16px;background:rgba(249,115,22,.1);border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--orange);">📋 Passo a passo no Metrópole</div>
+            <div id="nf-instrucoes"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Footer modal -->
+      <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:var(--bg2);">
+        <div id="nf-btn-voltar" style="display:none;"><button onclick="nfseIrStep(nfseStep-1)" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">← Voltar</button></div>
+        <button onclick="fecharModalNFSe()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+        <div id="nf-btn-avancar"><button onclick="nfseIrStep(nfseStep+1)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Avançar →</button></div>
+        <div id="nf-btn-emitir" style="display:none;"><button onclick="nfseAbrirMetropole()" style="background:#22c55e;color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">🌐 Abrir Metrópole</button></div>
+        <div id="nf-btn-marcar" style="display:none;"><button onclick="nfseMarcarEmitida()" style="background:var(--blue);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">✓ Marcar como Emitida</button></div>
+      </div>
+    </div>
+  </div>
+
 </body></html>`;
 
   const w=window.open('','_blank');w.document.write(html);w.document.close();
@@ -1604,6 +1695,202 @@ if(!leads.length){
 }
 renderKanban();
 
+
+// MÓDULO NFSe
+var nfseStep = 1;
+var nfseTipoPessoa = 'juridica';
+var nfseLeadAtual = null;
+var nfseEmitidas = JSON.parse(localStorage.getItem('crm-nfse-emitidas') || '[]');
+
+function opTab(tab) {
+  document.querySelectorAll('[id^="op-tab-"]').forEach(function(t) {
+    t.style.borderBottomColor = 'transparent';
+    t.style.color = 'var(--text2)';
+  });
+  document.querySelectorAll('[id^="op-content-"]').forEach(function(c) { c.style.display = 'none'; });
+  var tabEl = document.getElementById('op-tab-' + tab);
+  var contEl = document.getElementById('op-content-' + tab);
+  if(tabEl) { tabEl.style.borderBottomColor = 'var(--orange)'; tabEl.style.color = 'var(--orange)'; }
+  if(contEl) { contEl.style.display = 'block'; }
+  if(tab === 'nfse') renderNFSeLeads();
+}
+
+function renderNFSeLeads() {
+  var lista = document.getElementById('nfse-leads-lista');
+  if(!lista) return;
+  var fechados = leads.filter(function(l){ return l.stage === 'Fechado / Ganho' || l.stage === 'Fechado/Ganho'; });
+  if(!fechados.length) {
+    lista.innerHTML = '<div style="grid-column:1/-1;padding:24px;text-align:center;color:var(--text3);font-size:13px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;">Nenhum lead em Fechado/Ganho ainda.</div>';
+    return;
+  }
+  lista.innerHTML = fechados.slice(0,6).map(function(l) {
+    var valor = l.valorFrete ? 'R$ ' + l.valorFrete.replace('R$','').trim() : 'Sem valor';
+    var rota = l.rota || l.origem || '';
+    return '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;" onclick="abrirModalNFSe(\'' + l.id + '\')">' +
+      '<div style="font-weight:700;font-size:13px;margin-bottom:4px;">' + l.name + '</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">' + rota + '</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="font-weight:700;color:var(--green);font-size:14px;">' + valor + '</div>' +
+        '<button style="background:var(--orange);color:white;border:none;border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;">🧾 Emitir</button>' +
+      '</div></div>';
+  }).join('');
+  renderNFSeHistorico();
+}
+
+function renderNFSeHistorico() {
+  var hist = document.getElementById('nfse-historico');
+  if(!hist) return;
+  var mes = new Date().getMonth();
+  var ano = new Date().getFullYear();
+  var doMes = nfseEmitidas.filter(function(n){ var d=new Date(n.ts); return d.getMonth()===mes && d.getFullYear()===ano; });
+  if(!doMes.length) {
+    hist.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Nenhuma NFSe registrada este mês.</div>';
+    return;
+  }
+  hist.innerHTML = '<table style="width:100%;border-collapse:collapse;">' +
+    '<tr style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);">' +
+    '<th style="padding:10px 14px;text-align:left;">Cliente</th><th style="padding:10px 14px;text-align:left;">Discriminação</th>' +
+    '<th style="padding:10px 14px;text-align:right;">Valor</th><th style="padding:10px 14px;text-align:center;">Data</th></tr>' +
+    doMes.map(function(n){ return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-size:13px;font-weight:600;">' + n.razao + '</td>' +
+      '<td style="padding:10px 14px;font-size:12px;color:var(--text3);">' + (n.disc||'').substring(0,40) + '...</td>' +
+      '<td style="padding:10px 14px;font-size:13px;font-weight:700;color:var(--green);text-align:right;">R$ ' + n.valor + '</td>' +
+      '<td style="padding:10px 14px;font-size:12px;color:var(--text3);text-align:center;">' + new Date(n.ts).toLocaleDateString('pt-BR') + '</td></tr>'; }).join('') +
+    '</table>';
+}
+
+function abrirModalNFSe(leadId) {
+  nfseLeadAtual = null;
+  if(leadId) {
+    var lead = leads.find(function(l){ return l.id === leadId; });
+    if(lead) {
+      nfseLeadAtual = lead;
+      document.getElementById('nf-cnpj').value = '';
+      document.getElementById('nf-razao').value = lead.name || '';
+      document.getElementById('nf-end').value = '';
+      document.getElementById('nf-mun').value = '';
+      document.getElementById('nf-uf').value = '';
+      document.getElementById('nf-cep').value = '';
+      var v = (lead.valorFrete || '').replace('R$','').trim();
+      document.getElementById('nf-valor').value = v;
+      var origem = lead.origem || '';
+      var destino = lead.destino || '';
+      document.getElementById('nf-disc').value = origem && destino ? 'Coleta em ' + origem + ' e entrega em ' + destino : '';
+      var transp = (lead.transportadora||'').toLowerCase();
+      document.getElementById('nf-ativ').value = (transp.includes('dhl')||transp.includes('fedex')||transp.includes('gol')) ? '0005120000' : '0005110000';
+    }
+  }
+  var d = new Date();
+  var comp = String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+  document.getElementById('nf-comp').value = comp;
+  document.getElementById('nf-info').value = 'Competencia: ' + comp + ' - Tributado no Municipio de Lauro de Freitas - Nao Retido';
+  nfseIrStep(1);
+  document.getElementById('modal-nfse').style.display = 'flex';
+}
+
+function fecharModalNFSe() {
+  document.getElementById('modal-nfse').style.display = 'none';
+}
+
+function nfseTipo(tipo) {
+  nfseTipoPessoa = tipo;
+  var jur = document.getElementById('nfse-tipo-jur');
+  var fis = document.getElementById('nfse-tipo-fis');
+  if(!jur||!fis) return;
+  if(tipo === 'juridica') {
+    jur.style.background='var(--orange)';jur.style.borderColor='var(--orange)';jur.style.color='white';
+    fis.style.background='var(--bg3)';fis.style.borderColor='var(--border)';fis.style.color='var(--text2)';
+  } else {
+    fis.style.background='var(--orange)';fis.style.borderColor='var(--orange)';fis.style.color='white';
+    jur.style.background='var(--bg3)';jur.style.borderColor='var(--border)';jur.style.color='var(--text2)';
+  }
+}
+
+function nfseIrStep(n) {
+  if(n<1||n>3) return;
+  nfseStep = n;
+  for(var i=1;i<=3;i++) {
+    var s=document.getElementById('nfse-step-'+i);
+    var c=document.getElementById('nfse-content-'+i);
+    if(!s||!c) continue;
+    c.style.display = i===n?'block':'none';
+    if(i<n){s.style.background='var(--green)';s.style.color='white';}
+    else if(i===n){s.style.background='var(--orange)';s.style.color='white';}
+    else{s.style.background='transparent';s.style.color='var(--text3)';}
+  }
+  var bv=document.getElementById('nf-btn-voltar');
+  var ba=document.getElementById('nf-btn-avancar');
+  var be=document.getElementById('nf-btn-emitir');
+  var bm=document.getElementById('nf-btn-marcar');
+  if(bv) bv.style.display=n>1?'block':'none';
+  if(ba) ba.style.display=n<3?'block':'none';
+  if(be) be.style.display=n===3?'block':'none';
+  if(bm) bm.style.display=n===3?'block':'none';
+  if(n===3) nfsePreencherInstrucoes();
+}
+
+function nfsePreencherInstrucoes() {
+  var cnpj=document.getElementById('nf-cnpj').value;
+  var comp=document.getElementById('nf-comp').value;
+  var disc=document.getElementById('nf-disc').value;
+  var valor=document.getElementById('nf-valor').value;
+  var aliq=document.getElementById('nf-aliq').value;
+  var ativ=document.getElementById('nf-ativ');
+  var ativTxt=ativ.options[ativ.selectedIndex].text;
+  var tipo=nfseTipoPessoa==='juridica'?'Juridica':'Fisica';
+  
+  document.getElementById('nf-valor-dest').textContent = 'R$ ' + valor;
+
+  var itens = [
+    {n:1, txt:'Clique em <strong>"Abrir Metropole"</strong> abaixo. Faca login se necessario.', copy:null},
+    {n:2, txt:'No menu esquerdo: <strong>NFS-e &rarr; Nota Fiscal Eletronica</strong>', copy:null},
+    {n:3, txt:'<strong>Passo 1:</strong> Tipo de Pessoa = <strong>' + tipo + '</strong>', copy:null},
+    {n:'', txt:'CNPJ/CPF: <strong id="nfi-cnpj">' + cnpj + '</strong>', copy:'nfi-cnpj'},
+    {n:'', txt:'Local da Prestacao: <strong>Lauro de Freitas - BA</strong>', copy:null},
+    {n:'', txt:'Regime Especial: <strong>Nenhum</strong>', copy:null},
+    {n:'', txt:'Natureza: <strong>Tributado no Municipio de Lauro de Freitas</strong>', copy:null},
+    {n:4, txt:'<strong>Passo 3:</strong> Preencher servico', copy:null},
+    {n:'', txt:'Competencia: <strong id="nfi-comp">' + comp + '</strong>', copy:'nfi-comp'},
+    {n:'', txt:'Atividade: <strong>' + ativTxt + '</strong>', copy:null},
+    {n:'', txt:'Discriminacao: <strong id="nfi-disc">' + disc + '</strong>', copy:'nfi-disc'},
+    {n:'', txt:'Valor Total: <strong id="nfi-valor">' + valor + '</strong>', copy:'nfi-valor'},
+    {n:'', txt:'Aliquota: <strong id="nfi-aliq">' + aliq + '%</strong>', copy:'nfi-aliq'},
+    {n:'', txt:'ISS Retido: <strong>Nao</strong>', copy:null},
+    {n:5, txt:'Clique em <strong>Incluir</strong> para emitir.', copy:null}
+  ];
+
+  document.getElementById('nf-instrucoes').innerHTML = itens.map(function(item){
+    var num = item.n ? '<div style="width:22px;height:22px;background:var(--orange);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">' + item.n + '</div>' : '<div style="width:22px;flex-shrink:0;"></div>';
+    var btn = item.copy ? '<button onclick="nfseCopiar(\'' + item.copy + '\',this)" style="margin-left:auto;background:var(--bg2);border:1px solid var(--border);border-radius:4px;color:var(--text3);font-size:11px;padding:3px 8px;cursor:pointer;white-space:nowrap;flex-shrink:0;">Copiar</button>' : '';
+    return '<div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;font-size:12px;">' + num + '<div style="color:var(--text2);line-height:1.5;flex:1;">' + item.txt + '</div>' + btn + '</div>';
+  }).join('');
+}
+
+function nfseCopiar(id, btn) {
+  var el = document.getElementById(id);
+  if(!el) return;
+  navigator.clipboard.writeText(el.textContent).then(function(){
+    btn.textContent = 'Copiado!';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'var(--green)';
+    setTimeout(function(){ btn.textContent='Copiar'; btn.style.color='var(--text3)'; btn.style.borderColor='var(--border)'; }, 2000);
+  });
+}
+
+function nfseAbrirMetropole() {
+  window.open('https://lftributos.metropolisweb.com.br/metropolisWEB/', '_blank');
+}
+
+function nfseMarcarEmitida() {
+  var razao = document.getElementById('nf-razao').value;
+  var valor = document.getElementById('nf-valor').value;
+  var disc = document.getElementById('nf-disc').value;
+  nfseEmitidas.push({razao:razao, valor:valor, disc:disc, ts:Date.now()});
+  localStorage.setItem('crm-nfse-emitidas', JSON.stringify(nfseEmitidas));
+  fecharModalNFSe();
+  if(typeof showToast === 'function') showToast('NFSe registrada — ' + razao);
+  renderNFSeHistorico();
+}
+
 </script>
 
 <!-- OPERACIONAL VIEW -->
@@ -1638,6 +1925,7 @@ renderKanban();
     <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
     <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
     <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📄 Documentos</div>
+    <div class="tab" id="op-tab-nfse" onclick="opTab('nfse')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🧾 NFSe</div>
   </div>
 
   <!-- TAREFAS -->
