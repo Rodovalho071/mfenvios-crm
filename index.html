@@ -378,12 +378,12 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 // ═══════════════════════════════════════════════════════
 var vendas = [];
 var vendaEditando = null;
-function salvarVendas() {}
+function salvarVendas() {localStorage.setItem('crm-vendas',JSON.stringify(vendas));}
 function carregarVendas() {
   return fetch('/vendas').then(function(r){return r.json();}).then(function(data){
     vendas = Array.isArray(data) ? data : [];
   }).catch(function(){
-    vendas = JSON.parse(localStorage.getItem('crm-vendas')||'[]');
+    vendas = JSON.parse(localStorage.getItem('crm-vendas')||'[]').map(function(v){v.valor=parseMoeda(v.valor);return v;});
   });
 }
 
