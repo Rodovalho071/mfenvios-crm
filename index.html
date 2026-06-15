@@ -408,9 +408,10 @@ function calcVencimento(dias) {
 }
 
 function formatMoeda(v) {
-  var n = parseFloat((v||'0').toString().replace(/\./g,'').replace(',','.'));
+  var n = parseMoeda(v);
   if(isNaN(n)) return 'R$ 0,00';
   return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+});
 }
 
 function parseMoeda(v){
