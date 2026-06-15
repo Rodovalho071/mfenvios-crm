@@ -512,7 +512,6 @@ function abrirModalVenda(leadId) {
   var campos = ['fin-cliente','fin-cnpj','fin-descricao','fin-valor','fin-obs'];
   campos.forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
   document.getElementById('fin-forma').value = 'pix';
-  document.getElementById('fin-prazo').value = '0';
   document.getElementById('fin-vencimento').value = new Date().toISOString().split('T')[0];
 
   // Se veio de um lead
@@ -609,7 +608,7 @@ function finEditar(id) {
   document.getElementById('fin-descricao').value = v.descricao || '';
   document.getElementById('fin-obs').value = v.obs || '';
   document.getElementById('fin-lead-id').value = v.leadId || '';
-  document.getElementById('fin-prazo').value = '0';
+  document.getElementById('fin-prazo-noop').value = '0';
   document.getElementById('modal-financeiro').style.display = 'flex';
 }
 
