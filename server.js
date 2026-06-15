@@ -17,6 +17,7 @@ const INSTANCE      = (process.env.EVOLUTION_INSTANCE || 'mfenvios').trim();
 let db = null;
 let messagesCol = null, kanbanCol = null;
 let tarefasCol = null, fretesCol = null, agendaCol = null, docsCol = null;
+let vendasCol = null;
 
 async function connectMongo() {
   if (!MONGODB_URI) { console.log('[DB] Sem MONGODB_URI - memoria'); return; }
@@ -31,6 +32,7 @@ async function connectMongo() {
     fretesCol   = db.collection('fretes');
     agendaCol   = db.collection('agenda');
     docsCol     = db.collection('documentos');
+    vendasCol   = db.collection('vendas');
     await messagesCol.createIndex({ id: 1 }, { unique: true });
     await messagesCol.createIndex({ ts: -1 });
     await kanbanCol.createIndex({ phone: 1 }, { unique: true });
@@ -38,19 +40,23 @@ async function connectMongo() {
     await fretesCol.createIndex({ id: 1 }, { unique: true });
     await agendaCol.createIndex({ id: 1 }, { unique: true });
     await docsCol.createIndex({ id: 1 }, { unique: true });
+    await vendasCol.createIndex({ id: 1 }, { unique: true });
     console.log('[DB] MongoDB Atlas conectado!');
   } catch(e) {
     console.error('[DB] Erro:', e.message);
-    db=null; messagesCol=null; kanbanCol=null; tarefasCol=null; fretesCol=null; agendaCol=null; docsCol=null;
+    db=null; messagesCol=null; kanbanCol=null; tarefasCol=null; fretesCol=null; agendaCol=null; docsCol=null; vendasCol=null;
   }
 }
 
 let memMessages = [];
 let memKanban = { colunas:['Novo Lead','Em Atendimento','Proposta','Fechado'], cards:[] };
-let memTarefas=[], memFretes=[], memAgenda=[], memDocs=[];
+let memTarefas=[], memFretes=[], memAgenda=[], memDocs=[], memVendas=[];
 
 function nowId() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-async function colFind(col,mem) { return col ? col.find({}).sort({ts:-1}).toArray() : [...mem]; }
+async function colFind(col,mem,sort) { 
+  sort = sort || {ts:-1};
+  return col ? col.find({}).sort(sort).toArray() : [...mem]; 
+}
 async function colUpsert(col,mem,item) {
   if(col){ try{ await col.updateOne({id:item.id},{$set:item},{upsert:true}); }catch(e){console.error('[DB]',e.message);} }
   else{ const i=mem.findIndex(x=>x.id===item.id); if(i>=0) mem[i]=item; else mem.unshift(item); }
@@ -96,7 +102,7 @@ async function callGroq(messages,max_tokens) {
   if(!max_tokens) max_tokens=500;
   if(!GROQ_KEY) throw new Error('GROQ_KEY nao definida');
   const key=GROQ_KEY.replace(/[\x00-\x1F\x7F]/g,'');
-  const payload=JSON.stringify({model:'llama3-8b-8192',messages,max_tokens,temperature:0.7});
+  const payload=JSON.stringify({model:'llama-3.1-8b-instant',messages,max_tokens,temperature:0.7});
   const options={
     hostname:'api.groq.com',
     path:'/openai/v1/chat/completions',
@@ -251,25 +257,46 @@ app.post('/kanban-import',async function(req,res){
   } catch(e) { res.status(500).json({error:e.message}); }
 });
 
+// TAREFAS
 app.get('/tarefas',async function(req,res){res.json(await colFind(tarefasCol,memTarefas));});
 app.post('/tarefas',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(tarefasCol,memTarefas,item);res.json({ok:true,item});});
 app.put('/tarefas/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(tarefasCol,memTarefas,item);res.json({ok:true,item});});
 app.delete('/tarefas/:id',async function(req,res){await colDelete(tarefasCol,memTarefas,req.params.id);res.json({ok:true});});
 
+// FRETES
 app.get('/fretes',async function(req,res){res.json(await colFind(fretesCol,memFretes));});
 app.post('/fretes',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(fretesCol,memFretes,item);res.json({ok:true,item});});
 app.put('/fretes/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(fretesCol,memFretes,item);res.json({ok:true,item});});
 app.delete('/fretes/:id',async function(req,res){await colDelete(fretesCol,memFretes,req.params.id);res.json({ok:true});});
 
+// AGENDA
 app.get('/agenda',async function(req,res){res.json(await colFind(agendaCol,memAgenda));});
 app.post('/agenda',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(agendaCol,memAgenda,item);res.json({ok:true,item});});
 app.put('/agenda/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(agendaCol,memAgenda,item);res.json({ok:true,item});});
 app.delete('/agenda/:id',async function(req,res){await colDelete(agendaCol,memAgenda,req.params.id);res.json({ok:true});});
 
+// DOCUMENTOS
 app.get('/documentos',async function(req,res){res.json(await colFind(docsCol,memDocs));});
 app.post('/documentos',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(docsCol,memDocs,item);res.json({ok:true,item});});
 app.put('/documentos/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(docsCol,memDocs,item);res.json({ok:true,item});});
 app.delete('/documentos/:id',async function(req,res){await colDelete(docsCol,memDocs,req.params.id);res.json({ok:true});});
+
+// VENDAS — salvas no MongoDB
+app.get('/vendas',async function(req,res){res.json(await colFind(vendasCol,memVendas));});
+app.post('/vendas',async function(req,res){
+  const item=Object.assign({id:nowId(),ts:Date.now(),pago:false},req.body);
+  await colUpsert(vendasCol,memVendas,item);
+  res.json({ok:true,item});
+});
+app.put('/vendas/:id',async function(req,res){
+  const item=Object.assign({},req.body,{id:req.params.id,updatedAt:Date.now()});
+  await colUpsert(vendasCol,memVendas,item);
+  res.json({ok:true,item});
+});
+app.delete('/vendas/:id',async function(req,res){
+  await colDelete(vendasCol,memVendas,req.params.id);
+  res.json({ok:true});
+});
 
 const PORT=process.env.PORT||3000;
 connectMongo().then(function(){

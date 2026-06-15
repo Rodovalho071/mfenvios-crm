@@ -374,13 +374,24 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 <script>
 
 // ═══════════════════════════════════════════════════════
-// MÓDULO FINANCEIRO — Lançamento de Vendas
+// MÓDULO FINANCEIRO — Lançamento de Vendas (MongoDB)
 // ═══════════════════════════════════════════════════════
-var vendas = JSON.parse(localStorage.getItem('crm-vendas') || '[]');
+var vendas = [];
 var vendaEditando = null;
 
 function salvarVendas() {
-  localStorage.setItem('crm-vendas', JSON.stringify(vendas));
+  // Salvo via API — não usa localStorage
+}
+
+async function carregarVendas() {
+  try {
+    var r = await fetch('/vendas');
+    vendas = await r.json();
+    if(!Array.isArray(vendas)) vendas = [];
+  } catch(e) {
+    console.error('Erro ao carregar vendas:', e);
+    vendas = [];
+  }
 }
 
 function uid_fin() {
@@ -551,34 +562,35 @@ function finSalvar() {
     return;
   }
 
+  var dadosVenda = {
+    cliente: cliente,
+    valor: valor,
+    formaPag: forma,
+    vencimento: venc,
+    descricao: desc,
+    obs: obs,
+    leadId: leadId
+  };
+
   if(vendaEditando) {
-    var idx = vendas.findIndex(function(v){ return v.id===vendaEditando; });
-    if(idx >= 0) {
-      vendas[idx].cliente = cliente;
-      vendas[idx].valor = valor;
-      vendas[idx].formaPag = forma;
-      vendas[idx].vencimento = venc;
-      vendas[idx].descricao = desc;
-      vendas[idx].obs = obs;
-    }
+    fetch('/vendas/' + vendaEditando, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(dadosVenda)
+    }).then(function(){ 
+      carregarVendas().then(function(){ renderFinanceiro(); }); 
+    });
   } else {
-    vendas.push({
-      id: uid_fin(),
-      cliente: cliente,
-      valor: valor,
-      formaPag: forma,
-      vencimento: venc,
-      descricao: desc,
-      obs: obs,
-      leadId: leadId,
-      pago: false,
-      ts: Date.now()
+    fetch('/vendas', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(dadosVenda)
+    }).then(function(){ 
+      carregarVendas().then(function(){ renderFinanceiro(); renderFinLeadsProntos(); }); 
     });
   }
 
-  salvarVendas();
   fecharModalVenda();
-  renderFinanceiro();
   if(typeof showToast === 'function') showToast('Venda salva — ' + cliente);
 }
 
@@ -586,10 +598,13 @@ function finDarBaixa(id) {
   var v = vendas.find(function(x){ return x.id===id; });
   if(!v) return;
   if(confirm('Confirmar recebimento de ' + formatMoeda(v.valor) + ' de ' + v.cliente + '?')) {
-    v.pago = true;
-    v.dataPagamento = new Date().toISOString().split('T')[0];
-    salvarVendas();
-    renderFinanceiro();
+    fetch('/vendas/' + id, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({pago:true, dataPagamento:new Date().toISOString().split('T')[0]})
+    }).then(function(){ 
+      carregarVendas().then(function(){ renderFinanceiro(); }); 
+    });
     if(typeof showToast === 'function') showToast('Pagamento registrado!');
   }
 }
@@ -612,9 +627,9 @@ function finEditar(id) {
 
 function finExcluir(id) {
   if(!confirm('Excluir esta venda?')) return;
-  vendas = vendas.filter(function(v){ return v.id!==id; });
-  salvarVendas();
-  renderFinanceiro();
+  fetch('/vendas/' + id, {method:'DELETE'}).then(function(){
+    carregarVendas().then(function(){ renderFinanceiro(); });
+  });
 }
 
 
@@ -2132,7 +2147,7 @@ function opTab(tab) {
   if(tabEl) { tabEl.style.borderBottomColor = 'var(--orange)'; tabEl.style.color = 'var(--orange)'; }
   if(contEl) { contEl.style.display = 'block'; }
   if(tab === 'nfse') renderNFSeLeads();
-  if(tab === 'financeiro') { renderFinanceiro(); renderFinLeadsProntos(); }
+  if(tab === 'financeiro') { if(typeof carregarVendas==='function') carregarVendas().then(function(){ if(typeof renderFinanceiro==='function') renderFinanceiro(); if(typeof renderFinLeadsProntos==='function') renderFinLeadsProntos(); }); }
 }
 
 function renderNFSeLeads() {
