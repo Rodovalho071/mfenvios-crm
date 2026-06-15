@@ -1470,15 +1470,27 @@ let opModalMode = null, opModalId = null;
 
 function opTab(tab) {
   opCurrentTab = tab;
-  ['tarefas','fretes','agenda','docs'].forEach(t => {
-    document.getElementById('op-view-'+t).style.display = t===tab ? '' : 'none';
-    const el = document.getElementById('op-tab-'+t);
-    if(el) { el.style.borderBottomColor = t===tab ? 'var(--orange)' : 'transparent'; el.style.color = t===tab ? 'var(--text)' : ''; }
+  var allTabs = ['tarefas','fretes','agenda','docs','nfse','financeiro'];
+  allTabs.forEach(function(t) {
+    // Esconder views originais
+    var v = document.getElementById('op-view-'+t);
+    if(v) v.style.display = t===tab ? '' : 'none';
+    // Esconder conteúdos novos (nfse, financeiro)
+    var c = document.getElementById('op-content-'+t);
+    if(c) c.style.display = t===tab ? 'block' : 'none';
+    // Atualizar tabs
+    var el = document.getElementById('op-tab-'+t);
+    if(el) {
+      el.style.borderBottomColor = t===tab ? 'var(--orange)' : 'transparent';
+      el.style.color = t===tab ? 'var(--orange)' : '';
+    }
   });
-  if(tab==='tarefas') loadTarefas();
-  if(tab==='fretes') loadFretes();
-  if(tab==='agenda') loadAgenda();
-  if(tab==='docs') loadDocs();
+  if(tab==='tarefas') { if(typeof loadTarefas==='function') loadTarefas(); }
+  if(tab==='fretes') { if(typeof loadFretes==='function') loadFretes(); }
+  if(tab==='agenda') { if(typeof loadAgenda==='function') loadAgenda(); }
+  if(tab==='docs') { if(typeof loadDocs==='function') loadDocs(); }
+  if(tab==='nfse') { if(typeof renderNFSeLeads==='function') renderNFSeLeads(); }
+  if(tab==='financeiro') { if(typeof renderFinanceiro==='function') renderFinanceiro(); if(typeof renderFinLeadsProntos==='function') renderFinLeadsProntos(); }
 }
 
 // ── TAREFAS ─────────────────────────────────
