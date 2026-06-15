@@ -376,11 +376,15 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 // ═══════════════════════════════════════════════════════
 // MÓDULO FINANCEIRO — Lançamento de Vendas
 // ═══════════════════════════════════════════════════════
-var vendas = JSON.parse(localStorage.getItem('crm-vendas') || '[]');
+var vendas = [];
 var vendaEditando = null;
-
-function salvarVendas() {
-  localStorage.setItem('crm-vendas', JSON.stringify(vendas));
+function salvarVendas() {}
+function carregarVendas() {
+  return fetch('/vendas').then(function(r){return r.json();}).then(function(data){
+    vendas = Array.isArray(data) ? data : [];
+  }).catch(function(){
+    vendas = JSON.parse(localStorage.getItem('crm-vendas')||'[]');
+  });
 }
 
 function uid_fin() {
@@ -586,11 +590,10 @@ function finDarBaixa(id) {
   var v = vendas.find(function(x){ return x.id===id; });
   if(!v) return;
   if(confirm('Confirmar recebimento de ' + formatMoeda(v.valor) + ' de ' + v.cliente + '?')) {
-    v.pago = true;
-    v.dataPagamento = new Date().toISOString().split('T')[0];
-    salvarVendas();
-    renderFinanceiro();
-    if(typeof showToast === 'function') showToast('Pagamento registrado!');
+    fetch('/vendas/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({pago:true,dataPagamento:new Date().toISOString().split('T')[0]})})
+      .then(function(){carregarVendas().then(renderFinanceiro);});
+    if(typeof showToast==='function') showToast('Pagamento registrado!');
   }
 }
 
@@ -612,9 +615,7 @@ function finEditar(id) {
 
 function finExcluir(id) {
   if(!confirm('Excluir esta venda?')) return;
-  vendas = vendas.filter(function(v){ return v.id!==id; });
-  salvarVendas();
-  renderFinanceiro();
+  fetch('/vendas/'+id,{method:'DELETE'}).then(function(){carregarVendas().then(renderFinanceiro);});
 }
 
 
@@ -1576,42 +1577,33 @@ let opModalMode = null, opModalId = null;
 
 function opTab(tab) {
   opCurrentTab = tab;
-  // Esconder todos os conteúdos
-  ['tarefas','fretes','agenda','docs'].forEach(function(t) {
-    var v = document.getElementById('op-view-'+t);
-    if(v) v.style.display = 'none';
-    var el = document.getElementById('op-tab-'+t);
-    if(el) { el.style.borderBottomColor='transparent'; el.style.color=''; }
+  ['tarefas','fretes','agenda','docs'].forEach(function(t){
+    var v=document.getElementById('op-view-'+t);
+    if(v) v.style.display='none';
+    var el=document.getElementById('op-tab-'+t);
+    if(el){el.style.borderBottomColor='transparent';el.style.color='';}
   });
-  ['nfse','financeiro'].forEach(function(t) {
-    var c = document.getElementById('op-content-'+t);
-    if(c) c.style.display = 'none';
-    var el = document.getElementById('op-tab-'+t);
-    if(el) { el.style.borderBottomColor='transparent'; el.style.color=''; }
+  ['nfse','financeiro'].forEach(function(t){
+    var c=document.getElementById('op-content-'+t);
+    if(c) c.style.display='none';
+    var el=document.getElementById('op-tab-'+t);
+    if(el){el.style.borderBottomColor='transparent';el.style.color='';}
   });
-  // Mostrar a aba selecionada
-  if(['tarefas','fretes','agenda','docs'].indexOf(tab) >= 0) {
-    var v = document.getElementById('op-view-'+tab);
-    if(v) v.style.display = '';
+  if(['tarefas','fretes','agenda','docs'].indexOf(tab)>=0){
+    var v=document.getElementById('op-view-'+tab);
+    if(v) v.style.display='';
   } else {
-    var c = document.getElementById('op-content-'+tab);
-    if(c) c.style.display = 'block';
+    var c=document.getElementById('op-content-'+tab);
+    if(c) c.style.display='block';
   }
-  // Destacar tab ativa
-  var el = document.getElementById('op-tab-'+tab);
-  if(el) { el.style.borderBottomColor='var(--orange)'; el.style.color='var(--orange)'; }
-  // Carregar dados
+  var active=document.getElementById('op-tab-'+tab);
+  if(active){active.style.borderBottomColor='var(--orange)';active.style.color='var(--orange)';}
   if(tab==='tarefas') loadTarefas();
   if(tab==='fretes') loadFretes();
   if(tab==='agenda') loadAgenda();
   if(tab==='docs') loadDocs();
-  if(tab==='nfse') { if(typeof renderNFSeLeads==='function') renderNFSeLeads(); }
-  if(tab==='financeiro') { 
-    if(typeof carregarVendas==='function') carregarVendas().then(function(){ 
-      if(typeof renderFinanceiro==='function') renderFinanceiro(); 
-      if(typeof renderFinLeadsProntos==='function') renderFinLeadsProntos(); 
-    }); 
-  }
+  if(tab==='nfse'&&typeof renderNFSeLeads==='function') renderNFSeLeads();
+  if(tab==='financeiro') carregarVendas().then(function(){renderFinanceiro();renderFinLeadsProntos();});
 }
 
 // ── TAREFAS ─────────────────────────────────
