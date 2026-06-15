@@ -2213,13 +2213,14 @@ function renderFinLeadsProntos() {
     return (l.stage==='Fechado / Ganho'||l.stage==='Fechado/Ganho') && !vendas.find(function(v){ return v.leadId===l.id; });
   });
   if(!fechados.length) { el.innerHTML=''; return; }
-  var cards = fechados.slice(0,5).map(function(l){
+  // Guardar referência global temporária
+  window._finLeadsProntos = fechados.slice(0,5);
+  var cards = window._finLeadsProntos.map(function(l, idx){
     var v = (l.valorFrete||'').replace('R$','').trim();
-    var safeId = l.id.replace(/'/g,'');
     return '<div style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;">' +
       '<div><div style="font-weight:700;font-size:13px;">' + l.name + '</div>' +
       (v ? '<div style="font-size:12px;color:var(--green);">R$ '+v+'</div>' : '') +
-      '</div><button data-leadid="' + safeId + '" onclick="abrirModalVenda(this.getAttribute('data-leadid'))" style="background:var(--orange);color:white;border:none;border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;">+ Lancar</button></div>';
+      '</div><button onclick="abrirModalVenda(window._finLeadsProntos[' + idx + '].id)" style="background:var(--orange);color:white;border:none;border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;">+ Lancar</button></div>';
   }).join('');
   el.innerHTML = '<div style="margin-bottom:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Leads sem venda lancada</div><div style="display:flex;gap:8px;flex-wrap:wrap;">' + cards + '</div>';
 }
