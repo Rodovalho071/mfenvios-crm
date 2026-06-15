@@ -535,7 +535,15 @@ function abrirModalVenda(leadId) {
       var el = document.getElementById('fin-cliente');
       if(el) el.value = lead.name || '';
       var ev = document.getElementById('fin-valor');
-      if(ev) ev.value = (lead.valorFrete||'').replace('R$','').trim();
+      if(ev) {
+        var vf = parseMoeda(lead.valorFrete||0);
+        var digits = Math.round(vf*100).toString();
+        while(digits.length<3) digits='0'+digits;
+        var i=digits.slice(0,-2)||'0', dc=digits.slice(-2);
+        i=i.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+        ev.value = i+','+dc;
+        ev.dataset.valor = vf.toFixed(2);
+      }
       var ed = document.getElementById('fin-descricao');
       if(ed) ed.value = (lead.rota||lead.origem||'') ? 'Frete: ' + (lead.rota || (lead.origem||'') + ' → ' + (lead.destino||'')) : '';
       document.getElementById('fin-lead-id').value = lead.id;
@@ -618,7 +626,16 @@ function finEditar(id) {
   vendaEditando = id;
   document.getElementById('fin-form-titulo').textContent = 'Editar Venda';
   document.getElementById('fin-cliente').value = v.cliente || '';
-  document.getElementById('fin-valor').value = v.valor || '';
+  var evEdit = document.getElementById('fin-valor');
+  if(evEdit) {
+    var vEdit = parseMoeda(v.valor||0);
+    var dEdit = Math.round(vEdit*100).toString();
+    while(dEdit.length<3) dEdit='0'+dEdit;
+    var iE=dEdit.slice(0,-2)||'0', dcE=dEdit.slice(-2);
+    iE=iE.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    evEdit.value = iE+','+dcE;
+    evEdit.dataset.valor = vEdit.toFixed(2);
+  }
   document.getElementById('fin-forma').value = v.formaPag || 'pix';
   document.getElementById('fin-vencimento').value = v.vencimento || '';
   document.getElementById('fin-descricao').value = v.descricao || '';
