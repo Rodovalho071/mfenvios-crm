@@ -403,20 +403,22 @@ function formatMoeda(v) {
   return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
-function parseMoeda(v) {
-  if(!v && v!==0) return 0;
-  var s = v.toString().replace(/[R$\s]/g,'').trim();
-  // Remove tudo exceto números, ponto e vírgula
-  // Formato BR: 1.500,75 ou 1500,75
-  // Formato US: 1500.75
-  if(s.indexOf(',') !== -1) {
-    // Tem vírgula — formato brasileiro
-    s = s.replace(/\./g,'').replace(',','.');
-  }
-  // Se não tem vírgula, pode ser inteiro ou formato US
-  var n = parseFloat(s);
-  return isNaN(n) ? 0 : n;
+function parseMoeda(v){
+  if(v===null||v===undefined||v==='')return 0;
+  if(typeof v==='number'){if(Number.isInteger(v)&&v>=1000)return v/100;return v;}
+  var s=v.toString().replace(/R\$\s*/g,'').replace(/\s/g,'').trim();
+  if(s.indexOf(',')!==-1){s=s.replace(/\./g,'').replace(',','.');return parseFloat(s)||0;}
+  if(s.indexOf('.')!==-1){var p=s.split('.');if(p.length===2&&p[1].length<=2)return parseFloat(s)||0;s=s.replace(/\./g,'');}
+  var n=parseFloat(s)||0;if(Number.isInteger(n)&&n>=1000)return n/100;return n;
 }
+function mascaraMoeda(el){
+  var d=el.value.replace(/\D/g,'');if(!d){el.value='';el.dataset.valor='0';return;}
+  d=d.replace(/^0+/,'')||'0';while(d.length<3)d='0'+d;
+  var i=d.slice(0,-2)||'0',dc=d.slice(-2);
+  i=i.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  el.value=i+','+dc;el.dataset.valor=(parseInt(d)/100).toFixed(2);
+}
+function valorParaSalvar(el){return el.dataset&&el.dataset.valor?parseFloat(el.dataset.valor):parseMoeda(el.value);}
 
 function statusVenda(venda) {
   if(venda.pago) return 'recebido';
@@ -543,7 +545,7 @@ function finAtualizarVencimento() { /* prazo agora é select de atalho */ }
 
 function finSalvar() {
   var cliente = document.getElementById('fin-cliente').value.trim();
-  var valor = document.getElementById('fin-valor').value.trim();
+  var valor = valorParaSalvar(document.getElementById('fin-valor'));
   var forma = document.getElementById('fin-forma').value;
   var venc = document.getElementById('fin-vencimento').value;
   var desc = document.getElementById('fin-descricao').value.trim();
@@ -1268,7 +1270,7 @@ function abrirRelatorio(){
         <div id="nfse-content-2" style="display:none;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
             <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Competência (MM/AAAA) *</label><input id="nf-comp" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="06/2026"></div>
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Valor Total R$ *</label><input id="nf-valor" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="0,00"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Valor Total R$ *</label><input id="nf-valor" type="text" placeholder="0,00" oninput="mascaraMoeda(this)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;text-align:right;font-family:monospace;"></div>
           </div>
           <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Discriminação do Serviço *</label><textarea id="nf-disc" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;resize:vertical;min-height:72px;font-family:inherit;" placeholder="Ex: Coleta em Sao Paulo/SP e entrega em Salvador/BA"></textarea></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
@@ -1346,7 +1348,7 @@ function abrirRelatorio(){
         </div>
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Descricao</label><input id="fin-descricao" type="text" placeholder="Ex: Frete Sao Paulo - Salvador" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Valor R$</label><input id="fin-valor" type="text" placeholder="0,00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Valor R$</label><input id="fin-valor" type="text" placeholder="0,00" oninput="mascaraMoeda(this)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;text-align:right;font-family:monospace;"></div>
           <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Forma de Pagamento</label>
           <select id="fin-forma" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
             <option value="pix">PIX</option>
