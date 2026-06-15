@@ -404,15 +404,16 @@ function formatMoeda(v) {
 }
 
 function parseMoeda(v) {
-  if(!v) return 0;
+  if(!v && v!==0) return 0;
   var s = v.toString().replace(/[R$\s]/g,'').trim();
-  // Formato brasileiro: 1.234,56 → remover pontos, trocar vírgula por ponto
-  if(s.indexOf(',') > s.indexOf('.')) {
+  // Remove tudo exceto números, ponto e vírgula
+  // Formato BR: 1.500,75 ou 1500,75
+  // Formato US: 1500.75
+  if(s.indexOf(',') !== -1) {
+    // Tem vírgula — formato brasileiro
     s = s.replace(/\./g,'').replace(',','.');
-  } else {
-    // Formato americano ou sem separador de milhar
-    s = s.replace(',','');
   }
+  // Se não tem vírgula, pode ser inteiro ou formato US
   var n = parseFloat(s);
   return isNaN(n) ? 0 : n;
 }
@@ -608,6 +609,7 @@ function finEditar(id) {
   document.getElementById('fin-descricao').value = v.descricao || '';
   document.getElementById('fin-obs').value = v.obs || '';
   document.getElementById('fin-lead-id').value = v.leadId || '';
+  document.getElementById('fin-prazo-noop').value = '0';
   document.getElementById('modal-financeiro').style.display = 'flex';
 }
 
