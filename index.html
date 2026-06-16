@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
@@ -106,19 +106,19 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <div style="font-size:14px;color:var(--text3);margin-bottom:40px">Selecione seu perfil para continuar</div>
     <div style="display:flex;gap:16px;justify-content:center">
       <div onclick="selecionarPerfil('beatriz')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--orange)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
-        <div style="font-size:40px;margin-bottom:12px">👩‍💼</div>
+        <div style="font-size:40px;margin-bottom:12px">ðŸ‘©â€ðŸ’¼</div>
         <div style="font-size:16px;font-weight:700;color:var(--text)">Beatriz</div>
         <div style="font-size:12px;color:var(--text3);margin-top:4px">Comercial</div>
         <div style="font-size:11px;color:var(--orange);margin-top:8px;font-weight:600">mfenvios</div>
       </div>
       <div onclick="selecionarPerfil('davi')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
-        <div style="font-size:40px;margin-bottom:12px">👨‍💼</div>
+        <div style="font-size:40px;margin-bottom:12px">ðŸ‘¨â€ðŸ’¼</div>
         <div style="font-size:16px;font-weight:700;color:var(--text)">Davi</div>
         <div style="font-size:12px;color:var(--text3);margin-top:4px">Operacional</div>
         <div style="font-size:11px;color:var(--blue);margin-top:8px;font-weight:600">mfenvios-davi</div>
       </div>
     </div>
-    <div style="margin-top:24px;font-size:12px;color:var(--text3)">Você pode alternar o perfil a qualquer momento clicando no seu nome</div>
+    <div style="margin-top:24px;font-size:12px;color:var(--text3)">VocÃª pode alternar o perfil a qualquer momento clicando no seu nome</div>
   </div>
 </div>
 
@@ -126,23 +126,23 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="logo">MF <span class="envios">Envios</span><span class="crm"> CRM</span></div>
   <div class="topbar-right">
     <div class="wpp-status-badge"><span class="wpp-dot" id="wpp-dot"></span><span id="wpp-status-text">Verificando...</span></div>
-    <span class="agent-badge" onclick="mostrarTrocaPerfil()" id="agent-label" style="cursor:pointer">👤 Carregando...</span>
-    <button class="btn btn-report btn-sm" onclick="abrirRelatorio()">📄 Relatório do Dia</button>
+    <span class="agent-badge" onclick="mostrarTrocaPerfil()" id="agent-label" style="cursor:pointer">ðŸ‘¤ Carregando...</span>
+    <button class="btn btn-report btn-sm" onclick="abrirRelatorio()">ðŸ“„ RelatÃ³rio do Dia</button>
     <div style="position:relative;display:inline-flex">
-      <button class="btn btn-sm" onclick="toggleLembretes()" id="btn-sino" title="Lembretes">🔔</button>
+      <button class="btn btn-sm" onclick="toggleLembretes()" id="btn-sino" title="Lembretes">ðŸ””</button>
       <span id="sino-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1">0</span>
     </div>
-    <button class="btn btn-sm" onclick="exportData()">↓ Exportar</button>
-    <button class="btn btn-sm" onclick="document.getElementById('import-file').click()">↑ Importar</button>
+    <button class="btn btn-sm" onclick="exportData()">â†“ Exportar</button>
+    <button class="btn btn-sm" onclick="document.getElementById('import-file').click()">â†‘ Importar</button>
     <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"/>
   </div>
 </div>
 <div class="stats-bar" id="stats-bar-principal">
-  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" id="stat-total">0</div><div class="stat-label" id="stat-total-label">Total do mês</div></div>
-  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val green" id="stat-ganho">R$ 0</div><div class="stat-label">💰 Valor Ganho</div></div>
-  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" style="color:var(--red)" id="stat-perdido">R$ 0</div><div class="stat-label">📉 Valor Perdido</div></div>
-  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val blue" id="stat-negociacao">R$ 0</div><div class="stat-label">🔄 Em Negociação</div></div>
-  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" style="color:var(--amber)" id="stat-semretorno">0</div><div class="stat-label">⏳ Sem Retorno</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" id="stat-total">0</div><div class="stat-label" id="stat-total-label">Total do mÃªs</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val green" id="stat-ganho">R$ 0</div><div class="stat-label">ðŸ’° Valor Ganho</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" style="color:var(--red)" id="stat-perdido">R$ 0</div><div class="stat-label">ðŸ“‰ Valor Perdido</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val blue" id="stat-negociacao">R$ 0</div><div class="stat-label">ðŸ”„ Em NegociaÃ§Ã£o</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" style="color:var(--amber)" id="stat-semretorno">0</div><div class="stat-label">â³ Sem Retorno</div></div>
 </div>
 <!-- STATS DO OUTRO PERFIL -->
 <div id="stats-bar-outro" style="display:none;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0">
@@ -150,21 +150,21 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <span id="stats-outro-label" style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap"></span>
     <div style="display:flex;gap:0;flex:1;flex-wrap:wrap">
       <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--text)" id="outro-total">0</div><div style="font-size:10px;color:var(--text3)">Total</div></div>
-      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--green)" id="outro-ganho">R$0</div><div style="font-size:10px;color:var(--text3)">💰 Ganho</div></div>
-      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--red)" id="outro-perdido">R$0</div><div style="font-size:10px;color:var(--text3)">📉 Perdido</div></div>
-      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--blue)" id="outro-neg">R$0</div><div style="font-size:10px;color:var(--text3)">🔄 Negociação</div></div>
-      <div style="padding:6px 20px"><div style="font-size:16px;font-weight:700;color:var(--amber)" id="outro-semretorno">0</div><div style="font-size:10px;color:var(--text3)">⏳ Sem Retorno</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--green)" id="outro-ganho">R$0</div><div style="font-size:10px;color:var(--text3)">ðŸ’° Ganho</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--red)" id="outro-perdido">R$0</div><div style="font-size:10px;color:var(--text3)">ðŸ“‰ Perdido</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--blue)" id="outro-neg">R$0</div><div style="font-size:10px;color:var(--text3)">ðŸ”„ NegociaÃ§Ã£o</div></div>
+      <div style="padding:6px 20px"><div style="font-size:16px;font-weight:700;color:var(--amber)" id="outro-semretorno">0</div><div style="font-size:10px;color:var(--text3)">â³ Sem Retorno</div></div>
     </div>
-    <button onclick="alternarParaOutro()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text2);white-space:nowrap">Ver funil →</button>
+    <button onclick="alternarParaOutro()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text2);white-space:nowrap">Ver funil â†’</button>
   </div>
 </div>
 <div class="tabs-bar">
-  <div class="tab active" onclick="showView('kanban')" id="tab-kanban">🗂 Funil</div>
-  <div class="tab" onclick="showView('clientes')" id="tab-clientes">👥 Clientes</div>
-  <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">📊 Dashboard</div>
-  <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
-  <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
-  <div class="tab" onclick="showView('operacional')" id="tab-operacional">⚙️ Operacional</div>
+  <div class="tab active" onclick="showView('kanban')" id="tab-kanban">ðŸ—‚ Funil</div>
+  <div class="tab" onclick="showView('clientes')" id="tab-clientes">ðŸ‘¥ Clientes</div>
+  <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">ðŸ“Š Dashboard</div>
+  <div class="tab" onclick="showView('wpp')" id="tab-wpp">ðŸ’¬ WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
+  <div class="tab" onclick="showView('ia')" id="tab-ia">ðŸ¤– Analisar IA</div>
+  <div class="tab" onclick="showView('operacional')" id="tab-operacional">âš™ï¸ Operacional</div>
   <div class="tabs-right"><button class="btn btn-primary btn-sm" onclick="openNewLead()">+ Novo Lead</button></div>
 </div>
 
@@ -176,7 +176,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
       <button onclick="navMes(1)" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0 4px">&#9654;</button>
     </div>
     <div class="search-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Buscar lead..." id="kanban-search" oninput="renderKanban()"/></div>
-    <select class="filter-select" id="kanban-agent" onchange="renderKanban()"><option value="">Todos os responsáveis</option></select>
+    <select class="filter-select" id="kanban-agent" onchange="renderKanban()"><option value="">Todos os responsÃ¡veis</option></select>
   </div>
   <div class="kanban-board" id="kanban-board"></div>
 </div>
@@ -185,11 +185,11 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="leads-toolbar">
     <div class="search-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Buscar..." id="leads-search" oninput="renderLeads()"/></div>
     <select class="filter-select" id="leads-stage" onchange="renderLeads()"><option value="">Todas as etapas</option></select>
-    <select class="filter-select" id="leads-agent" onchange="renderLeads()"><option value="">Todos os responsáveis</option></select>
+    <select class="filter-select" id="leads-agent" onchange="renderLeads()"><option value="">Todos os responsÃ¡veis</option></select>
     <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="leads-count"></span>
   </div>
   <div class="leads-content">
-    <table><thead><tr><th>Nome</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>Responsável</th><th>Horário</th><th>Follow-up</th></tr></thead><tbody id="leads-tbody"></tbody></table>
+    <table><thead><tr><th>Nome</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>ResponsÃ¡vel</th><th>HorÃ¡rio</th><th>Follow-up</th></tr></thead><tbody id="leads-tbody"></tbody></table>
   </div>
 </div>
 
@@ -198,7 +198,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <button class="dash-f-btn active" onclick="dashFiltro(this,'hoje')">Hoje</button>
     <button class="dash-f-btn" onclick="dashFiltro(this,'ontem')">Ontem</button>
     <button class="dash-f-btn" onclick="dashFiltro(this,'semana')">Semana</button>
-    <button class="dash-f-btn" onclick="dashFiltro(this,'mes')">Mês</button>
+    <button class="dash-f-btn" onclick="dashFiltro(this,'mes')">MÃªs</button>
     <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="dash-periodo-label">Hoje</span>
   </div>
   <div style="flex:1;overflow-y:auto;padding:16px 20px">
@@ -206,7 +206,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
       <div class="dash-card">
         <div class="dash-card-title">Mensagens recebidas</div>
         <div style="font-size:32px;font-weight:600;color:var(--text);margin-bottom:4px" id="d-msgs">0</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">no período</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">no perÃ­odo</div>
         <div id="d-canais"></div>
         <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-msgs-delta"></div>
       </div>
@@ -223,7 +223,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
         <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-semfu-delta"></div>
       </div>
       <div class="dash-card">
-        <div class="dash-card-title">Taxa de conversão</div>
+        <div class="dash-card-title">Taxa de conversÃ£o</div>
         <div style="font-size:32px;font-weight:600;color:#22c55e;margin-bottom:4px" id="d-taxa">0%</div>
         <div style="font-size:11px;color:var(--text3);margin-bottom:12px">fechados / total</div>
         <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-taxa-sub"></div>
@@ -268,11 +268,11 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input id="wpp-search" placeholder="Buscar conversa..." style="border:none;background:none;outline:none;font-size:13px;color:var(--text);width:100%" oninput="filtrarConversas()"/>
         </div>
-        <button class="btn btn-sm" onclick="loadWppMessages()" title="Atualizar">↻</button>
+        <button class="btn btn-sm" onclick="loadWppMessages()" title="Atualizar">â†»</button>
       </div>
       <div style="padding:8px 12px;display:flex;gap:6px;border-bottom:1px solid var(--border)">
-        <span style="font-size:11px;background:rgba(249,115,22,.2);color:var(--orange);padding:2px 8px;border-radius:20px;font-weight:600">● Novos leads</span>
-        <span style="font-size:11px;background:rgba(59,130,246,.2);color:var(--blue);padding:2px 8px;border-radius:20px;font-weight:600">● Clientes MF</span>
+        <span style="font-size:11px;background:rgba(249,115,22,.2);color:var(--orange);padding:2px 8px;border-radius:20px;font-weight:600">â— Novos leads</span>
+        <span style="font-size:11px;background:rgba(59,130,246,.2);color:var(--blue);padding:2px 8px;border-radius:20px;font-weight:600">â— Clientes MF</span>
       </div>
       <div style="flex:1;overflow-y:auto" id="wpp-conv-list">
         <div style="text-align:center;padding:40px;color:var(--text3);font-size:13px">Carregando...</div>
@@ -280,11 +280,11 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
       <div style="padding:10px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);text-align:center" id="wpp-count">0 conversas</div>
     </div>
 
-    <!-- ÁREA DO CHAT -->
+    <!-- ÃREA DO CHAT -->
     <div style="flex:1;display:flex;flex-direction:column;background:var(--bg)" id="wpp-chat-area">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3)">
-        <div style="font-size:40px">💬</div>
-        <div style="font-size:14px">Selecione uma conversa para começar</div>
+        <div style="font-size:40px">ðŸ’¬</div>
+        <div style="font-size:14px">Selecione uma conversa para comeÃ§ar</div>
         <div style="font-size:12px">As mensagens aparecem aqui automaticamente</div>
       </div>
     </div>
@@ -299,15 +299,15 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
         <div class="ia-card-title">Mensagem do WhatsApp</div>
         <div class="form-group"><textarea id="ia-msg" rows="6" placeholder="Cole aqui a mensagem recebida no WhatsApp..."></textarea></div>
         <div class="form-group"><label class="form-label">Chave da API Anthropic</label><input type="password" id="ia-key" placeholder="sk-ant-..." oninput="saveKey()"/></div>
-        <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="analisarMsg()">Analisar com IA ↗</button><button class="btn" onclick="document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none'">Limpar</button></div>
+        <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="analisarMsg()">Analisar com IA â†—</button><button class="btn" onclick="document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none'">Limpar</button></div>
       </div>
       <div class="ia-card" id="ia-output" style="display:none">
         <div class="ia-card-title">Resultado</div><div id="ia-result-content"></div><div id="ia-add-btn" style="margin-top:12px;display:none"></div>
       </div>
     </div>
     <div class="ia-right">
-      <div class="ia-card"><div class="ia-card-title">Como usar</div><div style="font-size:13px;color:var(--text2);line-height:1.7"><p style="margin-bottom:10px">1. Cole a mensagem do WhatsApp.</p><p style="margin-bottom:10px">2. A IA extrai nome, telefone, produto, etapa e observações.</p><p>3. Revise e clique em Adicionar ao funil.</p></div></div>
-      <div class="ia-card" style="margin-top:12px"><div class="ia-card-title">Últimas análises</div><div id="ia-history"></div></div>
+      <div class="ia-card"><div class="ia-card-title">Como usar</div><div style="font-size:13px;color:var(--text2);line-height:1.7"><p style="margin-bottom:10px">1. Cole a mensagem do WhatsApp.</p><p style="margin-bottom:10px">2. A IA extrai nome, telefone, produto, etapa e observaÃ§Ãµes.</p><p>3. Revise e clique em Adicionar ao funil.</p></div></div>
+      <div class="ia-card" style="margin-top:12px"><div class="ia-card-title">Ãšltimas anÃ¡lises</div><div id="ia-history"></div></div>
     </div>
   </div>
 </div>
@@ -318,7 +318,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 <!-- PAINEL LEMBRETES -->
 <div id="painel-lembretes" style="display:none;position:fixed;top:56px;right:16px;width:360px;max-height:80vh;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:500;overflow:hidden;flex-direction:column">
   <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
-    <strong style="font-size:14px">🔔 Lembretes</strong>
+    <strong style="font-size:14px">ðŸ”” Lembretes</strong>
     <div style="display:flex;gap:8px">
       <button class="btn btn-primary btn-sm" onclick="abrirModalLembrete()">+ Novo</button>
       <span onclick="toggleLembretes()" style="cursor:pointer;color:var(--text3);font-size:18px;line-height:1">&times;</span>
@@ -338,16 +338,16 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
       <div>
         <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">TIPO</label>
         <select id="lemb-tipo" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
-          <option value="cobranca">💰 Cobrar cliente</option>
-          <option value="coleta">📦 Coleta agendada</option>
-          <option value="entrega">🚚 Entrega prevista</option>
-          <option value="reuniao">🤝 Reunião / Ligação</option>
-          <option value="outro">📌 Outro</option>
+          <option value="cobranca">ðŸ’° Cobrar cliente</option>
+          <option value="coleta">ðŸ“¦ Coleta agendada</option>
+          <option value="entrega">ðŸšš Entrega prevista</option>
+          <option value="reuniao">ðŸ¤ ReuniÃ£o / LigaÃ§Ã£o</option>
+          <option value="outro">ðŸ“Œ Outro</option>
         </select>
       </div>
       <div>
-        <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">DESCRIÇÃO *</label>
-        <input id="lemb-desc" placeholder="Ex: Ligar para João sobre proposta" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+        <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">DESCRIÃ‡ÃƒO *</label>
+        <input id="lemb-desc" placeholder="Ex: Ligar para JoÃ£o sobre proposta" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
       </div>
       <div>
         <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">CLIENTE (opcional)</label>
@@ -373,9 +373,9 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 
 <script>
 
-// ═══════════════════════════════════════════════════════
-// MÓDULO FINANCEIRO — Lançamento de Vendas
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// MÃ“DULO FINANCEIRO â€” LanÃ§amento de Vendas
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 var vendas = [];
 var vendaEditando = null;
 function salvarVendas() {localStorage.setItem('crm-vendas',JSON.stringify(vendas));}
@@ -441,7 +441,7 @@ function renderFinanceiro() {
   var mes = hoje.getMonth();
   var ano = hoje.getFullYear();
 
-  // Stats do mês
+  // Stats do mÃªs
   var doMes = vendas.filter(function(v){
     var d = new Date(v.ts);
     return d.getMonth()===mes && d.getFullYear()===ano;
@@ -455,7 +455,7 @@ function renderFinanceiro() {
   var stats = document.getElementById('fin-stats');
   if(stats) stats.innerHTML =
     '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">' +
-      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Faturado no mês</div>' +
+      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Faturado no mÃªs</div>' +
       '<div style="font-size:22px;font-weight:800;color:var(--text);">' + formatMoeda(totalFaturado) + '</div>' +
     '</div>' +
     '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">' +
@@ -493,8 +493,8 @@ function renderFinanceiro() {
     var stColor = st==='recebido'?'#22c55e': st==='atrasado'?'#ef4444': st==='hoje'?'#eab308':'#3b82f6';
     var stLabel = st==='recebido'?'Recebido': st==='atrasado'?'Atrasado': st==='hoje'?'Vence hoje':'Em aberto';
     var venc = new Date(v.vencimento+'T00:00:00').toLocaleDateString('pt-BR');
-    var pgIcon = {pix:'⚡',credito:'💳',link:'🔗',boleto:'📄',debito:'🏦'}[v.formaPag] || '💰';
-    var pgLabel = {pix:'PIX',credito:'Crédito',link:'Link Cartão',boleto:'Boleto',debito:'Débito'}[v.formaPag] || v.formaPag;
+    var pgIcon = {pix:'âš¡',credito:'ðŸ’³',link:'ðŸ”—',boleto:'ðŸ“„',debito:'ðŸ¦'}[v.formaPag] || 'ðŸ’°';
+    var pgLabel = {pix:'PIX',credito:'CrÃ©dito',link:'Link CartÃ£o',boleto:'Boleto',debito:'DÃ©bito'}[v.formaPag] || v.formaPag;
     return '<tr style="border-bottom:1px solid var(--border);">' +
       '<td style="padding:12px 14px;font-size:13px;font-weight:600;">' + (v.cliente||'-') + '</td>' +
       '<td style="padding:12px 14px;font-size:12px;color:var(--text3);">' + (v.descricao||'-') + '</td>' +
@@ -505,9 +505,9 @@ function renderFinanceiro() {
         '<span style="background:' + stColor + '22;color:' + stColor + ';border:1px solid ' + stColor + '44;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;">' + stLabel + '</span>' +
       '</td>' +
       '<td style="padding:12px 14px;display:flex;gap:6px;">' +
-        (!v.pago ? '<button onclick="finDarBaixa(\'' + v.id + '\')" style="background:#22c55e;color:white;border:none;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">✓ Baixar</button>' : '') +
-        '<button onclick="finEditar(\'' + v.id + '\')" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;">✏</button>' +
-        '<button onclick="finExcluir(\'' + v.id + '\')" style="background:var(--bg3);color:#ef4444;border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;">🗑</button>' +
+        (!v.pago ? '<button onclick="finDarBaixa(\'' + v.id + '\')" style="background:#22c55e;color:white;border:none;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">âœ“ Baixar</button>' : '') +
+        '<button onclick="finEditar(\'' + v.id + '\')" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;">âœ</button>' +
+        '<button onclick="finExcluir(\'' + v.id + '\')" style="background:var(--bg3);color:#ef4444;border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;">ðŸ—‘</button>' +
       '</td>' +
     '</tr>';
   }).join('');
@@ -540,7 +540,7 @@ function abrirModalVenda(leadId) {
         ev.dataset.valor = vf.toFixed(2);
       }
       var ed = document.getElementById('fin-descricao');
-      if(ed) ed.value = (lead.rota||lead.origem||'') ? 'Frete: ' + (lead.rota || (lead.origem||'') + ' → ' + (lead.destino||'')) : '';
+      if(ed) ed.value = (lead.rota||lead.origem||'') ? 'Frete: ' + (lead.rota || (lead.origem||'') + ' â†’ ' + (lead.destino||'')) : '';
       document.getElementById('fin-lead-id').value = lead.id;
     }
   } else {
@@ -555,7 +555,7 @@ function fecharModalVenda() {
   document.getElementById('modal-financeiro').style.display = 'none';
 }
 
-function finAtualizarVencimento() { /* prazo agora é select de atalho */ }
+function finAtualizarVencimento() { /* prazo agora Ã© select de atalho */ }
 
 function finSalvar() {
   var cliente = document.getElementById('fin-cliente').value.trim();
@@ -601,7 +601,7 @@ function finSalvar() {
   salvarVendas();
   fecharModalVenda();
   renderFinanceiro();
-  if(typeof showToast === 'function') showToast('Venda salva — ' + cliente);
+  if(typeof showToast === 'function') showToast('Venda salva â€” ' + cliente);
 }
 
 function finDarBaixa(id) {
@@ -647,9 +647,9 @@ function finExcluir(id) {
 
 
 
-const STAGES=['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'];
-const STAGE_COLORS={'Primeiro contato':'#3b82f6','Qualificação':'#8b5cf6','Proposta enviada':'#f59e0b','Negociação':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'};
-const STAGE_PILL={'Primeiro contato':'background:rgba(59,130,246,.25);color:#93c5fd','Qualificação':'background:rgba(139,92,246,.25);color:#c4b5fd','Proposta enviada':'background:rgba(245,158,11,.25);color:#fcd34d','Negociação':'background:rgba(249,115,22,.25);color:#fdba74','Fechado / Ganho':'background:rgba(34,197,94,.25);color:#86efac','Perdido':'background:rgba(239,68,68,.25);color:#fca5a5'};
+const STAGES=['Primeiro contato','QualificaÃ§Ã£o','Proposta enviada','NegociaÃ§Ã£o','Fechado / Ganho','Perdido'];
+const STAGE_COLORS={'Primeiro contato':'#3b82f6','QualificaÃ§Ã£o':'#8b5cf6','Proposta enviada':'#f59e0b','NegociaÃ§Ã£o':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'};
+const STAGE_PILL={'Primeiro contato':'background:rgba(59,130,246,.25);color:#93c5fd','QualificaÃ§Ã£o':'background:rgba(139,92,246,.25);color:#c4b5fd','Proposta enviada':'background:rgba(245,158,11,.25);color:#fcd34d','NegociaÃ§Ã£o':'background:rgba(249,115,22,.25);color:#fdba74','Fechado / Ganho':'background:rgba(34,197,94,.25);color:#86efac','Perdido':'background:rgba(239,68,68,.25);color:#fca5a5'};
 
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
 function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
@@ -658,12 +658,12 @@ function saveLeads(){save('crm-leads',leads);updateStats();}
 function saveActivity(){save('crm-activity',activity.slice(0,100));}
 function addActivity(msg){activity.unshift({msg,ts:Date.now()});saveActivity();}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
-function fmtDate(ts){const d=new Date(ts),now=new Date(),diff=Math.floor((now-d)/1000);if(diff<60)return 'agora';if(diff<3600)return Math.floor(diff/60)+'min atrás';if(diff<86400)return Math.floor(diff/3600)+'h atrás';return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});}
+function fmtDate(ts){const d=new Date(ts),now=new Date(),diff=Math.floor((now-d)/1000);if(diff<60)return 'agora';if(diff<3600)return Math.floor(diff/60)+'min atrÃ¡s';if(diff<86400)return Math.floor(diff/3600)+'h atrÃ¡s';return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});}
 function fmtTime(ts){return new Date(ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
 function fmtDateFull(ts){return new Date(ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
 function initials(name){return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';}
 
-function fmtValorStat(v){
+function fmtValorStat(v){ // v2
   if(!v||v===0) return 'R$ 0,00';
   return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
@@ -702,15 +702,15 @@ function updateStats(){
     if(el('outro-perdido')) el('outro-perdido').textContent = fmtValorStat(somaFrete(perdidosOutro));
     if(el('outro-neg')) el('outro-neg').textContent = fmtValorStat(somaFrete(negOutro));
     if(el('outro-semretorno')) el('outro-semretorno').textContent = srOutro.length;
-    if(el('stat-total-label')) el('stat-total-label').textContent = p.emoji+' '+p.nome+' · '+nomeMes;
+    if(el('stat-total-label')) el('stat-total-label').textContent = p.emoji+' '+p.nome+' Â· '+nomeMes;
   } else {
     if(el('stats-bar-outro')) el('stats-bar-outro').style.display='none';
-    if(el('stat-total-label')) el('stat-total-label').textContent = nomeMes||'Total do mês';
+    if(el('stat-total-label')) el('stat-total-label').textContent = nomeMes||'Total do mÃªs';
   }
 
   const stagesNeg = typeof PERFIS !== 'undefined' && perfilAtivo && PERFIS[perfilAtivo]
     ? PERFIS[perfilAtivo].stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido')
-    : ['Proposta enviada','Negociação','Qualificação','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal'];
+    : ['Proposta enviada','NegociaÃ§Ã£o','QualificaÃ§Ã£o','CotaÃ§Ã£o Enviada','EmissÃ£o','Coleta','CobranÃ§a','Nota Fiscal'];
 
   const ganhos = leadsMes.filter(l=>l.stage==='Fechado / Ganho');
   const perdidos = leadsMes.filter(l=>l.stage==='Perdido');
@@ -734,10 +734,10 @@ function showView(v){
 }
 
 function promptAgent(){const n=prompt('Seu nome:',agentName);if(n!==null){agentName=n.trim();save('crm-agent',agentName);updateAgentLabel();}}
-function updateAgentLabel(){document.getElementById('agent-label').textContent=agentName?'👤 '+agentName:'👤 Definir nome';}
+function updateAgentLabel(){document.getElementById('agent-label').textContent=agentName?'ðŸ‘¤ '+agentName:'ðŸ‘¤ Definir nome';}
 function updateAgentFilters(){
   const agents=[...new Set(leads.map(l=>l.agent).filter(Boolean))];
-  ['kanban-agent','leads-agent'].forEach(id=>{const sel=document.getElementById(id);if(!sel)return;const val=sel.value;sel.innerHTML='<option value="">Todos os responsáveis</option>'+agents.map(a=>`<option value="${a}">${a}</option>`).join('');sel.value=val;});
+  ['kanban-agent','leads-agent'].forEach(id=>{const sel=document.getElementById(id);if(!sel)return;const val=sel.value;sel.innerHTML='<option value="">Todos os responsÃ¡veis</option>'+agents.map(a=>`<option value="${a}">${a}</option>`).join('');sel.value=val;});
   const sel=document.getElementById('leads-stage');if(sel)sel.innerHTML='<option value="">Todas as etapas</option>'+STAGES.map(s=>`<option value="${s}">${s}</option>`).join('');
 }
 
@@ -774,16 +774,16 @@ function renderKanban(){
       card.innerHTML=`
         <div class="card-name">${lead.name}</div>
         <div class="card-phone">${lead.tel||'Sem telefone'}</div>
-        ${lead.rota?`<div class="card-route">📦 ${lead.rota}</div>`:''}
+        ${lead.rota?`<div class="card-route">ðŸ“¦ ${lead.rota}</div>`:''}
         ${lead.obs?`<div class="card-msg">${lead.obs.slice(0,55)}</div>`:''}
         <div class="card-tags">
           ${lead.source==='whatsapp'?'<span class="tag tag-wpp">WhatsApp</span>':''}
           ${hasFu?'<span class="tag tag-followup">Follow-up</span>':''}
-          ${lead.hot?'<span class="tag tag-hot">🔥 Quente</span>':''}
-          ${lead.urgencia==='Alta'?'<span class="tag tag-urgente">⚡ Urgente</span>':''}
+          ${lead.hot?'<span class="tag tag-hot">ðŸ”¥ Quente</span>':''}
+          ${lead.urgencia==='Alta'?'<span class="tag tag-urgente">âš¡ Urgente</span>':''}
         </div>
         <div class="card-footer">
-          <span style="font-size:11px;color:var(--text3)">${lead.agent||''}${lead.valorFrete?' · <span style="color:var(--green)">R$ '+lead.valorFrete+'</span>':''}</span>
+          <span style="font-size:11px;color:var(--text3)">${lead.agent||''}${lead.valorFrete?' Â· <span style="color:var(--green)">R$ '+lead.valorFrete+'</span>':''}</span>
           <span class="card-time">${fmtDate(lead.ts)}</span>
         </div>`;
       card.onclick=()=>openLead(lead.id);container.appendChild(card);
@@ -806,12 +806,12 @@ function renderLeads(){
     const fu=l.followups?.find(f=>!f.done);
     return `<tr onclick="openLead('${l.id}')">
       <td><strong>${l.name}</strong></td>
-      <td style="color:var(--blue);font-size:12px">${l.rota||l.prod||'—'}</td>
+      <td style="color:var(--blue);font-size:12px">${l.rota||l.prod||'â€”'}</td>
       <td><span class="stage-pill" style="${STAGE_PILL[l.stage]||''}">${l.stage}</span></td>
-      <td style="color:var(--green)">${l.valorNF?'R$ '+l.valorNF:'—'}</td>
-      <td style="color:var(--text2)">${l.agent||'—'}</td>
+      <td style="color:var(--green)">${l.valorNF?'R$ '+l.valorNF:'â€”'}</td>
+      <td style="color:var(--text2)">${l.agent||'â€”'}</td>
       <td style="color:var(--text3)">${fmtTime(l.ts)}</td>
-      <td style="color:${fu?'var(--amber)':'var(--text3)'}">${fu?fu.text:'—'}</td>
+      <td style="color:${fu?'var(--amber)':'var(--text3)'}">${fu?fu.text:'â€”'}</td>
     </tr>`;
   }).join(''):`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text3)">Nenhum lead encontrado.</td></tr>`;
 }
@@ -867,7 +867,7 @@ function renderDashboard(){
     {cor:'#378ADD',nome:'Site/Google',v:google+site},
     {cor:'#888',nome:'Outros',v:outros}
   ].map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${c.cor};display:inline-block"></span>${c.nome}</span><span style="font-size:13px;font-weight:600;color:#22c55e">${c.v}</span></div>`).join('');
-  if(s('d-msgs-delta'))s('d-msgs-delta').textContent=periodo.length+' leads no período';
+  if(s('d-msgs-delta'))s('d-msgs-delta').textContent=periodo.length+' leads no perÃ­odo';
   if(s('d-conv'))s('d-conv').textContent=ativos.length;
   if(s('d-conv-delta'))s('d-conv-delta').textContent='+'+leadsHoje.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length+' hoje';
   if(s('d-semfu'))s('d-semfu').textContent=semFu.length;
@@ -890,37 +890,37 @@ function renderDashboard(){
   document.getElementById('dash-followups').innerHTML=allFu.length?allFu.slice(0,6).map(f=>`<div class="activity-item" onclick="openLead('${f.leadId}')"><div class="activity-dot" style="background:var(--amber)"></div><div><div class="activity-text"><strong>${f.leadName}</strong>: ${f.text}</div><div class="activity-time">${f.date||'Sem data'}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhum follow-up pendente.</div>';
 }
 
-// ─── NOVO LEAD ───────────────────────────────────────────────
+// â”€â”€â”€ NOVO LEAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openNewLead(stage='Primeiro contato'){
   const stageOpts=STAGES.map(s=>`<option value="${s}" ${s===stage?'selected':''}>${s}</option>`).join('');
   showModal(`
-    <div class="modal-header"><span class="modal-title">Novo lead</span><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-header"><span class="modal-title">Novo lead</span><button class="modal-close" onclick="closeModal()">Ã—</button></div>
     <div class="modal-body">
-      <div class="section-divider">📋 Dados do cliente</div>
+      <div class="section-divider">ðŸ“‹ Dados do cliente</div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Nome *</label><input id="nl-name" placeholder="Nome do cliente"/></div>
         <div class="form-group"><label class="form-label">Telefone / WhatsApp</label><input id="nl-tel" placeholder="(11) 99999-9999"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Etapa</label><select id="nl-stage">${stageOpts}</select></div>
-        <div class="form-group"><label class="form-label">Responsável</label><input id="nl-agent" value="${agentName}" placeholder="Seu nome"/></div>
+        <div class="form-group"><label class="form-label">ResponsÃ¡vel</label><input id="nl-agent" value="${agentName}" placeholder="Seu nome"/></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Origem</label><select id="nl-source"><option value="">—</option><option value="whatsapp">WhatsApp</option><option value="google">Google</option><option value="instagram">Instagram</option><option value="site">Site</option><option value="indicacao">Indicação</option><option value="outro">Outro</option></select></div>
-        <div class="form-group"><label class="form-label">Urgência</label><select id="nl-urgencia"><option value="">Normal</option><option value="Alta">Alta</option><option value="Muito alta">Muito alta</option></select></div>
+        <div class="form-group"><label class="form-label">Origem</label><select id="nl-source"><option value="">â€”</option><option value="whatsapp">WhatsApp</option><option value="google">Google</option><option value="instagram">Instagram</option><option value="site">Site</option><option value="indicacao">IndicaÃ§Ã£o</option><option value="outro">Outro</option></select></div>
+        <div class="form-group"><label class="form-label">UrgÃªncia</label><select id="nl-urgencia"><option value="">Normal</option><option value="Alta">Alta</option><option value="Muito alta">Muito alta</option></select></div>
       </div>
 
-      <div class="section-divider">📦 Dados do frete</div>
+      <div class="section-divider">ðŸ“¦ Dados do frete</div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Material / Produto</label><input id="nl-material" placeholder="Ex: Rolamento, Brindes, Eletrônicos"/></div>
+        <div class="form-group"><label class="form-label">Material / Produto</label><input id="nl-material" placeholder="Ex: Rolamento, Brindes, EletrÃ´nicos"/></div>
         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="nl-valorNF" placeholder="Ex: 15.000,00"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Valor do Frete (R$)</label><input id="nl-valorFrete" placeholder="Ex: 1.200,00"/></div>
-        <div class="form-group"><label class="form-label">Transportadora</label><select id="nl-transportadora"><option value="">—</option><option value="FedEx">FedEx</option><option value="DHL">DHL</option><option value="Correios">Correios</option><option value="Jadlog">Jadlog</option><option value="Próprio">Próprio</option><option value="Outro">Outro</option></select></div>
+        <div class="form-group"><label class="form-label">Transportadora</label><select id="nl-transportadora"><option value="">â€”</option><option value="FedEx">FedEx</option><option value="DHL">DHL</option><option value="Correios">Correios</option><option value="Jadlog">Jadlog</option><option value="PrÃ³prio">PrÃ³prio</option><option value="Outro">Outro</option></select></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Origem (cidade/UF)</label><input id="nl-origem" placeholder="Ex: São Paulo/SP"/></div>
+        <div class="form-group"><label class="form-label">Origem (cidade/UF)</label><input id="nl-origem" placeholder="Ex: SÃ£o Paulo/SP"/></div>
         <div class="form-group"><label class="form-label">Destino (cidade/UF)</label><input id="nl-destino" placeholder="Ex: Manaus/AM"/></div>
       </div>
       <div class="form-row-3">
@@ -929,9 +929,9 @@ function openNewLead(stage='Primeiro contato'){
         <div class="form-group"><label class="form-label">Medidas (cm)</label><input id="nl-medidas" placeholder="Ex: 50x30x40"/></div>
       </div>
 
-      <div class="section-divider">📝 Observações</div>
-      <div class="form-group"><textarea id="nl-obs" rows="3" placeholder="Contexto, proposta enviada, status da negociação..."></textarea></div>
-      <div class="form-group"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="nl-hot" style="width:auto"/> Marcar como lead quente 🔥</label></div>
+      <div class="section-divider">ðŸ“ ObservaÃ§Ãµes</div>
+      <div class="form-group"><textarea id="nl-obs" rows="3" placeholder="Contexto, proposta enviada, status da negociaÃ§Ã£o..."></textarea></div>
+      <div class="form-group"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="nl-hot" style="width:auto"/> Marcar como lead quente ðŸ”¥</label></div>
     </div>
     <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveLead()">Adicionar lead</button></div>
   `);
@@ -943,7 +943,7 @@ function saveLead(){
   if(!name){toast('Informe o nome do lead.');return;}
   const origem=document.getElementById('nl-origem').value.trim();
   const destino=document.getElementById('nl-destino').value.trim();
-  const rota=origem&&destino?origem+' → '+destino:'';
+  const rota=origem&&destino?origem+' â†’ '+destino:'';
   const lead={
     id:uid(),name,tel:document.getElementById('nl-tel').value.trim(),
     stage:document.getElementById('nl-stage').value,agent:document.getElementById('nl-agent').value.trim(),
@@ -961,7 +961,7 @@ function saveLead(){
     ts:Date.now(),history:[],followups:[]
   };
   if(lead.obs)lead.history.push({text:lead.obs,ts:Date.now(),type:'note'});
-  // Ajustar timestamp para o mês do funil se não for o mês atual
+  // Ajustar timestamp para o mÃªs do funil se nÃ£o for o mÃªs atual
   if(kanbanMesOffset !== 0) {
     const mesBase = getMesAtual();
     mesBase.setDate(15);mesBase.setHours(12,0,0,0);
@@ -971,43 +971,43 @@ function saveLead(){
   closeModal();renderKanban();updateAgentFilters();toast('Lead adicionado!');
 }
 
-// ─── LEAD DETAIL ───────────────────────────────────────────────
+// â”€â”€â”€ LEAD DETAIL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openLead(id){const l=leads.find(x=>x.id===id);if(!l)return;renderLeadModal(l);}
 
 function renderLeadModal(l){
   const stageOpts=STAGES.map(s=>`<option value="${s}" ${s===l.stage?'selected':''}>${s}</option>`).join('');
-  const history=(l.history||[]).slice().reverse().map(h=>`<div class="history-item"><div class="history-dot"></div><div><div class="history-bubble">${h.text}</div><div class="history-meta">${fmtDateFull(h.ts)}${h.agent?' · '+h.agent:''}</div></div></div>`).join('');
-  const fus=(l.followups||[]).map((f,i)=>`<div class="followup-item"><input type="checkbox" class="followup-check" ${f.done?'checked':''} onchange="toggleFollowup('${l.id}',${i},this.checked)"/><span class="followup-text ${f.done?'followup-done':''}">${f.text}</span><span class="followup-date">${f.date||''}</span><button class="btn btn-sm btn-danger" onclick="deleteFollowup('${l.id}',${i})">×</button></div>`).join('');
+  const history=(l.history||[]).slice().reverse().map(h=>`<div class="history-item"><div class="history-dot"></div><div><div class="history-bubble">${h.text}</div><div class="history-meta">${fmtDateFull(h.ts)}${h.agent?' Â· '+h.agent:''}</div></div></div>`).join('');
+  const fus=(l.followups||[]).map((f,i)=>`<div class="followup-item"><input type="checkbox" class="followup-check" ${f.done?'checked':''} onchange="toggleFollowup('${l.id}',${i},this.checked)"/><span class="followup-text ${f.done?'followup-done':''}">${f.text}</span><span class="followup-date">${f.date||''}</span><button class="btn btn-sm btn-danger" onclick="deleteFollowup('${l.id}',${i})">Ã—</button></div>`).join('');
   showModal(`
     <div class="modal-header">
       <span class="modal-title">Detalhes do lead</span>
-      <div style="display:flex;gap:6px"><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')">Excluir</button><button class="modal-close" onclick="closeModal()">×</button></div>
+      <div style="display:flex;gap:6px"><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')">Excluir</button><button class="modal-close" onclick="closeModal()">Ã—</button></div>
     </div>
     <div class="modal-body">
       <div class="detail-header">
         <div class="avatar">${initials(l.name)}</div>
-        <div><div class="detail-name">${l.name}</div><div class="detail-sub">${l.tel||''}${l.rota?' · '+l.rota:''}</div></div>
-        ${l.tel?`<a href="https://wa.me/55${l.tel.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="margin-left:auto;background:var(--green-bg);color:var(--green);border-color:var(--green)">Abrir WhatsApp ↗</a>`:''}
+        <div><div class="detail-name">${l.name}</div><div class="detail-sub">${l.tel||''}${l.rota?' Â· '+l.rota:''}</div></div>
+        ${l.tel?`<a href="https://wa.me/55${l.tel.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="margin-left:auto;background:var(--green-bg);color:var(--green);border-color:var(--green)">Abrir WhatsApp â†—</a>`:''}
       </div>
 
-      <div class="section-divider">📋 Dados do lead</div>
+      <div class="section-divider">ðŸ“‹ Dados do lead</div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Etapa</label><select id="d-stage" onchange="updateLeadStage('${l.id}',this.value)">${stageOpts}</select></div>
-        <div class="form-group"><label class="form-label">Responsável</label><input id="d-agent" value="${l.agent||''}" onblur="updateLeadField('${l.id}','agent',this.value)"/></div>
+        <div class="form-group"><label class="form-label">ResponsÃ¡vel</label><input id="d-agent" value="${l.agent||''}" onblur="updateLeadField('${l.id}','agent',this.value)"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Telefone</label><input id="d-tel" value="${l.tel||''}" onblur="updateLeadField('${l.id}','tel',this.value)"/></div>
-        <div class="form-group"><label class="form-label">Urgência</label><select id="d-urgencia" onchange="updateLeadField('${l.id}','urgencia',this.value)"><option value="" ${!l.urgencia?'selected':''}>Normal</option><option value="Alta" ${l.urgencia==='Alta'?'selected':''}>Alta</option><option value="Muito alta" ${l.urgencia==='Muito alta'?'selected':''}>Muito alta</option></select></div>
+        <div class="form-group"><label class="form-label">UrgÃªncia</label><select id="d-urgencia" onchange="updateLeadField('${l.id}','urgencia',this.value)"><option value="" ${!l.urgencia?'selected':''}>Normal</option><option value="Alta" ${l.urgencia==='Alta'?'selected':''}>Alta</option><option value="Muito alta" ${l.urgencia==='Muito alta'?'selected':''}>Muito alta</option></select></div>
       </div>
 
-      <div class="section-divider">📦 Dados do frete</div>
+      <div class="section-divider">ðŸ“¦ Dados do frete</div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Material / Produto</label><input id="d-material" value="${l.material||''}" onblur="updateLeadField('${l.id}','material',this.value)"/></div>
         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="d-valorNF" value="${l.valorNF||''}" onblur="updateLeadField('${l.id}','valorNF',this.value)"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Valor do Frete (R$)</label><input id="d-valorFrete" value="${l.valorFrete||''}" onblur="updateLeadField('${l.id}','valorFrete',this.value)" placeholder="Ex: 1.200,00"/></div>
-        <div class="form-group"><label class="form-label">Transportadora</label><select id="d-transportadora" onchange="updateLeadField('${l.id}','transportadora',this.value)"><option value="" ${!l.transportadora?'selected':''}>—</option><option value="FedEx" ${l.transportadora==='FedEx'?'selected':''}>FedEx</option><option value="DHL" ${l.transportadora==='DHL'?'selected':''}>DHL</option><option value="Correios" ${l.transportadora==='Correios'?'selected':''}>Correios</option><option value="Jadlog" ${l.transportadora==='Jadlog'?'selected':''}>Jadlog</option><option value="Próprio" ${l.transportadora==='Próprio'?'selected':''}>Próprio</option><option value="Outro" ${l.transportadora==='Outro'?'selected':''}>Outro</option></select></div>
+        <div class="form-group"><label class="form-label">Transportadora</label><select id="d-transportadora" onchange="updateLeadField('${l.id}','transportadora',this.value)"><option value="" ${!l.transportadora?'selected':''}>â€”</option><option value="FedEx" ${l.transportadora==='FedEx'?'selected':''}>FedEx</option><option value="DHL" ${l.transportadora==='DHL'?'selected':''}>DHL</option><option value="Correios" ${l.transportadora==='Correios'?'selected':''}>Correios</option><option value="Jadlog" ${l.transportadora==='Jadlog'?'selected':''}>Jadlog</option><option value="PrÃ³prio" ${l.transportadora==='PrÃ³prio'?'selected':''}>PrÃ³prio</option><option value="Outro" ${l.transportadora==='Outro'?'selected':''}>Outro</option></select></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Origem</label><input id="d-origem" value="${l.origem||''}" onblur="updateRotaField('${l.id}')"/></div>
@@ -1019,23 +1019,23 @@ function renderLeadModal(l){
         <div class="form-group"><label class="form-label">Medidas (cm)</label><input id="d-medidas" value="${l.medidas||''}" onblur="updateLeadField('${l.id}','medidas',this.value)"/></div>
       </div>
 
-      <div class="section-divider">📝 Anotações</div>
+      <div class="section-divider">ðŸ“ AnotaÃ§Ãµes</div>
       <div style="display:flex;gap:8px;margin-bottom:16px">
-        <textarea id="d-note" rows="2" placeholder="Escreva uma anotação..." style="flex:1"></textarea>
+        <textarea id="d-note" rows="2" placeholder="Escreva uma anotaÃ§Ã£o..." style="flex:1"></textarea>
         <button class="btn btn-primary" style="align-self:flex-end" onclick="addNote('${l.id}')">Salvar</button>
       </div>
-      <div style="max-height:180px;overflow-y:auto;margin-bottom:16px">${history||'<div style="color:var(--text3);font-size:13px">Sem histórico ainda.</div>'}</div>
+      <div style="max-height:180px;overflow-y:auto;margin-bottom:16px">${history||'<div style="color:var(--text3);font-size:13px">Sem histÃ³rico ainda.</div>'}</div>
 
       <div class="section-title">Follow-ups</div>
       <div id="fu-list">${fus}</div>
       <div style="display:flex;gap:8px;margin-top:8px">
-        <input id="fu-text" placeholder="Próxima ação..." style="flex:1"/>
+        <input id="fu-text" placeholder="PrÃ³xima aÃ§Ã£o..." style="flex:1"/>
         <input id="fu-date" type="date" style="width:140px"/>
         <button class="btn btn-primary" onclick="addFollowup('${l.id}')">+ Adicionar</button>
       </div>
     </div>
     <div class="modal-footer">
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-right:auto"><input type="checkbox" id="d-hot" ${l.hot?'checked':''} style="width:auto" onchange="updateLeadField('${l.id}','hot',this.checked)"/>Lead quente 🔥</label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-right:auto"><input type="checkbox" id="d-hot" ${l.hot?'checked':''} style="width:auto" onchange="updateLeadField('${l.id}','hot',this.checked)"/>Lead quente ðŸ”¥</label>
       <button class="btn" onclick="closeModal()">Fechar</button>
     </div>
   `);
@@ -1045,29 +1045,29 @@ function updateRotaField(id){
   const l=leads.find(x=>x.id===id);if(!l)return;
   const origem=document.getElementById('d-origem').value.trim();
   const destino=document.getElementById('d-destino').value.trim();
-  l.origem=origem;l.destino=destino;l.rota=origem&&destino?origem+' → '+destino:'';saveLeads();
+  l.origem=origem;l.destino=destino;l.rota=origem&&destino?origem+' â†’ '+destino:'';saveLeads();
 }
-function updateLeadStage(id,stage){const l=leads.find(x=>x.id===id);if(!l)return;const old=l.stage;l.stage=stage;l.history=l.history||[];l.history.push({text:`Etapa: <em>${old}</em> → <strong>${stage}</strong>`,ts:Date.now(),agent:agentName});saveLeads();addActivity(`<strong>${l.name}</strong>: ${old} → <strong>${stage}</strong>`);renderKanban();toast('Etapa atualizada!');}
+function updateLeadStage(id,stage){const l=leads.find(x=>x.id===id);if(!l)return;const old=l.stage;l.stage=stage;l.history=l.history||[];l.history.push({text:`Etapa: <em>${old}</em> â†’ <strong>${stage}</strong>`,ts:Date.now(),agent:agentName});saveLeads();addActivity(`<strong>${l.name}</strong>: ${old} â†’ <strong>${stage}</strong>`);renderKanban();toast('Etapa atualizada!');}
 function updateLeadField(id,field,value){const l=leads.find(x=>x.id===id);if(!l)return;l[field]=value;saveLeads();}
-function addNote(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=document.getElementById('d-note').value.trim();if(!text)return;l.history=l.history||[];l.history.push({text,ts:Date.now(),agent:agentName});saveLeads();addActivity(`Nota em <strong>${l.name}</strong>`);renderLeadModal(l);toast('Anotação salva!');}
+function addNote(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=document.getElementById('d-note').value.trim();if(!text)return;l.history=l.history||[];l.history.push({text,ts:Date.now(),agent:agentName});saveLeads();addActivity(`Nota em <strong>${l.name}</strong>`);renderLeadModal(l);toast('AnotaÃ§Ã£o salva!');}
 function addFollowup(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=document.getElementById('fu-text').value.trim();if(!text)return;l.followups=l.followups||[];l.followups.push({text,date:document.getElementById('fu-date').value,done:false});saveLeads();renderLeadModal(l);toast('Follow-up adicionado!');}
-function toggleFollowup(id,idx,done){const l=leads.find(x=>x.id===id);if(!l)return;l.followups[idx].done=done;saveLeads();if(done)toast('Follow-up concluído!');}
+function toggleFollowup(id,idx,done){const l=leads.find(x=>x.id===id);if(!l)return;l.followups[idx].done=done;saveLeads();if(done)toast('Follow-up concluÃ­do!');}
 function deleteFollowup(id,idx){const l=leads.find(x=>x.id===id);if(!l)return;l.followups.splice(idx,1);saveLeads();renderLeadModal(l);}
-function deleteLead(id){if(!confirm('Excluir este lead?'))return;const l=leads.find(x=>x.id===id);leads=leads.filter(x=>x.id!==id);saveLeads();addActivity(`Lead <strong>${l?.name}</strong> excluído.`);closeModal();renderKanban();toast('Lead excluído.');}
+function deleteLead(id){if(!confirm('Excluir este lead?'))return;const l=leads.find(x=>x.id===id);leads=leads.filter(x=>x.id!==id);saveLeads();addActivity(`Lead <strong>${l?.name}</strong> excluÃ­do.`);closeModal();renderKanban();toast('Lead excluÃ­do.');}
 
-// ─── RELATÓRIO DO DIA ───────────────────────────────────────────────
+// â”€â”€â”€ RELATÃ“RIO DO DIA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function abrirRelatorio(){
   const hoje=new Date();hoje.setHours(0,0,0,0);
   const leadsHoje=leads.filter(l=>new Date(l.ts)>=hoje).sort((a,b)=>a.ts-b.ts);
   const dataStr=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
   const novos=leadsHoje.filter(l=>l.stage==='Primeiro contato').length;
   const proposta=leadsHoje.filter(l=>l.stage==='Proposta enviada').length;
-  const negociacao=leadsHoje.filter(l=>l.stage==='Negociação').length;
-  const qualificacao=leadsHoje.filter(l=>l.stage==='Qualificação').length;
+  const negociacao=leadsHoje.filter(l=>l.stage==='NegociaÃ§Ã£o').length;
+  const qualificacao=leadsHoje.filter(l=>l.stage==='QualificaÃ§Ã£o').length;
   const perdidos=leadsHoje.filter(l=>l.stage==='Perdido').length;
   const followupsPendentes=leads.flatMap(l=>(l.followups||[]).filter(f=>!f.done).map(f=>({...f,leadName:l.name,leadTel:l.tel,leadId:l.id,valor:l.valorNF,rota:l.rota})));
 
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório ${dataStr}</title>
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>RelatÃ³rio ${dataStr}</title>
   <style>
     body{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:32px;background:#fff;color:#1a1a2e;font-size:13px}
     .header{margin-bottom:24px}.header h1{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
@@ -1096,40 +1096,40 @@ function abrirRelatorio(){
     @media print{body{padding:16px}}
   </style></head><body>
   <div class="header">
-    <h1>Leads novos — ${dataStr}</h1>
-    <p>${dataStr} &nbsp;·&nbsp; Atendente: ${agentName||'MF Envios'} &nbsp;·&nbsp; MF Envios · Clientes captados via Google / WhatsApp</p>
+    <h1>Leads novos â€” ${dataStr}</h1>
+    <p>${dataStr} &nbsp;Â·&nbsp; Atendente: ${agentName||'MF Envios'} &nbsp;Â·&nbsp; MF Envios Â· Clientes captados via Google / WhatsApp</p>
   </div>
   <div class="counters">
     <div class="counter"><div class="counter-val">${leadsHoje.length}</div><div class="counter-label">Leads novos</div></div>
     <div class="counter"><div class="counter-val">${proposta}</div><div class="counter-label">Proposta enviada</div></div>
-    <div class="counter"><div class="counter-val">${negociacao}</div><div class="counter-label">Negociação</div></div>
-    <div class="counter"><div class="counter-val">${qualificacao}</div><div class="counter-label">Qualificação</div></div>
+    <div class="counter"><div class="counter-val">${negociacao}</div><div class="counter-label">NegociaÃ§Ã£o</div></div>
+    <div class="counter"><div class="counter-val">${qualificacao}</div><div class="counter-label">QualificaÃ§Ã£o</div></div>
     <div class="counter"><div class="counter-val">${perdidos}</div><div class="counter-label">Perdidos</div></div>
   </div>
   <div class="section-title">LEADS DO DIA</div>
   ${leadsHoje.length?leadsHoje.map(l=>{
-    const stageClass={'Proposta enviada':'stage-proposta','Negociação':'stage-negociacao','Qualificação':'stage-qualificacao','Primeiro contato':'stage-novo','Fechado / Ganho':'stage-fechado','Perdido':'stage-perdido'}[l.stage]||'';
+    const stageClass={'Proposta enviada':'stage-proposta','NegociaÃ§Ã£o':'stage-negociacao','QualificaÃ§Ã£o':'stage-qualificacao','Primeiro contato':'stage-novo','Fechado / Ganho':'stage-fechado','Perdido':'stage-perdido'}[l.stage]||'';
     return `<div class="lead-card">
       <div class="lead-header"><span class="lead-name">${l.name}</span><span class="lead-stage ${stageClass}">${l.stage}</span></div>
       <div class="lead-phone">${l.tel||'Sem telefone'}</div>
       <div class="lead-grid">
-        <div class="lead-field"><label>Material</label><span>${l.material||l.prod||'—'}</span></div>
-        <div class="lead-field"><label>Volumes / Peso</label><span>${[l.volumes,l.peso,l.medidas].filter(Boolean).join(' · ')||'—'}</span></div>
-        <div class="lead-field"><label>Valor da NF</label><span>${l.valorNF?'R$ '+l.valorNF:'—'}</span></div>
+        <div class="lead-field"><label>Material</label><span>${l.material||l.prod||'â€”'}</span></div>
+        <div class="lead-field"><label>Volumes / Peso</label><span>${[l.volumes,l.peso,l.medidas].filter(Boolean).join(' Â· ')||'â€”'}</span></div>
+        <div class="lead-field"><label>Valor da NF</label><span>${l.valorNF?'R$ '+l.valorNF:'â€”'}</span></div>
       </div>
-      <div class="lead-field" style="margin-bottom:8px"><label>Rota</label><span>${l.rota||'—'}</span></div>
-      <div class="lead-horario">Horário: ${fmtTime(l.ts)}${l.urgencia?' · Urgência: '+l.urgencia:''}${l.transportadora?' · '+l.transportadora:''}</div>
-      ${l.valorFrete?`<div style="font-size:13px;font-weight:700;color:#f97316;margin-bottom:8px">💰 Valor do Frete: R$ ${l.valorFrete}</div>`:''}
+      <div class="lead-field" style="margin-bottom:8px"><label>Rota</label><span>${l.rota||'â€”'}</span></div>
+      <div class="lead-horario">HorÃ¡rio: ${fmtTime(l.ts)}${l.urgencia?' Â· UrgÃªncia: '+l.urgencia:''}${l.transportadora?' Â· '+l.transportadora:''}</div>
+      ${l.valorFrete?`<div style="font-size:13px;font-weight:700;color:#f97316;margin-bottom:8px">ðŸ’° Valor do Frete: R$ ${l.valorFrete}</div>`:''}
       ${l.obs?`<div class="lead-obs"><strong>Obs:</strong> ${l.obs}</div>`:''}
-      ${(l.history&&l.history.length)?`<div style="margin-top:8px"><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Anotações</div>${l.history.slice(-3).reverse().map(h=>`<div style="font-size:12px;color:#444;background:#f1f5f9;padding:8px 10px;border-radius:6px;margin-bottom:4px;border-left:3px solid #f97316">${h.text}${h.agent?' <span style="color:#888;font-size:11px">· '+h.agent+'</span>':''}</div>`).join('')}</div>`:''}
+      ${(l.history&&l.history.length)?`<div style="margin-top:8px"><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">AnotaÃ§Ãµes</div>${l.history.slice(-3).reverse().map(h=>`<div style="font-size:12px;color:#444;background:#f1f5f9;padding:8px 10px;border-radius:6px;margin-bottom:4px;border-left:3px solid #f97316">${h.text}${h.agent?' <span style="color:#888;font-size:11px">Â· '+h.agent+'</span>':''}</div>`).join('')}</div>`:''}
     </div>`;
   }).join(''):'<p style="color:#888">Nenhum lead registrado hoje.</p>'}
   ${followupsPendentes.length?`
   <div class="recomendacoes">
-    <div class="section-title">RECOMENDAÇÕES PARA AMANHÃ</div>
-    ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
+    <div class="section-title">RECOMENDAÃ‡Ã•ES PARA AMANHÃƒ</div>
+    ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} â€” ${f.text}${f.rota?' Â· '+f.rota:''}${f.valor?' Â· R$ '+f.valor:''}${f.date?' Â· '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
   </div>`:''}
-  <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
+  <div class="footer">Gerado automaticamente Â· MF Envios Â· ${dataStr}</div>
 </body></html>`;
 
   const w=window.open('','_blank');w.document.write(html);w.document.close();
@@ -1167,12 +1167,12 @@ function abrirRelatorio(){
 
   <!-- Sub-tabs -->
   <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
-    <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">✅ Tarefas</div>
-    <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
-    <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
-    <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📄 Documentos</div>
-    <div class="tab" id="op-tab-nfse" onclick="opTab('nfse')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🧾 NFSe</div>
-    <div class="tab" id="op-tab-financeiro" onclick="opTab('financeiro')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">💰 Financeiro</div>
+    <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">âœ… Tarefas</div>
+    <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">ðŸšš Fretes</div>
+    <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">ðŸ“… Agenda</div>
+    <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">ðŸ“„ Documentos</div>
+    <div class="tab" id="op-tab-nfse" onclick="opTab('nfse')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">ðŸ§¾ NFSe</div>
+    <div class="tab" id="op-tab-financeiro" onclick="opTab('financeiro')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">ðŸ’° Financeiro</div>
   </div>
 
   <!-- TAREFAS -->
@@ -1235,16 +1235,16 @@ function abrirRelatorio(){
   <div id="op-content-nfse" style="display:none">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <div>
-        <div style="font-size:16px;font-weight:700;">🧾 Notas Fiscais de Serviço</div>
-        <div style="font-size:12px;color:var(--text3);margin-top:2px;">Prepare e emita NFSe no sistema Metrópole de Lauro de Freitas</div>
+        <div style="font-size:16px;font-weight:700;">ðŸ§¾ Notas Fiscais de ServiÃ§o</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px;">Prepare e emita NFSe no sistema MetrÃ³pole de Lauro de Freitas</div>
       </div>
       <button onclick="abrirModalNFSe(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">+ Nova NFSe</button>
     </div>
-    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Leads prontos para emissão (Fechado/Ganho)</div>
+    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Leads prontos para emissÃ£o (Fechado/Ganho)</div>
     <div id="nfse-leads-lista" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;"></div>
-    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Notas emitidas este mês</div>
+    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Notas emitidas este mÃªs</div>
     <div id="nfse-historico" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
-      <div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Clique em "Marcar como Emitida" após emitir no Metrópole.</div>
+      <div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Clique em "Marcar como Emitida" apÃ³s emitir no MetrÃ³pole.</div>
     </div>
   </div>
 
@@ -1252,34 +1252,34 @@ function abrirRelatorio(){
   <div id="modal-nfse" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;align-items:center;justify-content:center;padding:16px;">
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5);">
       <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1;">
-        <div style="font-size:16px;font-weight:700;">🧾 Emitir <span style="color:var(--orange)">NFSe</span></div>
-        <button onclick="fecharModalNFSe()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;">✕</button>
+        <div style="font-size:16px;font-weight:700;">ðŸ§¾ Emitir <span style="color:var(--orange)">NFSe</span></div>
+        <button onclick="fecharModalNFSe()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;">âœ•</button>
       </div>
       <div style="padding:16px 24px 0;">
         <div style="display:flex;gap:0;background:var(--bg3);border-radius:8px;padding:4px;">
-          <div id="nfse-step-1" onclick="nfseIrStep(1)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:var(--orange);color:white;">1 · Tomador</div>
-          <div id="nfse-step-2" onclick="nfseIrStep(2)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);">2 · Serviço</div>
-          <div id="nfse-step-3" onclick="nfseIrStep(3)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);">3 · Emitir</div>
+          <div id="nfse-step-1" onclick="nfseIrStep(1)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:var(--orange);color:white;">1 Â· Tomador</div>
+          <div id="nfse-step-2" onclick="nfseIrStep(2)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);">2 Â· ServiÃ§o</div>
+          <div id="nfse-step-3" onclick="nfseIrStep(3)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);">3 Â· Emitir</div>
         </div>
       </div>
       <div style="padding:24px;">
         <!-- Step 1 -->
         <div id="nfse-content-1">
-          <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text2);margin-bottom:16px;">ℹ Confirme os dados do tomador (quem contratou o serviço).</div>
+          <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text2);margin-bottom:16px;">â„¹ Confirme os dados do tomador (quem contratou o serviÃ§o).</div>
           <div style="margin-bottom:12px;">
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px;">Tipo de Pessoa</div>
             <div style="display:flex;gap:8px;">
-              <div id="nfse-tipo-jur" onclick="nfseTipo('juridica')" style="flex:1;padding:8px;background:var(--orange);border:1px solid var(--orange);border-radius:6px;color:white;font-size:12px;font-weight:600;cursor:pointer;text-align:center;">🏢 Jurídica</div>
-              <div id="nfse-tipo-fis" onclick="nfseTipo('fisica')" style="flex:1;padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;text-align:center;">👤 Física</div>
+              <div id="nfse-tipo-jur" onclick="nfseTipo('juridica')" style="flex:1;padding:8px;background:var(--orange);border:1px solid var(--orange);border-radius:6px;color:white;font-size:12px;font-weight:600;cursor:pointer;text-align:center;">ðŸ¢ JurÃ­dica</div>
+              <div id="nfse-tipo-fis" onclick="nfseTipo('fisica')" style="flex:1;padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;text-align:center;">ðŸ‘¤ FÃ­sica</div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
             <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CNPJ/CPF *</label><input id="nf-cnpj" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="00.000.000/0000-00"></div>
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Razão Social *</label><input id="nf-razao" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">RazÃ£o Social *</label><input id="nf-razao" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
           </div>
-          <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Endereço</label><input id="nf-end" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">EndereÃ§o</label><input id="nf-end" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
           <div style="display:grid;grid-template-columns:1fr 80px 130px;gap:12px;">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Município *</label><input id="nf-mun" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">MunicÃ­pio *</label><input id="nf-mun" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
             <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">UF *</label><input id="nf-uf" type="text" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;text-transform:uppercase;"></div>
             <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CEP</label><input id="nf-cep" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="00000-000"></div>
           </div>
@@ -1287,36 +1287,36 @@ function abrirRelatorio(){
         <!-- Step 2 -->
         <div id="nfse-content-2" style="display:none;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Competência (MM/AAAA) *</label><input id="nf-comp" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="06/2026"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CompetÃªncia (MM/AAAA) *</label><input id="nf-comp" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="06/2026"></div>
             <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Valor Total R$ *</label><input id="nf-valor" type="text" placeholder="0,00" oninput="mascaraMoeda(this)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;text-align:right;font-family:monospace;"></div>
           </div>
-          <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Discriminação do Serviço *</label><textarea id="nf-disc" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;resize:vertical;min-height:72px;font-family:inherit;" placeholder="Ex: Coleta em Sao Paulo/SP e entrega em Salvador/BA"></textarea></div>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">DiscriminaÃ§Ã£o do ServiÃ§o *</label><textarea id="nf-disc" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;resize:vertical;min-height:72px;font-family:inherit;" placeholder="Ex: Coleta em Sao Paulo/SP e entrega em Salvador/BA"></textarea></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
             <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Atividade *</label>
             <select id="nf-ativ" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
               <option value="0005120000">0005120000 - Transporte Aereo De Carga</option>
               <option value="0005110000">0005110000 - Transporte Rodoviario De Carga</option>
             </select></div>
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Alíquota (%) *</label><input id="nf-aliq" type="text" value="3,00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">AlÃ­quota (%) *</label><input id="nf-aliq" type="text" value="3,00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
           </div>
-          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Informações Complementares</label><input id="nf-info" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">InformaÃ§Ãµes Complementares</label><input id="nf-info" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
         </div>
         <!-- Step 3 -->
         <div id="nfse-content-3" style="display:none;">
           <div id="nf-valor-dest" style="font-size:24px;font-weight:800;color:var(--orange);text-align:center;padding:16px;background:rgba(249,115,22,.08);border-radius:8px;margin-bottom:16px;">R$ 0,00</div>
           <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;">
-            <div style="padding:12px 16px;background:rgba(249,115,22,.1);border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--orange);">📋 Passo a passo no Metrópole</div>
+            <div style="padding:12px 16px;background:rgba(249,115,22,.1);border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--orange);">ðŸ“‹ Passo a passo no MetrÃ³pole</div>
             <div id="nf-instrucoes"></div>
           </div>
         </div>
       </div>
       <!-- Footer modal -->
       <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:var(--bg2);">
-        <div id="nf-btn-voltar" style="display:none;"><button onclick="nfseIrStep(nfseStep-1)" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">← Voltar</button></div>
+        <div id="nf-btn-voltar" style="display:none;"><button onclick="nfseIrStep(nfseStep-1)" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">â† Voltar</button></div>
         <button onclick="fecharModalNFSe()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
-        <div id="nf-btn-avancar"><button onclick="nfseIrStep(nfseStep+1)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Avançar →</button></div>
-        <div id="nf-btn-emitir" style="display:none;"><button onclick="nfseAbrirMetropole()" style="background:#22c55e;color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">🌐 Abrir Metrópole</button></div>
-        <div id="nf-btn-marcar" style="display:none;"><button onclick="nfseMarcarEmitida()" style="background:var(--blue);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">✓ Marcar como Emitida</button></div>
+        <div id="nf-btn-avancar"><button onclick="nfseIrStep(nfseStep+1)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">AvanÃ§ar â†’</button></div>
+        <div id="nf-btn-emitir" style="display:none;"><button onclick="nfseAbrirMetropole()" style="background:#22c55e;color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">ðŸŒ Abrir MetrÃ³pole</button></div>
+        <div id="nf-btn-marcar" style="display:none;"><button onclick="nfseMarcarEmitida()" style="background:var(--blue);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">âœ“ Marcar como Emitida</button></div>
       </div>
     </div>
   </div>
@@ -1378,10 +1378,10 @@ function abrirRelatorio(){
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
           <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Data de Vencimento *</label><input id="fin-vencimento" type="date" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
-          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Prazo rápido</label>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Prazo rÃ¡pido</label>
           <select onchange="if(this.value){var d=new Date();d.setDate(d.getDate()+parseInt(this.value));document.getElementById('fin-vencimento').value=d.toISOString().split('T')[0];this.value='';}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
             <option value="">Selecionar prazo...</option>
-            <option value="0">Hoje (à vista)</option>
+            <option value="0">Hoje (Ã  vista)</option>
             <option value="7">+7 dias</option>
             <option value="10">+10 dias</option>
             <option value="15">+15 dias</option>
@@ -1401,43 +1401,43 @@ function abrirRelatorio(){
 
 <script>
 
-// ─── IA ───────────────────────────────────────────────
+// â”€â”€â”€ IA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function saveKey(){iaKey=document.getElementById('ia-key').value;save('crm-ia-key',iaKey);}
 async function analisarMsg(){
   const msg=document.getElementById('ia-msg').value.trim(),key=document.getElementById('ia-key').value.trim()||iaKey;
   if(!msg){toast('Cole uma mensagem primeiro.');return;}if(!key){toast('Informe sua chave da API Anthropic.');return;}
   const out=document.getElementById('ia-output'),res=document.getElementById('ia-result-content'),addBtn=document.getElementById('ia-add-btn');
-  out.style.display='block';res.innerHTML='<div style="color:var(--text3)">⏳ Analisando...</div>';addBtn.style.display='none';iaPreview=null;
+  out.style.display='block';res.innerHTML='<div style="color:var(--text3)">â³ Analisando...</div>';addBtn.style.display='none';iaPreview=null;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:`Analise a mensagem de WhatsApp de frete/logística e extraia:\n1. nome\n2. tel\n3. material\n4. origem\n5. destino\n6. volumes\n7. peso\n8. medidas\n9. valorNF\n10. etapa (uma de: Primeiro contato, Qualificação, Proposta enviada, Negociação, Fechado / Ganho, Perdido)\n11. obs\n\nResponda APENAS JSON puro:\n{"nome":"...","tel":"...","material":"...","origem":"...","destino":"...","volumes":"...","peso":"...","medidas":"...","valorNF":"...","etapa":"...","obs":"..."}\n\nMensagem:\n"""\n${msg}\n"""`}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:`Analise a mensagem de WhatsApp de frete/logÃ­stica e extraia:\n1. nome\n2. tel\n3. material\n4. origem\n5. destino\n6. volumes\n7. peso\n8. medidas\n9. valorNF\n10. etapa (uma de: Primeiro contato, QualificaÃ§Ã£o, Proposta enviada, NegociaÃ§Ã£o, Fechado / Ganho, Perdido)\n11. obs\n\nResponda APENAS JSON puro:\n{"nome":"...","tel":"...","material":"...","origem":"...","destino":"...","volumes":"...","peso":"...","medidas":"...","valorNF":"...","etapa":"...","obs":"..."}\n\nMensagem:\n"""\n${msg}\n"""`}]})});
     const data=await r.json();const text=data.content?.filter(c=>c.type==='text').map(c=>c.text).join('')||'';
     const p=JSON.parse(text.replace(/```json|```/g,'').trim());iaPreview=p;
-    res.innerHTML=`<div class="field"><span class="field-label">Nome</span>${p.nome}</div><div class="field"><span class="field-label">Telefone</span>${p.tel||'—'}</div><div class="field"><span class="field-label">Material</span>${p.material||'—'}</div><div class="field"><span class="field-label">Rota</span>${p.origem&&p.destino?p.origem+' → '+p.destino:'—'}</div><div class="field"><span class="field-label">Volumes / Peso</span>${[p.volumes,p.peso,p.medidas].filter(Boolean).join(' · ')||'—'}</div><div class="field"><span class="field-label">Valor NF</span>${p.valorNF?'R$ '+p.valorNF:'—'}</div><div class="field"><span class="field-label">Etapa</span><span class="stage-pill" style="${STAGE_PILL[p.etapa]||''}">${p.etapa}</span></div><div class="field" style="margin-top:8px"><span class="field-label">Obs</span>${p.obs}</div>`;
-    addBtn.style.display='block';addBtn.innerHTML=`<button class="btn btn-primary" onclick="addFromIA()">✓ Adicionar ao funil</button>`;
+    res.innerHTML=`<div class="field"><span class="field-label">Nome</span>${p.nome}</div><div class="field"><span class="field-label">Telefone</span>${p.tel||'â€”'}</div><div class="field"><span class="field-label">Material</span>${p.material||'â€”'}</div><div class="field"><span class="field-label">Rota</span>${p.origem&&p.destino?p.origem+' â†’ '+p.destino:'â€”'}</div><div class="field"><span class="field-label">Volumes / Peso</span>${[p.volumes,p.peso,p.medidas].filter(Boolean).join(' Â· ')||'â€”'}</div><div class="field"><span class="field-label">Valor NF</span>${p.valorNF?'R$ '+p.valorNF:'â€”'}</div><div class="field"><span class="field-label">Etapa</span><span class="stage-pill" style="${STAGE_PILL[p.etapa]||''}">${p.etapa}</span></div><div class="field" style="margin-top:8px"><span class="field-label">Obs</span>${p.obs}</div>`;
+    addBtn.style.display='block';addBtn.innerHTML=`<button class="btn btn-primary" onclick="addFromIA()">âœ“ Adicionar ao funil</button>`;
     const iaHist=load('crm-ia-hist',[]);iaHist.unshift({nome:p.nome,etapa:p.etapa,ts:Date.now()});save('crm-ia-hist',iaHist.slice(0,10));renderIAHistory();
   }catch(e){res.innerHTML=`<div style="color:var(--red)">Erro ao analisar. Verifique a chave.<br><small>${e.message}</small></div>`;}
 }
 function addFromIA(){
   if(!iaPreview)return;
-  const rota=iaPreview.origem&&iaPreview.destino?iaPreview.origem+' → '+iaPreview.destino:'';
+  const rota=iaPreview.origem&&iaPreview.destino?iaPreview.origem+' â†’ '+iaPreview.destino:'';
   const lead={id:uid(),name:iaPreview.nome||'Desconhecido',tel:iaPreview.tel||'',material:iaPreview.material||'',origem:iaPreview.origem||'',destino:iaPreview.destino||'',rota,volumes:iaPreview.volumes||'',peso:iaPreview.peso||'',medidas:iaPreview.medidas||'',valorNF:iaPreview.valorNF||'',stage:iaPreview.etapa||'Primeiro contato',agent:agentName,source:'whatsapp',obs:iaPreview.obs||'',hot:false,ts:Date.now(),followups:[],history:[{text:`Captado via WhatsApp: ${iaPreview.obs}`,ts:Date.now(),agent:agentName}]};
   leads.push(lead);saveLeads();addActivity(`Lead <strong>${lead.name}</strong> captado via IA`);
   document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none';iaPreview=null;showView('kanban');toast('Lead adicionado!');
 }
-function renderIAHistory(){const hist=load('crm-ia-hist',[]);document.getElementById('ia-history').innerHTML=hist.length?hist.map(h=>`<div class="activity-item"><div class="activity-dot" style="background:var(--green)"></div><div><div class="activity-text"><strong>${h.nome}</strong></div><div class="activity-time">${h.etapa} · ${fmtDate(h.ts)}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhuma análise ainda.</div>';}
+function renderIAHistory(){const hist=load('crm-ia-hist',[]);document.getElementById('ia-history').innerHTML=hist.length?hist.map(h=>`<div class="activity-item"><div class="activity-dot" style="background:var(--green)"></div><div><div class="activity-text"><strong>${h.nome}</strong></div><div class="activity-time">${h.etapa} Â· ${fmtDate(h.ts)}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhuma anÃ¡lise ainda.</div>';}
 
-// ─── MODAL ───────────────────────────────────────────────
+// â”€â”€â”€ MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function showModal(html){document.getElementById('modal-content').innerHTML=html;document.getElementById('modal-overlay').style.display='flex';}
 function closeModal(){document.getElementById('modal-overlay').style.display='none';renderKanban();renderLeads();updateAgentFilters();}
 
-// ─── EXPORT / IMPORT ───────────────────────────────────────────────
+// â”€â”€â”€ EXPORT / IMPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function exportData(){const blob=new Blob([JSON.stringify({leads,activity,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`crm-export-${new Date().toISOString().slice(0,10)}.json`;a.click();toast('Dados exportados!');}
 function importData(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(data.leads){leads=data.leads;saveLeads();}if(data.activity){activity=data.activity;saveActivity();}renderKanban();renderLeads();updateAgentFilters();toast('Importado com sucesso!');}catch{toast('Erro ao importar.');}};reader.readAsText(file);e.target.value='';}
 
-// ─── TOAST ───────────────────────────────────────────────
+// â”€â”€â”€ TOAST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function toast(msg){const t=document.getElementById('toast');t.innerHTML=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-// ─── WHATSAPP CHAT ───────────────────────────────────────────────
+// â”€â”€â”€ WHATSAPP CHAT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const WPP_SERVER='https://mf-envios-crm.onrender.com';
 let wppMsgs=[];
 let chatAtivo=null;
@@ -1489,7 +1489,7 @@ function renderConvList(q=''){
           <span style="font-size:13px;font-weight:700;color:var(--text)">${g.name}</span>
           <span style="font-size:10px;color:var(--text3)">${fmtDateChat(g.lastTs)}</span>
         </div>
-        <div style="font-size:11px;color:${cor};margin-bottom:3px;font-weight:600">${cliente?'● Cliente MF':'● Novo lead'}</div>
+        <div style="font-size:11px;color:${cor};margin-bottom:3px;font-weight:600">${cliente?'â— Cliente MF':'â— Novo lead'}</div>
         <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.lastText.slice(0,45)}</div>
       </div>
       <div style="width:8px;height:8px;border-radius:50%;background:${cor};flex-shrink:0"></div>
@@ -1514,11 +1514,11 @@ function abrirChat(phone){
       <div style="width:38px;height:38px;border-radius:50%;background:${bgCor};color:${cor};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid ${cor}">${grupo.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?'}</div>
       <div style="flex:1">
         <div style="font-size:14px;font-weight:700;color:var(--text)">${grupo.name}</div>
-        <div style="font-size:11px;color:${cor};font-weight:600">${cliente?'● Cliente MF Envios':'● Novo lead'} · ${phone}</div>
+        <div style="font-size:11px;color:${cor};font-weight:600">${cliente?'â— Cliente MF Envios':'â— Novo lead'} Â· ${phone}</div>
       </div>
       <div style="display:flex;gap:8px">
         ${leadInfo?`<button class="btn btn-sm" onclick="openLead('${leadInfo.id}')">Ver ficha</button>`:'<button class="btn btn-sm btn-primary" onclick="wppToLead(\''+grupo.msgs[0]?.id+'\',\''+grupo.name+'\',\''+phone+'\',\''+grupo.lastText.replace(/'/g,"\\'")+'\')">+ Funil</button>'}
-        <a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm" style="background:rgba(34,197,94,.2);color:var(--green);border-color:var(--green)">Abrir WA ↗</a>
+        <a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm" style="background:rgba(34,197,94,.2);color:var(--green);border-color:var(--green)">Abrir WA â†—</a>
       </div>
     </div>
     <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px" id="chat-msgs">
@@ -1530,7 +1530,7 @@ function abrirChat(phone){
     </div>
     <div style="padding:12px 16px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0">
       <textarea id="chat-input" placeholder="Digite uma mensagem..." rows="2" style="flex:1;resize:none;border-radius:var(--radius);font-size:13px" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg('${phone}');}"></textarea>
-      <button class="btn btn-primary" onclick="enviarMsg('${phone}')" style="height:58px;padding:0 20px;font-size:18px">➤</button>
+      <button class="btn btn-primary" onclick="enviarMsg('${phone}')" style="height:58px;padding:0 20px;font-size:18px">âž¤</button>
     </div>`;
   const chatMsgs=document.getElementById('chat-msgs');
   if(chatMsgs)chatMsgs.scrollTop=chatMsgs.scrollHeight;
@@ -1547,7 +1547,7 @@ async function enviarMsg(phone){
   if(chatMsgs){
     const div=document.createElement('div');
     div.style.cssText='display:flex;flex-direction:column;align-items:flex-end;max-width:70%;align-self:flex-end;margin-left:auto';
-    div.innerHTML=`<div style="background:#25D366;border-radius:10px 0 10px 10px;padding:10px 14px;font-size:13px;color:#fff;line-height:1.5">${texto}</div><span style="font-size:10px;color:var(--text3);margin-top:3px;padding-right:4px">Agora ✓</span>`;
+    div.innerHTML=`<div style="background:#25D366;border-radius:10px 0 10px 10px;padding:10px 14px;font-size:13px;color:#fff;line-height:1.5">${texto}</div><span style="font-size:10px;color:var(--text3);margin-top:3px;padding-right:4px">Agora âœ“</span>`;
     chatMsgs.appendChild(div);chatMsgs.scrollTop=chatMsgs.scrollHeight;
   }
   try{
@@ -1576,7 +1576,7 @@ async function wppToLead(id,name,phone,text){
   try{
     await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
     const exists=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
-    // Sempre cria novo lead (permite múltiplos leads por contato em meses diferentes)
+    // Sempre cria novo lead (permite mÃºltiplos leads por contato em meses diferentes)
     const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);
     toast('Lead adicionado ao funil!');showView('kanban');renderKanban();
   }catch(e){toast('Erro ao adicionar.');}
@@ -1588,9 +1588,9 @@ conectarSSE();
 setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
 
-// ═══════════════════════════════════════════
-//  OPERACIONAL — Tarefas, Fretes, Agenda, Docs
-// ═══════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  OPERACIONAL â€” Tarefas, Fretes, Agenda, Docs
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 const OP_API = window.location.origin;
 let opCurrentTab = 'tarefas';
 let opModalMode = null, opModalId = null;
@@ -1626,7 +1626,7 @@ function opTab(tab) {
   if(tab==='financeiro') carregarVendas().then(function(){renderFinanceiro();renderFinLeadsProntos();});
 }
 
-// ── TAREFAS ─────────────────────────────────
+// â”€â”€ TAREFAS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadTarefas() {
   const res = await fetch(OP_API+'/tarefas').then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('tarefas-list');
@@ -1635,11 +1635,11 @@ async function loadTarefas() {
     <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;border-left:3px solid ${t.done?'var(--green)':'var(--orange)'}">
       <input type="checkbox" ${t.done?'checked':''} onchange="toggleTarefa('${t.id}',this.checked)" style="width:16px;height:16px;cursor:pointer">
       <div style="flex:1">
-        <div style="font-size:13px;font-weight:600;${t.done?'text-decoration:line-through;color:var(--text3)':''}">${t.titulo||'Sem título'}</div>
+        <div style="font-size:13px;font-weight:600;${t.done?'text-decoration:line-through;color:var(--text3)':''}">${t.titulo||'Sem tÃ­tulo'}</div>
         ${t.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${t.desc}</div>`:''}
-        ${t.data?`<div style="font-size:11px;color:var(--text3);margin-top:4px">📅 ${t.data}</div>`:''}
+        ${t.data?`<div style="font-size:11px;color:var(--text3);margin-top:4px">ðŸ“… ${t.data}</div>`:''}
       </div>
-      <button onclick="deleteTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+      <button onclick="deleteTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">ðŸ—‘</button>
     </div>`).join('');
 }
 
@@ -1648,8 +1648,8 @@ function openAddTarefa() {
   document.getElementById('modal-op-title').textContent='Nova Tarefa';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Ligar para cliente" style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">TÃTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Ligar para cliente" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÃ‡ÃƒO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
       <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" style="width:100%;margin-top:4px"></div>
     </div>`;
   document.getElementById('modal-op').style.display='flex';
@@ -1658,22 +1658,22 @@ function openAddTarefa() {
 async function saveModalOp() {
   if(opModalMode==='tarefa') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
-    if(!titulo) return alert('Título obrigatório');
+    if(!titulo) return alert('TÃ­tulo obrigatÃ³rio');
     await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,done:false})});
     closeModalOp(); loadTarefas();
   } else if(opModalMode==='frete') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
-    if(!titulo) return alert('Título obrigatório');
+    if(!titulo) return alert('TÃ­tulo obrigatÃ³rio');
     await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta'})});
     closeModalOp(); loadFretes();
   } else if(opModalMode==='agenda') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
-    if(!titulo) return alert('Título obrigatório');
+    if(!titulo) return alert('TÃ­tulo obrigatÃ³rio');
     await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value})});
     closeModalOp(); loadAgenda();
   } else if(opModalMode==='doc') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
-    if(!titulo) return alert('Título obrigatório');
+    if(!titulo) return alert('TÃ­tulo obrigatÃ³rio');
     await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value})});
     closeModalOp(); loadDocs();
   }
@@ -1689,9 +1689,9 @@ async function deleteTarefa(id) {
   loadTarefas();
 }
 
-// ── FRETES KANBAN ───────────────────────────
-const FRETE_COLS = ['Aguardando coleta','Em trânsito','Entregue','Problema'];
-const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','Entregue':'#22c55e','Problema':'#ef4444'};
+// â”€â”€ FRETES KANBAN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const FRETE_COLS = ['Aguardando coleta','Em trÃ¢nsito','Entregue','Problema'];
+const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trÃ¢nsito':'#3b82f6','Entregue':'#22c55e','Problema':'#ef4444'};
 
 async function loadFretes() {
   const res = await fetch(OP_API+'/fretes').then(r=>r.json()).catch(()=>[]);
@@ -1703,11 +1703,11 @@ async function loadFretes() {
         ${res.filter(f=>f.status===col).map(f=>`
           <div style="background:var(--surface);border-radius:var(--radius-sm);padding:10px;border-left:3px solid ${FRETE_COLORS[col]}">
             <div style="font-size:13px;font-weight:600">${f.titulo}</div>
-            ${f.origem?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${f.origem} → ${f.destino||'?'}</div>`:''}
+            ${f.origem?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${f.origem} â†’ ${f.destino||'?'}</div>`:''}
             ${f.valor?`<div style="font-size:12px;color:var(--green);margin-top:4px">R$ ${f.valor}</div>`:''}
             <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
-              ${FRETE_COLS.filter(c=>c!==col).map(c=>`<button onclick="moveFrete('${f.id}','${c}')" style="font-size:10px;padding:2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text3)">→ ${c.split(' ')[0]}</button>`).join('')}
-              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5;margin-left:auto">🗑</button>
+              ${FRETE_COLS.filter(c=>c!==col).map(c=>`<button onclick="moveFrete('${f.id}','${c}')" style="font-size:10px;padding:2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text3)">â†’ ${c.split(' ')[0]}</button>`).join('')}
+              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5;margin-left:auto">ðŸ—‘</button>
             </div>
           </div>`).join('')}
       </div>
@@ -1719,7 +1719,7 @@ function openAddFrete() {
   document.getElementById('modal-op-title').textContent='Novo Frete';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div><label style="font-size:12px;color:var(--text3)">IDENTIFICAÇÃO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Pedido #1234 - João" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">IDENTIFICAÃ‡ÃƒO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Pedido #1234 - JoÃ£o" style="width:100%;margin-top:4px"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <div><label style="font-size:12px;color:var(--text3)">ORIGEM</label><input id="op-f-origem" class="form-input" placeholder="Cidade/UF" style="width:100%;margin-top:4px"></div>
         <div><label style="font-size:12px;color:var(--text3)">DESTINO</label><input id="op-f-destino" class="form-input" placeholder="Cidade/UF" style="width:100%;margin-top:4px"></div>
@@ -1744,7 +1744,7 @@ async function deleteFrete(id) {
   loadFretes();
 }
 
-// ── AGENDA ──────────────────────────────────
+// â”€â”€ AGENDA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadAgenda() {
   const res = await fetch(OP_API+'/agenda').then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('agenda-list');
@@ -1753,14 +1753,14 @@ async function loadAgenda() {
   list.innerHTML = sorted.map(e => `
     <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--blue,#3b82f6)">
       <div style="text-align:center;min-width:44px">
-        ${e.data?`<div style="font-size:18px;font-weight:700;line-height:1">${e.data.slice(8)}</div><div style="font-size:10px;color:var(--text3)">${['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][parseInt(e.data.slice(5,7))]}</div>`:'<div style="font-size:20px">📅</div>'}
+        ${e.data?`<div style="font-size:18px;font-weight:700;line-height:1">${e.data.slice(8)}</div><div style="font-size:10px;color:var(--text3)">${['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][parseInt(e.data.slice(5,7))]}</div>`:'<div style="font-size:20px">ðŸ“…</div>'}
       </div>
       <div style="flex:1">
         <div style="font-size:13px;font-weight:600">${e.titulo}</div>
-        ${e.hora?`<div style="font-size:12px;color:var(--text3);margin-top:2px">⏰ ${e.hora}</div>`:''}
+        ${e.hora?`<div style="font-size:12px;color:var(--text3);margin-top:2px">â° ${e.hora}</div>`:''}
         ${e.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${e.desc}</div>`:''}
       </div>
-      <button onclick="deleteAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+      <button onclick="deleteAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">ðŸ—‘</button>
     </div>`).join('');
 }
 
@@ -1769,12 +1769,12 @@ function openAddAgenda() {
   document.getElementById('modal-op-title').textContent='Novo Evento';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Reunião com cliente" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">TÃTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: ReuniÃ£o com cliente" style="width:100%;margin-top:4px"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" style="width:100%;margin-top:4px"></div>
         <div><label style="font-size:12px;color:var(--text3)">HORA</label><input id="op-f-hora" type="time" class="form-input" style="width:100%;margin-top:4px"></div>
       </div>
-      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÃ‡ÃƒO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
     </div>`;
   document.getElementById('modal-op').style.display='flex';
 }
@@ -1785,21 +1785,21 @@ async function deleteAgenda(id) {
   loadAgenda();
 }
 
-// ── DOCUMENTOS ──────────────────────────────
+// â”€â”€ DOCUMENTOS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadDocs() {
   const res = await fetch(OP_API+'/documentos').then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('docs-list');
   if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum documento ainda.</div>'; return; }
   list.innerHTML = res.map(d => `
     <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px">
-      <div style="font-size:24px">${{Contrato:'📝',NF:'🧾',Boleto:'💳',Proposta:'📋',Outro:'📄'}[d.tipo]||'📄'}</div>
+      <div style="font-size:24px">${{Contrato:'ðŸ“',NF:'ðŸ§¾',Boleto:'ðŸ’³',Proposta:'ðŸ“‹',Outro:'ðŸ“„'}[d.tipo]||'ðŸ“„'}</div>
       <div style="flex:1">
         <div style="font-size:13px;font-weight:600">${d.titulo}</div>
         ${d.tipo?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${d.tipo}</div>`:''}
         ${d.obs?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.obs}</div>`:''}
-        ${d.link?`<a href="${d.link}" target="_blank" style="font-size:12px;color:var(--orange);margin-top:4px;display:block">🔗 Abrir link</a>`:''}
+        ${d.link?`<a href="${d.link}" target="_blank" style="font-size:12px;color:var(--orange);margin-top:4px;display:block">ðŸ”— Abrir link</a>`:''}
       </div>
-      <button onclick="deleteDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+      <button onclick="deleteDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">ðŸ—‘</button>
     </div>`).join('');
 }
 
@@ -1808,14 +1808,14 @@ function openAddDoc() {
   document.getElementById('modal-op-title').textContent='Novo Documento';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Contrato Wanderley Cruz" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">TÃTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Contrato Wanderley Cruz" style="width:100%;margin-top:4px"></div>
       <div><label style="font-size:12px;color:var(--text3)">TIPO</label>
         <select id="op-f-tipo" class="form-input" style="width:100%;margin-top:4px">
           <option>Contrato</option><option>NF</option><option>Boleto</option><option>Proposta</option><option>Outro</option>
         </select>
       </div>
       <div><label style="font-size:12px;color:var(--text3)">LINK (opcional)</label><input id="op-f-link" class="form-input" placeholder="https://..." style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">OBSERVAÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">OBSERVAÃ‡ÃƒO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
     </div>`;
   document.getElementById('modal-op').style.display='flex';
 }
@@ -1834,8 +1834,8 @@ function closeModalOp() {
 const _origShowView = typeof showView === 'function' ? showView : null;
 
 
-// ─── FUNIL POR MÊS ───────────────────────────────────────────
-const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+// â”€â”€â”€ FUNIL POR MÃŠS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const MESES = ['Janeiro','Fevereiro','MarÃ§o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 let kanbanMesOffset = 0; // 0 = mes atual, -1 = mes anterior, etc.
 
 function getMesAtual() {
@@ -1867,9 +1867,9 @@ function getLeadsMes() {
 }
 
 
-// ═══════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  LEMBRETES
-// ═══════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 let lembretes = JSON.parse(localStorage.getItem('crm-lembretes')||'[]');
 let painelAberto = false;
 
@@ -1893,7 +1893,7 @@ function abrirModalLembrete() {
 function salvarLembrete() {
   const desc = document.getElementById('lemb-desc').value.trim();
   const data = document.getElementById('lemb-data').value;
-  if(!desc || !data) { alert('Preencha descrição e data.'); return; }
+  if(!desc || !data) { alert('Preencha descriÃ§Ã£o e data.'); return; }
   const lemb = {
     id: Date.now().toString(36),
     tipo: document.getElementById('lemb-tipo').value,
@@ -1913,11 +1913,11 @@ function salvarLembrete() {
 }
 
 const LEMB_TIPOS = {
-  cobranca: {icon:'💰', label:'Cobrar cliente', cor:'var(--green)'},
-  coleta:   {icon:'📦', label:'Coleta', cor:'var(--orange)'},
-  entrega:  {icon:'🚚', label:'Entrega', cor:'var(--blue)'},
-  reuniao:  {icon:'🤝', label:'Reunião', cor:'var(--purple)'},
-  outro:    {icon:'📌', label:'Outro', cor:'var(--text3)'}
+  cobranca: {icon:'ðŸ’°', label:'Cobrar cliente', cor:'var(--green)'},
+  coleta:   {icon:'ðŸ“¦', label:'Coleta', cor:'var(--orange)'},
+  entrega:  {icon:'ðŸšš', label:'Entrega', cor:'var(--blue)'},
+  reuniao:  {icon:'ðŸ¤', label:'ReuniÃ£o', cor:'var(--purple)'},
+  outro:    {icon:'ðŸ“Œ', label:'Outro', cor:'var(--text3)'}
 };
 
 function renderLembretes() {
@@ -1942,17 +1942,17 @@ function renderLembretes() {
     const hoje_ = !l.done && dataBase.getTime() === hoje.getTime();
     const amanha_ = !l.done && dataBase.getTime() === amanha.getTime();
     const statusCor = atrasado ? '#ef4444' : hoje_ ? '#f97316' : amanha_ ? '#f59e0b' : 'var(--text3)';
-    const statusTxt = atrasado ? '⚠️ Atrasado' : hoje_ ? '🔴 Hoje' : amanha_ ? '🟡 Amanhã' : l.data.split('-').reverse().slice(0,2).join('/');
+    const statusTxt = atrasado ? 'âš ï¸ Atrasado' : hoje_ ? 'ðŸ”´ Hoje' : amanha_ ? 'ðŸŸ¡ AmanhÃ£' : l.data.split('-').reverse().slice(0,2).join('/');
     return `<div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;${l.done?'opacity:.5':''}">
       <div style="font-size:20px;flex-shrink:0">${t.icon}</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:13px;font-weight:600;${l.done?'text-decoration:line-through;color:var(--text3)':''}">${l.desc}</div>
-        ${l.cliente?`<div style="font-size:12px;color:var(--text2);margin-top:2px">👤 ${l.cliente}</div>`:''}
-        <div style="font-size:11px;color:${statusCor};margin-top:4px;font-weight:600">${statusTxt} ${l.hora?'às '+l.hora:''}</div>
+        ${l.cliente?`<div style="font-size:12px;color:var(--text2);margin-top:2px">ðŸ‘¤ ${l.cliente}</div>`:''}
+        <div style="font-size:11px;color:${statusCor};margin-top:4px;font-weight:600">${statusTxt} ${l.hora?'Ã s '+l.hora:''}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
-        ${!l.done?`<button onclick="concluirLembrete('${l.id}')" style="font-size:10px;padding:3px 8px;background:rgba(34,197,94,.2);border:1px solid var(--green);border-radius:4px;cursor:pointer;color:var(--green)">✓ Ok</button>`:''}
-        <button onclick="deletarLembrete('${l.id}')" style="font-size:10px;padding:3px 8px;background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:4px;cursor:pointer;color:var(--red)">🗑</button>
+        ${!l.done?`<button onclick="concluirLembrete('${l.id}')" style="font-size:10px;padding:3px 8px;background:rgba(34,197,94,.2);border:1px solid var(--green);border-radius:4px;cursor:pointer;color:var(--green)">âœ“ Ok</button>`:''}
+        <button onclick="deletarLembrete('${l.id}')" style="font-size:10px;padding:3px 8px;background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:4px;cursor:pointer;color:var(--red)">ðŸ—‘</button>
       </div>
     </div>`;
   };
@@ -1963,7 +1963,7 @@ function renderLembretes() {
     html += pendentes.map(renderItem).join('');
   }
   if(concluidos.length) {
-    html += `<div style="padding:8px 16px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)">Concluídos</div>`;
+    html += `<div style="padding:8px 16px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)">ConcluÃ­dos</div>`;
     html += concluidos.map(renderItem).join('');
   }
   el.innerHTML = html;
@@ -1971,7 +1971,7 @@ function renderLembretes() {
 
 function concluirLembrete(id) {
   const l = lembretes.find(x=>x.id===id);
-  if(l) { l.done=true; salvarLembretes(); renderLembretes(); atualizarSino(); toast('Lembrete concluído!'); }
+  if(l) { l.done=true; salvarLembretes(); renderLembretes(); atualizarSino(); toast('Lembrete concluÃ­do!'); }
 }
 function deletarLembrete(id) {
   lembretes = lembretes.filter(x=>x.id!==id);
@@ -2007,7 +2007,7 @@ function verificarLembretes() {
     if(diff >= -60000 && diff <= 300000 && !l._notificado) {
       l._notificado = true;
       const t = LEMB_TIPOS[l.tipo]||LEMB_TIPOS.outro;
-      toast(t.icon+' '+l.desc+(l.cliente?' — '+l.cliente:''));
+      toast(t.icon+' '+l.desc+(l.cliente?' â€” '+l.cliente:''));
       atualizarSino();
       // Abrir painel automaticamente
       if(!painelAberto) toggleLembretes();
@@ -2020,27 +2020,27 @@ setInterval(verificarLembretes, 60000);
 setInterval(atualizarSino, 300000);
 
 
-// ═══════════════════════════════════════════
-//  PERFIS — Beatriz e Davi
-// ═══════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  PERFIS â€” Beatriz e Davi
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 const PERFIS = {
   beatriz: {
     nome: 'Beatriz',
-    emoji: '👩‍💼',
+    emoji: 'ðŸ‘©â€ðŸ’¼',
     cor: 'var(--orange)',
     instancia: 'mfenvios',
     apikey: 'mfenvios2024',
-    stages: ['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'],
-    stageColors: {'Primeiro contato':'#3b82f6','Qualificação':'#8b5cf6','Proposta enviada':'#f59e0b','Negociação':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
+    stages: ['Primeiro contato','QualificaÃ§Ã£o','Proposta enviada','NegociaÃ§Ã£o','Fechado / Ganho','Perdido'],
+    stageColors: {'Primeiro contato':'#3b82f6','QualificaÃ§Ã£o':'#8b5cf6','Proposta enviada':'#f59e0b','NegociaÃ§Ã£o':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
   },
   davi: {
     nome: 'Davi',
-    emoji: '👨‍💼',
+    emoji: 'ðŸ‘¨â€ðŸ’¼',
     cor: 'var(--blue)',
     instancia: 'mfenvios-davi',
     apikey: 'mfenvios2024',
-    stages: ['Novo','Aguardando Retorno','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal','Fechado / Ganho','Perdido'],
-    stageColors: {'Novo':'#3b82f6','Aguardando Retorno':'#f59e0b','Cotação Enviada':'#8b5cf6','Emissão':'#f97316','Coleta':'#06b6d4','Cobrança':'#ec4899','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
+    stages: ['Novo','Aguardando Retorno','CotaÃ§Ã£o Enviada','EmissÃ£o','Coleta','CobranÃ§a','Nota Fiscal','Fechado / Ganho','Perdido'],
+    stageColors: {'Novo':'#3b82f6','Aguardando Retorno':'#f59e0b','CotaÃ§Ã£o Enviada':'#8b5cf6','EmissÃ£o':'#f97316','Coleta':'#06b6d4','CobranÃ§a':'#ec4899','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
   }
 };
 
@@ -2099,7 +2099,7 @@ function mostrarTrocaPerfil() {
     </div>
     <hr style="border:none;border-top:1px solid var(--border);margin:4px 0">
     <div onclick="verTodosLeads();this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
-      <span style="font-size:20px">👥</span>
+      <span style="font-size:20px">ðŸ‘¥</span>
       <div><div style="font-size:13px;font-weight:600">Ver todos os leads</div><div style="font-size:11px;color:var(--text3)">Beatriz + Davi</div></div>
     </div>
     <div onclick="this.parentElement.remove()" style="padding:8px 12px;font-size:12px;color:var(--text3);cursor:pointer;text-align:center">Fechar</div>
@@ -2110,16 +2110,16 @@ function mostrarTrocaPerfil() {
 
 function verTodosLeads() {
   verTodos = true;
-  // Mostrar todos os estágios dos dois perfis
+  // Mostrar todos os estÃ¡gios dos dois perfis
   const allStages = [...new Set([...PERFIS.beatriz.stages, ...PERFIS.davi.stages])];
   window.STAGES = allStages;
   const allColors = {...PERFIS.beatriz.stageColors, ...PERFIS.davi.stageColors};
   window.STAGE_COLORS = allColors;
   const label = document.getElementById('agent-label');
-  if(label) label.textContent = '👥 Todos os leads';
+  if(label) label.textContent = 'ðŸ‘¥ Todos os leads';
   renderKanban();
   updateStats();
-  toast('Mostrando leads de todos os usuários');
+  toast('Mostrando leads de todos os usuÃ¡rios');
 }
 
 // Filtrar leads por perfil no renderKanban
@@ -2133,7 +2133,7 @@ function getLeadsPerfil() {
   });
 }
 
-// ─── INIT ───────────────────────────────────────────────
+// â”€â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener('DOMContentLoaded', function() {
   updateAgentLabel();updateAgentFilters();updateStats();
   var iaKeyEl=document.getElementById('ia-key'); if(iaKeyEl) iaKeyEl.value=iaKey;
@@ -2146,15 +2146,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 if(!leads.length){
   const demo=[
-    {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'Macapá/AP',rota:'Tijucas/SC → Macapá/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 · 2 a 3 dias úteis. Intermediário — aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
-    {id:uid(),name:'Isabella Guarnier',tel:'5511982517687',material:'Volumes',origem:'São Paulo/SP',destino:'Itacoatiara/AM',rota:'São Paulo/SP → Itacoatiara/AM',volumes:'2 volumes',peso:'42kg',medidas:'47x47x50cm',valorNF:'3.258,75',stage:'Negociação',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 1.717,00 · 6 dias úteis. Lead disse "Perfeito. Obrigada!" Aguardando confirmação.',urgencia:'',hot:true,ts:Date.now()-7200000,followups:[{text:'Confirmar fechamento — R$ 1.717,00',date:'',done:false}],history:[{text:'Proposta enviada.',ts:Date.now()-7200000,agent:'Beatriz'}]},
+    {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'MacapÃ¡/AP',rota:'Tijucas/SC â†’ MacapÃ¡/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 Â· 2 a 3 dias Ãºteis. IntermediÃ¡rio â€” aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
+    {id:uid(),name:'Isabella Guarnier',tel:'5511982517687',material:'Volumes',origem:'SÃ£o Paulo/SP',destino:'Itacoatiara/AM',rota:'SÃ£o Paulo/SP â†’ Itacoatiara/AM',volumes:'2 volumes',peso:'42kg',medidas:'47x47x50cm',valorNF:'3.258,75',stage:'NegociaÃ§Ã£o',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 1.717,00 Â· 6 dias Ãºteis. Lead disse "Perfeito. Obrigada!" Aguardando confirmaÃ§Ã£o.',urgencia:'',hot:true,ts:Date.now()-7200000,followups:[{text:'Confirmar fechamento â€” R$ 1.717,00',date:'',done:false}],history:[{text:'Proposta enviada.',ts:Date.now()-7200000,agent:'Beatriz'}]},
   ];
-  leads=demo;saveLeads();activity=[{msg:'Lead <strong>Wanderley Cruz</strong> em proposta',ts:Date.now()-3600000},{msg:'Lead <strong>Isabella Guarnier</strong> em negociação 🔥',ts:Date.now()-7200000}];saveActivity();updateAgentFilters();updateStats();
+  leads=demo;saveLeads();activity=[{msg:'Lead <strong>Wanderley Cruz</strong> em proposta',ts:Date.now()-3600000},{msg:'Lead <strong>Isabella Guarnier</strong> em negociaÃ§Ã£o ðŸ”¥',ts:Date.now()-7200000}];saveActivity();updateAgentFilters();updateStats();
 }
 renderKanban();
 
 
-// MÓDULO NFSe
+// MÃ“DULO NFSe
 var nfseStep = 1;
 var nfseTipoPessoa = 'juridica';
 var nfseLeadAtual = null;
@@ -2190,7 +2190,7 @@ function renderNFSeLeads() {
       '<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">' + rota + '</div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between;">' +
         '<div style="font-weight:700;color:var(--green);font-size:14px;">' + valor + '</div>' +
-        '<button style="background:var(--orange);color:white;border:none;border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;">🧾 Emitir</button>' +
+        '<button style="background:var(--orange);color:white;border:none;border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;">ðŸ§¾ Emitir</button>' +
       '</div></div>';
   }).join('');
   renderNFSeHistorico();
@@ -2203,12 +2203,12 @@ function renderNFSeHistorico() {
   var ano = new Date().getFullYear();
   var doMes = nfseEmitidas.filter(function(n){ var d=new Date(n.ts); return d.getMonth()===mes && d.getFullYear()===ano; });
   if(!doMes.length) {
-    hist.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Nenhuma NFSe registrada este mês.</div>';
+    hist.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Nenhuma NFSe registrada este mÃªs.</div>';
     return;
   }
   hist.innerHTML = '<table style="width:100%;border-collapse:collapse;">' +
     '<tr style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);">' +
-    '<th style="padding:10px 14px;text-align:left;">Cliente</th><th style="padding:10px 14px;text-align:left;">Discriminação</th>' +
+    '<th style="padding:10px 14px;text-align:left;">Cliente</th><th style="padding:10px 14px;text-align:left;">DiscriminaÃ§Ã£o</th>' +
     '<th style="padding:10px 14px;text-align:right;">Valor</th><th style="padding:10px 14px;text-align:center;">Data</th></tr>' +
     doMes.map(function(n){ return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-size:13px;font-weight:600;">' + n.razao + '</td>' +
       '<td style="padding:10px 14px;font-size:12px;color:var(--text3);">' + (n.disc||'').substring(0,40) + '...</td>' +
@@ -2346,7 +2346,7 @@ function nfseMarcarEmitida() {
   nfseEmitidas.push({razao:razao, valor:valor, disc:disc, ts:Date.now()});
   localStorage.setItem('crm-nfse-emitidas', JSON.stringify(nfseEmitidas));
   fecharModalNFSe();
-  if(typeof showToast === 'function') showToast('NFSe registrada — ' + razao);
+  if(typeof showToast === 'function') showToast('NFSe registrada â€” ' + razao);
   renderNFSeHistorico();
 }
 
@@ -2358,7 +2358,7 @@ function renderFinLeadsProntos() {
     return (l.stage==='Fechado / Ganho'||l.stage==='Fechado/Ganho') && !vendas.find(function(v){ return v.leadId===l.id; });
   });
   if(!fechados.length) { el.innerHTML=''; return; }
-  // Guardar referência global temporária
+  // Guardar referÃªncia global temporÃ¡ria
   window._finLeadsProntos = fechados.slice(0,5);
   var cards = window._finLeadsProntos.map(function(l, idx){
     var v = (l.valorFrete||'').replace('R$','').trim();
@@ -2375,3 +2375,4 @@ function renderFinLeadsProntos() {
 </script>
 </body>
 </html>
+
