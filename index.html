@@ -551,11 +551,22 @@ function finAtualizarVencimento() { /* prazo agora é select de atalho */ }
 
 
 function autoPreencherClienteFin(nome) {
-  if(!nome || !window.clientesFin) return;
-  var cli = (window.clientesFin||[]).find(function(c){ return c.nome === nome; });
+  if(!nome) return;
+  var fontes = (window.clientesFin||[]);
+  var cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'') === nome; });
+  if(!cli) cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'').toLowerCase().includes(nome.toLowerCase()); });
   if(!cli) return;
   var cnpj = document.getElementById('fin-cnpj');
-  if(cnpj && cli.cnpj) cnpj.value = cli.cnpj;
+  if(cnpj && (cli.cnpj||cli.cpf)) cnpj.value = cli.cnpj||cli.cpf||'';
+  var end = '';
+  if(cli.logradouro) {
+    end = (cli.logradouro||'') + (cli.numero?', '+cli.numero:'') +
+          (cli.comp?' '+cli.comp:'') + (cli.bairro?' - '+cli.bairro:'') +
+          (cli.cidade?' - '+cli.cidade:'') + (cli.estado?' / '+cli.estado:'') +
+          (cli.cep?' CEP: '+cli.cep:'');
+  } else if(cli.endereco) { end = cli.endereco; }
+  var endEl = document.getElementById('fin-endereco');
+  if(endEl && end) endEl.value = end.trim();
 }
 function finSalvar() {
   var cliente = document.getElementById('fin-cliente').value.trim();
@@ -733,7 +744,7 @@ function showView(v){
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   const t=document.getElementById('tab-'+v);if(t)t.classList.add('active');
-  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}
+  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}if(v==='operacional'){opTab('tarefas');}
   updateAgentFilters();
 }
 
@@ -774,7 +785,11 @@ function renderKanban(){
     const container=col.querySelector('.col-cards');
     cards.sort((a,b)=>b.ts-a.ts).forEach(lead=>{
       const hasFu=lead.followups?.some(f=>!f.done);
+      const textoObs=(lead.obs||'').toLowerCase();
+      const palavrasCotacao=['cotacao','cotacao','anuncio','anuncio','tabela','quanto fica','quanto custa','me passa','me manda','preciso enviar','quero enviar','valor do frete','preco do frete'];
+      const isAnuncio=palavrasCotacao.some(function(p){return textoObs.includes(p);});
       const card=document.createElement('div');card.className='card';
+      if(isAnuncio) card.style.borderColor='var(--red)';
       card.innerHTML=`
         <div class="card-name">${lead.name}</div>
         <div class="card-phone">${lead.tel||'Sem telefone'}</div>
@@ -1341,7 +1356,7 @@ function getClienteNomes() {
 
 
 <!-- OPERACIONAL VIEW -->
-<div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
+<div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto;overflow-y:auto;">
 
   <!-- Sub-tabs -->
   <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
@@ -1388,6 +1403,23 @@ function getClienteNomes() {
     <div id="docs-list" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
 
+
+  <!-- NFSe SUB-TAB -->
+  <div id="op-content-nfse" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <div style="font-size:16px;font-weight:700;">🧾 Notas Fiscais de Serviço</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px;">Prepare e emita NFSe no sistema Metrópole de Lauro de Freitas</div>
+      </div>
+      <button onclick="abrirModalNFSe(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">+ Nova NFSe</button>
+    </div>
+    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Leads prontos para emissão (Fechado/Ganho)</div>
+    <div id="nfse-leads-lista" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;"></div>
+    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Notas emitidas este mês</div>
+    <div id="nfse-historico" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Clique em "Marcar como Emitida" após emitir no Metrópole.</div>
+    </div>
+  </div>
 </div>
 <div class="view" id="view-financeiro" style="padding:20px;max-width:1100px;margin:0 auto">
 <div id="op-content-financeiro" style="display:block">
@@ -1440,22 +1472,6 @@ function getClienteNomes() {
 
 
 
-<!-- NFSe SUB-TAB -->
-  <div id="op-content-nfse" style="display:none">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-      <div>
-        <div style="font-size:16px;font-weight:700;">🧾 Notas Fiscais de Serviço</div>
-        <div style="font-size:12px;color:var(--text3);margin-top:2px;">Prepare e emita NFSe no sistema Metrópole de Lauro de Freitas</div>
-      </div>
-      <button onclick="abrirModalNFSe(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">+ Nova NFSe</button>
-    </div>
-    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Leads prontos para emissão (Fechado/Ganho)</div>
-    <div id="nfse-leads-lista" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;"></div>
-    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Notas emitidas este mês</div>
-    <div id="nfse-historico" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
-      <div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Clique em "Marcar como Emitida" após emitir no Metrópole.</div>
-    </div>
-  </div>
 
   <!-- MODAL NFSe -->
   <div id="modal-nfse" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;align-items:center;justify-content:center;padding:16px;">
@@ -1791,17 +1807,17 @@ function opTab(tab) {
     var v=document.getElementById('op-view-'+t);
     if(v) v.style.display='none';
     var el=document.getElementById('op-tab-'+t);
-    if(el){el.style.borderBottomColor='transparent';el.style.color='';}
+    if(el){el.style.borderBottomColor='transparent';el.style.color='var(--text2)';}
   });
   ['nfse'].forEach(function(t){
     var c=document.getElementById('op-content-'+t);
     if(c) c.style.display='none';
     var el=document.getElementById('op-tab-'+t);
-    if(el){el.style.borderBottomColor='transparent';el.style.color='';}
+    if(el){el.style.borderBottomColor='transparent';el.style.color='var(--text2)';}
   });
   if(['tarefas','fretes','agenda','docs'].indexOf(tab)>=0){
     var v=document.getElementById('op-view-'+tab);
-    if(v) v.style.display='';
+    if(v) v.style.display='block';
   } else {
     var c=document.getElementById('op-content-'+tab);
     if(c) c.style.display='block';
@@ -2249,9 +2265,11 @@ function sincronizarLeadsServidor() {
     if(data && data.cards && data.cards.length > 0) {
       var serverLeads = data.cards;
       serverLeads.forEach(function(sl){
-        var local = leads.find(function(l){ return l.id === sl.id; });
-        if(!local) {
+        var idx = leads.findIndex(function(l){ return l.id === sl.id; });
+        if(idx < 0) {
           leads.push(sl);
+        } else {
+          leads[idx] = Object.assign({}, leads[idx], sl);
         }
       });
       save('crm-leads', leads);
@@ -2366,19 +2384,7 @@ var nfseTipoPessoa = 'juridica';
 var nfseLeadAtual = null;
 var nfseEmitidas = JSON.parse(localStorage.getItem('crm-nfse-emitidas') || '[]');
 
-function opTab(tab) {
-  document.querySelectorAll('[id^="op-tab-"]').forEach(function(t) {
-    t.style.borderBottomColor = 'transparent';
-    t.style.color = 'var(--text2)';
-  });
-  document.querySelectorAll('[id^="op-content-"]').forEach(function(c) { c.style.display = 'none'; });
-  var tabEl = document.getElementById('op-tab-' + tab);
-  var contEl = document.getElementById('op-content-' + tab);
-  if(tabEl) { tabEl.style.borderBottomColor = 'var(--orange)'; tabEl.style.color = 'var(--orange)'; }
-  if(contEl) { contEl.style.display = 'block'; }
-  if(tab === 'nfse') renderNFSeLeads();
-  if(tab === 'financeiro') { renderFinanceiro(); renderFinLeadsProntos(); }
-}
+// opTab duplicado removido
 
 function renderNFSeLeads() {
   var lista = document.getElementById('nfse-leads-lista');
