@@ -18,7 +18,6 @@ let db = null;
 let messagesCol = null, kanbanCol = null;
 let tarefasCol = null, fretesCol = null, agendaCol = null, docsCol = null;
 let vendasCol = null;
-let clientesCol = null;
 
 async function connectMongo() {
   if (!MONGODB_URI) { console.log('[DB] Sem MONGODB_URI - memoria'); return; }
@@ -34,7 +33,6 @@ async function connectMongo() {
     agendaCol   = db.collection('agenda');
     docsCol     = db.collection('documentos');
     vendasCol   = db.collection('vendas');
-    clientesCol = db.collection('clientes');
     await messagesCol.createIndex({ id: 1 }, { unique: true });
     await messagesCol.createIndex({ ts: -1 });
     await kanbanCol.createIndex({ phone: 1 }, { unique: true });
@@ -43,22 +41,21 @@ async function connectMongo() {
     await agendaCol.createIndex({ id: 1 }, { unique: true });
     await docsCol.createIndex({ id: 1 }, { unique: true });
     await vendasCol.createIndex({ id: 1 }, { unique: true });
-    await clientesCol.createIndex({ id: 1 }, { unique: true });
     console.log('[DB] MongoDB Atlas conectado!');
   } catch(e) {
     console.error('[DB] Erro:', e.message);
-    db=null; messagesCol=null; kanbanCol=null; tarefasCol=null; fretesCol=null; agendaCol=null; docsCol=null; vendasCol=null; clientesCol=null;
+    db=null; messagesCol=null; kanbanCol=null; tarefasCol=null; fretesCol=null; agendaCol=null; docsCol=null; vendasCol=null;
   }
 }
 
 let memMessages = [];
 let memKanban = { colunas:['Novo Lead','Em Atendimento','Proposta','Fechado'], cards:[] };
-let memTarefas=[], memFretes=[], memAgenda=[], memDocs=[], memVendas=[], memClientes=[];
+let memTarefas=[], memFretes=[], memAgenda=[], memDocs=[], memVendas=[];
 
 function nowId() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-async function colFind(col,mem,sort) {
+async function colFind(col,mem,sort) { 
   sort = sort || {ts:-1};
-  return col ? col.find({}).sort(sort).toArray() : [...mem];
+  return col ? col.find({}).sort(sort).toArray() : [...mem]; 
 }
 async function colUpsert(col,mem,item) {
   if(col){ try{ await col.updateOne({id:item.id},{$set:item},{upsert:true}); }catch(e){console.error('[DB]',e.message);} }
@@ -150,7 +147,7 @@ async function enviarMensagemWhatsApp(phone,texto) {
   });
 }
 
-app.get('/',function(req,res){res.sendFile(path.join(__dirname,'index.html'));});
+app.get('/',function(req,res){res.setHeader('Cache-Control','no-store, no-cache, must-revalidate');res.setHeader('Pragma','no-cache');res.setHeader('Expires','0');res.sendFile(path.join(__dirname,'index.html'));});
 
 app.get('/health',async function(req,res){
   const msgs=await getMessages();
@@ -284,24 +281,13 @@ app.post('/documentos',async function(req,res){const item=Object.assign({id:nowI
 app.put('/documentos/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(docsCol,memDocs,item);res.json({ok:true,item});});
 app.delete('/documentos/:id',async function(req,res){await colDelete(docsCol,memDocs,req.params.id);res.json({ok:true});});
 
-// CLIENTES
-app.get('/clientes',async function(req,res){res.json(await colFind(clientesCol,memClientes));});
-app.post('/clientes',async function(req,res){
-  var item=Object.assign({id:req.body.id||(Date.now().toString(36)+Math.random().toString(36).slice(2,6)),ts:Date.now()},req.body);
-  await colUpsert(clientesCol,memClientes,item);
-  res.json({ok:true,item});
-});
-app.put('/clientes/:id',async function(req,res){
-  var item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});
-  await colUpsert(clientesCol,memClientes,item);
-  res.json({ok:true,item});
-});
-app.delete('/clientes/:id',async function(req,res){
-  await colDelete(clientesCol,memClientes,req.params.id);
-  res.json({ok:true});
-});
-
-// VENDAS
+// VENDAS — salvas no MongoDB
+let clientesCol = null;
+// rotas clientes
+app.get('/clientes',async function(req,res){res.json(await colFind(clientesCol,[]));});
+app.post('/clientes',async function(req,res){var item=req.body;await colFind(clientesCol,[]);res.json({ok:true});});
+app.put('/clientes/:id',async function(req,res){res.json({ok:true});});
+app.delete('/clientes/:id',async function(req,res){res.json({ok:true});});
 app.get('/vendas',async function(req,res){res.json(await colFind(vendasCol,memVendas));});
 app.post('/vendas',async function(req,res){
   const item=Object.assign({id:nowId(),ts:Date.now(),pago:false},req.body);
