@@ -282,6 +282,12 @@ app.put('/documentos/:id',async function(req,res){const item=Object.assign({ts:D
 app.delete('/documentos/:id',async function(req,res){await colDelete(docsCol,memDocs,req.params.id);res.json({ok:true});});
 
 // VENDAS — salvas no MongoDB
+let clientesCol = null;
+// rotas clientes
+app.get('/clientes',async function(req,res){res.json(await colFind(clientesCol,[]));});
+app.post('/clientes',async function(req,res){var item=req.body;await colFind(clientesCol,[]);res.json({ok:true});});
+app.put('/clientes/:id',async function(req,res){res.json({ok:true});});
+app.delete('/clientes/:id',async function(req,res){res.json({ok:true});});
 app.get('/vendas',async function(req,res){res.json(await colFind(vendasCol,memVendas));});
 app.post('/vendas',async function(req,res){
   const item=Object.assign({id:nowId(),ts:Date.now(),pago:false},req.body);
