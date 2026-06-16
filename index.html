@@ -1606,7 +1606,8 @@ async function enviarMsg(phone){
 async function loadWppMessages(){
   const dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
   try{
-    const res=await fetch(WPP_SERVER+'/messages');if(!res.ok)throw new Error();
+    const instParam = (typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?('?instance='+PERFIS[perfilAtivo].instancia):'';
+    const res=await fetch(WPP_SERVER+'/messages'+instParam);if(!res.ok)throw new Error();
     wppMsgs=await res.json();
     dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
     const badge=document.getElementById('wpp-badge');
@@ -1630,7 +1631,7 @@ async function wppToLead(id,name,phone,text){
 }
 
 async function deleteWppMsg(id){try{await fetch(WPP_SERVER+'/messages/'+id,{method:'DELETE'});loadWppMessages();}catch(e){}}
-function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',()=>loadWppMessages());es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
+function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',function(e){try{var d=JSON.parse(e.data);var inst=typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo]?PERFIS[perfilAtivo].instancia:'';if(!inst||!d.instance||d.instance===inst)loadWppMessages();}catch(ex){loadWppMessages();}});es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
 conectarSSE();
 setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
@@ -1645,7 +1646,7 @@ let opModalMode = null, opModalId = null;
 function opTab(tab) {
   if(tab==='clientes-fin'){carregarClientesFin();}
   opCurrentTab = tab;
-  ['tarefas','fretes','agenda','docs'].forEach(function(t){
+  ['tarefas','fretes','agenda','docs','clientes-fin'].forEach(function(t){
     var v=document.getElementById('op-view-'+t);
     if(v) v.style.display='none';
     var el=document.getElementById('op-tab-'+t);
@@ -1657,7 +1658,7 @@ function opTab(tab) {
     var el=document.getElementById('op-tab-'+t);
     if(el){el.style.borderBottomColor='transparent';el.style.color='';}
   });
-  if(['tarefas','fretes','agenda','docs'].indexOf(tab)>=0){
+  if(['tarefas','fretes','agenda','docs','clientes-fin'].indexOf(tab)>=0){
     var v=document.getElementById('op-view-'+tab);
     if(v) v.style.display='';
   } else {
@@ -1671,6 +1672,7 @@ function opTab(tab) {
   if(tab==='agenda') loadAgenda();
   if(tab==='docs') loadDocs();
   if(tab==='nfse'&&typeof renderNFSeLeads==='function') renderNFSeLeads();
+  if(tab==='clientes-fin') carregarClientesFin();
   if(tab==='financeiro') carregarVendas().then(function(){renderFinanceiro();renderFinLeadsProntos();});
 }
 
