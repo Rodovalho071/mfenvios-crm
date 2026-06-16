@@ -411,7 +411,8 @@ function formatMoeda(v){var n=parseMoeda(v);if(isNaN(n))return 'R$ 0,00';return 
 });
 }
 
-function parseMoeda(v){if(v===null||v===undefined||v==='')return 0;if(typeof v==='number')return v;var s=v.toString().replace(/R[$]\s*/g,'').replace(/\s/g,'').trim();if(!s)return 0;if(s.indexOf(',')!==-1){s=s.replace(/[.]/g,'').replace(',','.');return parseFloat(s)||0;}if(s.indexOf('.')!==-1){var p=s.split('.');if(p.length===2&&p[1].length<=2)return parseFloat(s)||0;s=s.replace(/[.]/g,'');}return parseFloat(s)||0;}if(s.indexOf('.')!==-1){var p=s.split('.');if(p.length===2&&p[1].length<=2)return parseFloat(s)||0;s=s.replace(/[.]/g,'');}return parseFloat(s)||0;}
+function parseMoeda(v){if(v===null||v===undefined||v==='')return 0;if(typeof v==='number')return v;var s=v.toString().replace(/R[$]\s*/g,'').replace(/\s/g,'').trim();if(!s)return 0;if(s.indexOf(',')!==-1){s=s.replace(/[.]/g,'').replace(',','.');return parseFloat(s)||0;}if(s.indexOf('.')!==-1){var p=s.split('.');if(p.length===2&&p[1].length<=2)return parseFloat(s)||0;s=s.replace(/[.]/g,'');}return parseFloat(s)||0;}
+
   var s=v.toString().replace(/R\$\s*/g,'').replace(/\s/g,'').trim();
   if(s.indexOf(',')!==-1){s=s.replace(/\./g,'').replace(',','.');return parseFloat(s)||0;}
   if(s.indexOf('.')!==-1){var p=s.split('.');if(p.length===2&&p[1].length<=2)return parseFloat(s)||0;s=s.replace(/\./g,'');}
