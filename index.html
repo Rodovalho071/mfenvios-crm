@@ -161,6 +161,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 <div class="tabs-bar">
   <div class="tab active" onclick="showView('kanban')" id="tab-kanban">🗂 Funil</div>
   <div class="tab" onclick="showView('clientes')" id="tab-clientes">👥 Clientes</div>
+  <div class="tab" onclick="showView('cadastro')" id="tab-cadastro">📋 Cadastro</div>
   <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">📊 Dashboard</div>
   <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
   <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
@@ -732,7 +733,7 @@ function showView(v){
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   const t=document.getElementById('tab-'+v);if(t)t.classList.add('active');
-  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}
+  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}
   updateAgentFilters();
 }
 
@@ -1133,6 +1134,153 @@ function abrirRelatorio(){
     ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
   </div>`:''}
   <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
+
+<div class="view" id="view-cadastro" style="padding:20px;max-width:900px;margin:0 auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div>
+      <div style="font-size:18px;font-weight:700">📋 Cadastro de Clientes</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:2px">Gerencie seus clientes para agilizar vendas e documentações</div>
+    </div>
+    <button onclick="abrirModalCadastro(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer">+ Novo Cliente</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <input id="cad-busca" type="text" placeholder="Buscar por nome, CNPJ ou cidade..." oninput="renderCadastro()" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px">
+    <select id="cad-tipo-filter" onchange="renderCadastro()" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px">
+      <option value="">Todos os tipos</option>
+      <option value="pj">Pessoa Jurídica</option>
+      <option value="pf">Pessoa Física</option>
+    </select>
+  </div>
+  <div id="cadastro-lista"></div>
+</div>
+
+<!-- MODAL CADASTRO -->
+<div id="modal-cadastro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1">
+      <div id="cad-modal-titulo" style="font-size:16px;font-weight:700">Novo Cliente</div>
+      <button onclick="fecharModalCadastro()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px">&times;</button>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- Tipo -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Tipo de Pessoa</div>
+        <div style="display:flex;gap:20px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pj" id="cad-tipo-pj" checked onchange="toggleCadTipo()"> Pessoa Jurídica
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pf" id="cad-tipo-pf" onchange="toggleCadTipo()"> Pessoa Física
+          </label>
+        </div>
+      </div>
+
+      <!-- Dados Básicos -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Dados Básicos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label id="cad-doc-label" style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNPJ</label>
+            <input id="cad-doc" type="text" placeholder="00.000.000/0000-00" onblur="buscarCNPJ(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Razão Social / Nome</label>
+            <input id="cad-razao" type="text" placeholder="Razão social ou nome completo" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Nome Fantasia</label>
+            <input id="cad-fantasia" type="text" placeholder="Nome fantasia (opcional)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Estadual</label>
+            <input id="cad-ie" type="text" placeholder="Inscrição estadual" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Municipal</label>
+            <input id="cad-im" type="text" placeholder="Inscrição municipal" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNAE</label>
+            <input id="cad-cnae" type="text" placeholder="Código CNAE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contato -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Informações de Contato</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Celular</label>
+            <input id="cad-cel" type="text" placeholder="(00) 00000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Comercial</label>
+            <input id="cad-tel" type="text" placeholder="(00) 0000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail</label>
+            <input id="cad-email" type="email" placeholder="email@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail Cobrança</label>
+            <input id="cad-email-cob" type="email" placeholder="cobranca@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Endereço -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Endereço</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CEP</label>
+            <input id="cad-cep" type="text" placeholder="00000-000" onblur="buscarCEP(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Estado</label>
+            <input id="cad-estado" type="text" placeholder="UF" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Cidade</label>
+            <input id="cad-cidade" type="text" placeholder="Cidade" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Bairro</label>
+            <input id="cad-bairro" type="text" placeholder="Bairro" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Logradouro</label>
+            <input id="cad-logradouro" type="text" placeholder="Rua, Av..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Número</label>
+              <input id="cad-numero" type="text" placeholder="Nº" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Compl.</label>
+              <input id="cad-comp" type="text" placeholder="Apto..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div>
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Observações</label>
+        <textarea id="cad-obs" placeholder="Observações gerais sobre o cliente..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">
+        <button onclick="fecharModalCadastro()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button>
+        <button onclick="salvarCadastro()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer">Salvar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body></html>`;
 
   const w=window.open('','_blank');w.document.write(html);w.document.close();
@@ -2431,5 +2579,152 @@ function renderFinLeadsProntos() {
 
 
 </script>
+
+<div class="view" id="view-cadastro" style="padding:20px;max-width:900px;margin:0 auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div>
+      <div style="font-size:18px;font-weight:700">📋 Cadastro de Clientes</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:2px">Gerencie seus clientes para agilizar vendas e documentações</div>
+    </div>
+    <button onclick="abrirModalCadastro(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer">+ Novo Cliente</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <input id="cad-busca" type="text" placeholder="Buscar por nome, CNPJ ou cidade..." oninput="renderCadastro()" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px">
+    <select id="cad-tipo-filter" onchange="renderCadastro()" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px">
+      <option value="">Todos os tipos</option>
+      <option value="pj">Pessoa Jurídica</option>
+      <option value="pf">Pessoa Física</option>
+    </select>
+  </div>
+  <div id="cadastro-lista"></div>
+</div>
+
+<!-- MODAL CADASTRO -->
+<div id="modal-cadastro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1">
+      <div id="cad-modal-titulo" style="font-size:16px;font-weight:700">Novo Cliente</div>
+      <button onclick="fecharModalCadastro()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px">&times;</button>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- Tipo -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Tipo de Pessoa</div>
+        <div style="display:flex;gap:20px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pj" id="cad-tipo-pj" checked onchange="toggleCadTipo()"> Pessoa Jurídica
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pf" id="cad-tipo-pf" onchange="toggleCadTipo()"> Pessoa Física
+          </label>
+        </div>
+      </div>
+
+      <!-- Dados Básicos -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Dados Básicos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label id="cad-doc-label" style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNPJ</label>
+            <input id="cad-doc" type="text" placeholder="00.000.000/0000-00" onblur="buscarCNPJ(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Razão Social / Nome</label>
+            <input id="cad-razao" type="text" placeholder="Razão social ou nome completo" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Nome Fantasia</label>
+            <input id="cad-fantasia" type="text" placeholder="Nome fantasia (opcional)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Estadual</label>
+            <input id="cad-ie" type="text" placeholder="Inscrição estadual" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Municipal</label>
+            <input id="cad-im" type="text" placeholder="Inscrição municipal" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNAE</label>
+            <input id="cad-cnae" type="text" placeholder="Código CNAE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contato -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Informações de Contato</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Celular</label>
+            <input id="cad-cel" type="text" placeholder="(00) 00000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Comercial</label>
+            <input id="cad-tel" type="text" placeholder="(00) 0000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail</label>
+            <input id="cad-email" type="email" placeholder="email@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail Cobrança</label>
+            <input id="cad-email-cob" type="email" placeholder="cobranca@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Endereço -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Endereço</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CEP</label>
+            <input id="cad-cep" type="text" placeholder="00000-000" onblur="buscarCEP(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Estado</label>
+            <input id="cad-estado" type="text" placeholder="UF" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Cidade</label>
+            <input id="cad-cidade" type="text" placeholder="Cidade" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Bairro</label>
+            <input id="cad-bairro" type="text" placeholder="Bairro" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Logradouro</label>
+            <input id="cad-logradouro" type="text" placeholder="Rua, Av..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Número</label>
+              <input id="cad-numero" type="text" placeholder="Nº" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Compl.</label>
+              <input id="cad-comp" type="text" placeholder="Apto..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div>
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Observações</label>
+        <textarea id="cad-obs" placeholder="Observações gerais sobre o cliente..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">
+        <button onclick="fecharModalCadastro()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button>
+        <button onclick="salvarCadastro()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer">Salvar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
