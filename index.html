@@ -1369,7 +1369,7 @@ function renderCadastro() {
   el.innerHTML = lista.map(function(c){
     var doc = c.tipo==='pf' ? (c.cpf||'') : (c.cnpj||'');
     var cidade = [c.cidade, c.estado].filter(Boolean).join(' / ');
-    return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:10px;cursor:pointer;" onclick="abrirModalCadastro(''+c.id+'')">' +
+    return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:10px;cursor:pointer;" onclick="abrirModalCadastro('"+c.id+"'')">' +
       '<div style="width:44px;height:44px;border-radius:50%;background:var(--blue-bg);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;">' +
         (c.razao||c.fantasia||'?')[0].toUpperCase() +
       '</div>' +
@@ -1383,7 +1383,7 @@ function renderCadastro() {
         '</div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;flex-shrink:0;">' +
-        '<button onclick="event.stopPropagation();deletarCadastro(''+c.id+'')" style="background:var(--red-bg);color:var(--red);border:1px solid var(--red-bg);border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;">🗑</button>' +
+        '<button onclick="event.stopPropagation();deletarCadastro('"+c.id+"'')" style="background:var(--red-bg);color:var(--red);border:1px solid var(--red-bg);border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;">🗑</button>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -1862,7 +1862,7 @@ let chatAtivo=null;
 let enviando=false;
 
 // Contatos conhecidos da MF Envios (clientes com contato salvo)
-const CONTATOS_MF = load('crm-contatos-mf', []);
+var CONTATOS_MF = []; try { CONTATOS_MF = JSON.parse(localStorage.getItem('crm-contatos-mf')||'[]'); } catch(e) {}
 
 function isClienteMF(phone){ return leads.some(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,'')); }
 
@@ -2469,8 +2469,8 @@ const PERFIS = {
   }
 };
 
-let perfilAtivo = localStorage.getItem('crm-perfil') || null;
-let verTodos = false;
+var perfilAtivo = localStorage.getItem('crm-perfil') || null;
+var verTodos = false;
 
 function selecionarPerfil(perfil) {
   perfilAtivo = perfil;
