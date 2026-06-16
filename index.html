@@ -559,7 +559,7 @@ function finSalvar() {
     var idx = vendas.findIndex(function(v){ return v.id===vendaEditando; });
     if(idx >= 0) {
       vendas[idx].cliente = cliente;
-      vendas[idx].valor = valor;
+      vendas[idx].valor = parseMoeda(valor);
       vendas[idx].formaPag = forma;
       vendas[idx].vencimento = venc;
       vendas[idx].descricao = desc;
@@ -569,7 +569,7 @@ function finSalvar() {
     vendas.push({
       id: uid_fin(),
       cliente: cliente,
-      valor: valor,
+      valor: parseMoeda(valor),
       formaPag: forma,
       vencimento: venc,
       descricao: desc,
@@ -627,7 +627,14 @@ const STAGE_PILL={'Primeiro contato':'background:rgba(59,130,246,.25);color:#93c
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
 function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
 let leads=load('crm-leads',[]),activity=load('crm-activity',[]),agentName=load('crm-agent',''),iaKey=load('crm-ia-key',''),iaPreview=null;
-function saveLeads(){save('crm-leads',leads);updateStats();}
+function saveLeads(){
+  save('crm-leads',leads);
+  updateStats();
+  // Sincronizar cada lead com MongoDB
+  leads.forEach(function(lead){
+    fetch('/kanban-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(function(){});
+  });
+}
 function saveActivity(){save('crm-activity',activity.slice(0,100));}
 function addActivity(msg){activity.unshift({msg,ts:Date.now()});saveActivity();}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
@@ -1115,6 +1122,33 @@ function abrirRelatorio(){
   const w=window.open('','_blank');w.document.write(html);w.document.close();
   setTimeout(()=>w.print(),500);
 }
+
+// ═══════════════════════════════════════════
+// MÓDULO CLIENTES
+// ═══════════════════════════════════════════
+var clientesFin = [];
+function carregarClientesFin() {
+  return fetch('/clientes').then(function(r){return r.json();}).then(function(d){
+    clientesFin = Array.isArray(d) ? d : [];
+  }).catch(function(){
+    clientesFin = JSON.parse(localStorage.getItem('crm-clientes-fin')||'[]');
+  });
+}
+function salvarClienteFin(obj) {
+  var existe = clientesFin.findIndex(function(c){ return c.id === obj.id; });
+  if(existe >= 0) {
+    clientesFin[existe] = obj;
+    fetch('/clientes/'+obj.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){});
+  } else {
+    clientesFin.push(obj);
+    fetch('/clientes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){});
+  }
+  localStorage.setItem('crm-clientes-fin', JSON.stringify(clientesFin));
+}
+function getClienteNomes() {
+  return clientesFin.map(function(c){ return c.nome; });
+}
+
 </script>
 
 
@@ -1341,7 +1375,7 @@ function abrirRelatorio(){
       <div style="padding:24px;display:flex;flex-direction:column;gap:14px;">
         <input type="hidden" id="fin-lead-id">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Cliente</label><input id="fin-cliente" type="text" placeholder="Nome do cliente" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Cliente</label><input id="fin-cliente" type="text" list="fin-clientes-list" onchange="autoPreencherClienteFin(this.value)" placeholder="Nome do cliente" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
           <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CNPJ/CPF</label><input id="fin-cnpj" type="text" placeholder="00.000.000/0000-00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
         </div>
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Descricao</label><input id="fin-descricao" type="text" placeholder="Ex: Frete Sao Paulo - Salvador" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
@@ -1539,7 +1573,9 @@ async function enviarMsg(phone){
 async function loadWppMessages(){
   const dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
   try{
-    const res=await fetch(WPP_SERVER+'/messages');if(!res.ok)throw new Error();
+    var _inst = (typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
+    var _url = WPP_SERVER+'/messages'+(_inst?'?instance='+_inst:'');
+    const res=await fetch(_url);if(!res.ok)throw new Error();
     wppMsgs=await res.json();
     dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
     const badge=document.getElementById('wpp-badge');
@@ -1563,7 +1599,13 @@ async function wppToLead(id,name,phone,text){
 }
 
 async function deleteWppMsg(id){try{await fetch(WPP_SERVER+'/messages/'+id,{method:'DELETE'});loadWppMessages();}catch(e){}}
-function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',()=>loadWppMessages());es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
+function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',function(e){
+    try{
+      var d=JSON.parse(e.data);
+      var inst=(typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
+      if(!inst||!d.instance||d.instance===inst) loadWppMessages();
+    }catch(ex){loadWppMessages();}
+  });es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
 conectarSSE();
 setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
@@ -2032,8 +2074,25 @@ function selecionarPerfil(perfil) {
   localStorage.setItem('crm-perfil', perfil);
   document.getElementById('splash-perfil').style.display = 'none';
   aplicarPerfil();
+  sincronizarLeadsServidor();
 }
 
+function sincronizarLeadsServidor() {
+  fetch('/kanban').then(function(r){return r.json();}).then(function(data){
+    if(data && data.cards && data.cards.length > 0) {
+      var serverLeads = data.cards;
+      serverLeads.forEach(function(sl){
+        var local = leads.find(function(l){ return l.id === sl.id; });
+        if(!local) {
+          leads.push(sl);
+        }
+      });
+      save('crm-leads', leads);
+      updateStats();
+      if(typeof renderKanban === 'function') renderKanban();
+    }
+  }).catch(function(){});
+}
 function aplicarPerfil() {
   if(!perfilAtivo) return;
   const p = PERFIS[perfilAtivo];
