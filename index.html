@@ -382,7 +382,13 @@ var vendaEditando = null;
 function salvarVendas() {}
 function carregarVendas() {
   return fetch('/vendas').then(function(r){return r.json();}).then(function(data){
-    vendas = Array.isArray(data) ? data : [];
+    vendas = (Array.isArray(data) ? data : []).map(function(v){
+      // Corrigir valores inteiros grandes que foram salvos errado (ex: 10025 -> 100.25)
+      if(typeof v.valor === 'number' && Number.isInteger(v.valor) && v.valor > 1000) {
+        v.valor = v.valor / 100;
+      }
+      return v;
+    });
   }).catch(function(){
     vendas = JSON.parse(localStorage.getItem('crm-vendas')||'[]');
   });
@@ -542,6 +548,14 @@ function fecharModalVenda() {
 
 function finAtualizarVencimento() { /* prazo agora é select de atalho */ }
 
+
+function autoPreencherClienteFin(nome) {
+  if(!nome || !window.clientesFin) return;
+  var cli = (window.clientesFin||[]).find(function(c){ return c.nome === nome; });
+  if(!cli) return;
+  var cnpj = document.getElementById('fin-cnpj');
+  if(cnpj && cli.cnpj) cnpj.value = cli.cnpj;
+}
 function finSalvar() {
   var cliente = document.getElementById('fin-cliente').value.trim();
   var valor = document.getElementById('fin-valor').value.trim();
@@ -575,6 +589,7 @@ function finSalvar() {
       vencimento: venc,
       descricao: desc,
       obs: obs,
+      endereco: (document.getElementById('fin-endereco')||{}).value||'',
       leadId: leadId,
       pago: false,
       ts: Date.now()
@@ -1407,6 +1422,7 @@ function getClienteNomes() {
           </select></div>
         </div>
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Observacoes</label><input id="fin-obs" type="text" placeholder="Informacoes adicionais" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div style="grid-column:1/-1"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Endereço</label><input id="fin-endereco" type="text" placeholder="Endereço completo do cliente" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
       </div>
       <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
         <button onclick="fecharModalVenda()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
