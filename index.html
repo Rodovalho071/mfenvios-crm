@@ -552,19 +552,27 @@ function finAtualizarVencimento() { /* prazo agora é select de atalho */ }
 
 function autoPreencherClienteFin(nome) {
   if(!nome) return;
+  // Buscar no cadastro local ou em window.clientesFin
   var fontes = (window.clientesFin||[]);
+  if(typeof clientes !== 'undefined') fontes = fontes.concat(clientes);
   var cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'') === nome; });
-  if(!cli) cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'').toLowerCase().includes(nome.toLowerCase()); });
+  if(!cli) {
+    // Tentar busca parcial
+    cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'').toLowerCase().includes(nome.toLowerCase()); });
+  }
   if(!cli) return;
   var cnpj = document.getElementById('fin-cnpj');
   if(cnpj && (cli.cnpj||cli.cpf)) cnpj.value = cli.cnpj||cli.cpf||'';
+  // Montar endereco
   var end = '';
   if(cli.logradouro) {
     end = (cli.logradouro||'') + (cli.numero?', '+cli.numero:'') +
           (cli.comp?' '+cli.comp:'') + (cli.bairro?' - '+cli.bairro:'') +
           (cli.cidade?' - '+cli.cidade:'') + (cli.estado?' / '+cli.estado:'') +
           (cli.cep?' CEP: '+cli.cep:'');
-  } else if(cli.endereco) { end = cli.endereco; }
+  } else if(cli.endereco) {
+    end = cli.endereco;
+  }
   var endEl = document.getElementById('fin-endereco');
   if(endEl && end) endEl.value = end.trim();
 }
@@ -744,7 +752,7 @@ function showView(v){
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   const t=document.getElementById('tab-'+v);if(t)t.classList.add('active');
-  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}if(v==='operacional'){opTab('tarefas');}
+  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();})}if(v==='operacional'){opTab('tarefas');};}
   updateAgentFilters();
 }
 
@@ -786,7 +794,7 @@ function renderKanban(){
     cards.sort((a,b)=>b.ts-a.ts).forEach(lead=>{
       const hasFu=lead.followups?.some(f=>!f.done);
       const textoObs=(lead.obs||'').toLowerCase();
-      const palavrasCotacao=['cotacao','cotacao','anuncio','anuncio','tabela','quanto fica','quanto custa','me passa','me manda','preciso enviar','quero enviar','valor do frete','preco do frete'];
+      const palavrasCotacao=['cotação','cotacao','anuncio','anúncio','tabela','quanto fica','quanto custa','me passa','me manda','preciso enviar','quero enviar','valor do frete','preço do frete'];
       const isAnuncio=palavrasCotacao.some(function(p){return textoObs.includes(p);});
       const card=document.createElement('div');card.className='card';
       if(isAnuncio) card.style.borderColor='var(--red)';
@@ -1328,187 +1336,8 @@ function getClienteNomes() {
   return clientesFin.map(function(c){ return c.nome; });
 }
 
-
-// ═══════════════════════════════════════════
-// MÓDULO CADASTRO DE CLIENTES
-// ═══════════════════════════════════════════
-var cadastros = [];
-var cadastroEditandoId = null;
-
-function carregarCadastro() {
-  fetch('/clientes').then(function(r){ return r.json(); }).then(function(d){
-    cadastros = Array.isArray(d) ? d : [];
-    window.clientesFin = cadastros;
-    renderCadastro();
-  }).catch(function(){
-    cadastros = JSON.parse(localStorage.getItem('crm-cadastros')||'[]');
-    window.clientesFin = cadastros;
-    renderCadastro();
-  });
-}
-
-function renderCadastro() {
-  var busca = (document.getElementById('cad-busca')||{}).value || '';
-  var tipo = (document.getElementById('cad-tipo-filter')||{}).value || '';
-  busca = busca.toLowerCase();
-  var lista = cadastros.filter(function(c){
-    var match = !busca || (c.razao||'').toLowerCase().includes(busca) ||
-      (c.fantasia||'').toLowerCase().includes(busca) ||
-      (c.cnpj||'').includes(busca) ||
-      (c.cidade||'').toLowerCase().includes(busca);
-    var matchTipo = !tipo || c.tipo === tipo;
-    return match && matchTipo;
-  });
-  var el = document.getElementById('cadastro-lista');
-  if(!el) return;
-  if(!lista.length) {
-    el.innerHTML = '<div style="text-align:center;padding:48px;color:var(--text3);font-size:14px;">Nenhum cliente cadastrado ainda.<br><br><button onclick="abrirModalCadastro(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;">+ Cadastrar primeiro cliente</button></div>';
-    return;
-  }
-  el.innerHTML = lista.map(function(cad){
-    var doc = cad.tipo==='pf' ? (cad.cpf||'') : (cad.cnpj||'');
-    var cidade = [cad.cidade, cad.estado].filter(Boolean).join(' / ');
-    var idEsc = cad.id;
-    return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:10px;cursor:pointer;" onclick="abrirModalCadastro(\'' + idEsc + '\')">' +
-      '<div style="width:44px;height:44px;border-radius:50%;background:var(--blue-bg);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;">' +
-        (cad.razao||cad.fantasia||'?')[0].toUpperCase() +
-      '</div>' +
-      '<div style="flex:1;min-width:0;">' +
-        '<div style="font-size:14px;font-weight:700;">' + (cad.razao||cad.fantasia||'Sem nome') + '</div>' +
-        (cad.fantasia && cad.razao ? '<div style="font-size:12px;color:var(--text3);">' + cad.fantasia + '</div>' : '') +
-        '<div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">' +
-          (doc ? '<span style="font-size:11px;color:var(--text3);">📄 ' + doc + '</span>' : '') +
-          (cidade ? '<span style="font-size:11px;color:var(--text3);">📍 ' + cidade + '</span>' : '') +
-          (cad.cel||cad.tel ? '<span style="font-size:11px;color:var(--text3);">📱 ' + (cad.cel||cad.tel) + '</span>' : '') +
-        '</div>' +
-      '</div>' +
-      '<div style="display:flex;gap:8px;flex-shrink:0;">' +
-        '<button onclick="event.stopPropagation();deletarCadastro(\'' + idEsc + '\')" style="background:var(--red-bg);color:var(--red);border:1px solid var(--red-bg);border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;">🗑</button>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-function abrirModalCadastro(id) {
-  cadastroEditandoId = id;
-  var modal = document.getElementById('modal-cadastro');
-  if(!modal) return;
-  ['cad-doc','cad-razao','cad-fantasia','cad-ie','cad-im','cad-cnae',
-   'cad-cel','cad-tel','cad-email','cad-email-cob',
-   'cad-cep','cad-estado','cad-cidade','cad-bairro','cad-logradouro','cad-numero','cad-comp','cad-obs'].forEach(function(fid){
-    var el = document.getElementById(fid); if(el) el.value = '';
-  });
-  document.getElementById('cad-tipo-pj').checked = true;
-  toggleCadTipo();
-  if(id) {
-    var cad = cadastros.find(function(x){ return x.id === id; });
-    if(cad) {
-      document.getElementById('cad-modal-titulo').textContent = 'Editar Cliente';
-      if(cad.tipo==='pf') { document.getElementById('cad-tipo-pf').checked=true; toggleCadTipo(); }
-      var set = function(fid,val){ var el=document.getElementById(fid); if(el&&val) el.value=val; };
-      set('cad-doc', cad.cnpj||cad.cpf); set('cad-razao', cad.razao); set('cad-fantasia', cad.fantasia);
-      set('cad-ie', cad.ie); set('cad-im', cad.im); set('cad-cnae', cad.cnae);
-      set('cad-cel', cad.cel); set('cad-tel', cad.tel); set('cad-email', cad.email);
-      set('cad-email-cob', cad.emailCob); set('cad-cep', cad.cep); set('cad-estado', cad.estado);
-      set('cad-cidade', cad.cidade); set('cad-bairro', cad.bairro); set('cad-logradouro', cad.logradouro);
-      set('cad-numero', cad.numero); set('cad-comp', cad.comp); set('cad-obs', cad.obs);
-    }
-  } else {
-    document.getElementById('cad-modal-titulo').textContent = 'Novo Cliente';
-  }
-  modal.style.display = 'flex';
-}
-
-function fecharModalCadastro() {
-  var modal = document.getElementById('modal-cadastro');
-  if(modal) modal.style.display = 'none';
-}
-
-function toggleCadTipo() {
-  var pj = document.getElementById('cad-tipo-pj');
-  var label = document.getElementById('cad-doc-label');
-  var input = document.getElementById('cad-doc');
-  if(!pj||!label||!input) return;
-  if(pj.checked) { label.textContent='CNPJ'; input.placeholder='00.000.000/0000-00'; }
-  else { label.textContent='CPF'; input.placeholder='000.000.000-00'; }
-}
-
-function salvarCadastro() {
-  var tipo = document.getElementById('cad-tipo-pj').checked ? 'pj' : 'pf';
-  var doc = (document.getElementById('cad-doc')||{}).value||'';
-  var razao = (document.getElementById('cad-razao')||{}).value||'';
-  if(!razao.trim()) { alert('Preencha a Razão Social / Nome.'); return; }
-  var obj = {
-    id: cadastroEditandoId || (Date.now().toString(36)+Math.random().toString(36).slice(2,6)),
-    tipo: tipo, cnpj: tipo==='pj'?doc:'', cpf: tipo==='pf'?doc:'',
-    razao: razao.trim(), nome: razao.trim(),
-    fantasia: (document.getElementById('cad-fantasia')||{}).value||'',
-    ie: (document.getElementById('cad-ie')||{}).value||'',
-    im: (document.getElementById('cad-im')||{}).value||'',
-    cnae: (document.getElementById('cad-cnae')||{}).value||'',
-    cel: (document.getElementById('cad-cel')||{}).value||'',
-    tel: (document.getElementById('cad-tel')||{}).value||'',
-    email: (document.getElementById('cad-email')||{}).value||'',
-    emailCob: (document.getElementById('cad-email-cob')||{}).value||'',
-    cep: (document.getElementById('cad-cep')||{}).value||'',
-    estado: (document.getElementById('cad-estado')||{}).value||'',
-    cidade: (document.getElementById('cad-cidade')||{}).value||'',
-    bairro: (document.getElementById('cad-bairro')||{}).value||'',
-    logradouro: (document.getElementById('cad-logradouro')||{}).value||'',
-    numero: (document.getElementById('cad-numero')||{}).value||'',
-    comp: (document.getElementById('cad-comp')||{}).value||'',
-    obs: (document.getElementById('cad-obs')||{}).value||'',
-    ts: Date.now()
-  };
-  var idx = cadastros.findIndex(function(x){ return x.id===obj.id; });
-  if(idx>=0) { cadastros[idx]=obj; fetch('/clientes/'+obj.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){}); }
-  else { cadastros.unshift(obj); fetch('/clientes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){}); }
-  localStorage.setItem('crm-cadastros',JSON.stringify(cadastros));
-  window.clientesFin = cadastros;
-  fecharModalCadastro(); renderCadastro();
-  if(typeof showToast==='function') showToast('Cliente salvo — '+obj.razao);
-  else if(typeof toast==='function') toast('Cliente salvo — '+obj.razao);
-}
-
-function deletarCadastro(id) {
-  var cad = cadastros.find(function(x){ return x.id===id; });
-  if(!cad||!confirm('Excluir "'+cad.razao+'"?')) return;
-  cadastros = cadastros.filter(function(x){ return x.id!==id; });
-  fetch('/clientes/'+id,{method:'DELETE'}).catch(function(){});
-  localStorage.setItem('crm-cadastros',JSON.stringify(cadastros));
-  renderCadastro();
-}
-
-function buscarCNPJ(cnpj) {
-  cnpj = cnpj.replace(/\D/g,'');
-  if(cnpj.length!==14) return;
-  fetch('https://brasilapi.com.br/api/cnpj/v1/'+cnpj).then(function(r){return r.json();}).then(function(d){
-    if(d.razao_social) {
-      var set=function(id,val){var el=document.getElementById(id);if(el&&val)el.value=val;};
-      set('cad-razao',d.razao_social); set('cad-fantasia',d.nome_fantasia||'');
-      set('cad-cnae',d.cnae_fiscal||''); set('cad-cep',(d.cep||'').replace(/\D/g,''));
-      set('cad-logradouro',d.logradouro||''); set('cad-numero',d.numero||'');
-      set('cad-comp',d.complemento||''); set('cad-bairro',d.bairro||'');
-      set('cad-cidade',d.municipio||''); set('cad-estado',d.uf||'');
-      set('cad-email',d.email||'');
-      if(typeof showToast==='function') showToast('CNPJ encontrado!');
-    }
-  }).catch(function(){});
-}
-
-function buscarCEP(cep) {
-  cep = cep.replace(/\D/g,'');
-  if(cep.length!==8) return;
-  fetch('https://viacep.com.br/ws/'+cep+'/json/').then(function(r){return r.json();}).then(function(d){
-    if(!d.erro){
-      var set=function(id,val){var el=document.getElementById(id);if(el&&val)el.value=val;};
-      set('cad-logradouro',d.logradouro||''); set('cad-bairro',d.bairro||'');
-      set('cad-cidade',d.localidade||''); set('cad-estado',d.uf||'');
-    }
-  }).catch(function(){});
-}
-
 </script>
+
 
 
 <!-- OPERACIONAL VIEW -->
@@ -1821,7 +1650,7 @@ let chatAtivo=null;
 let enviando=false;
 
 // Contatos conhecidos da MF Envios (clientes com contato salvo)
-var CONTATOS_MF = []; try { CONTATOS_MF = JSON.parse(localStorage.getItem('crm-contatos-mf')||'[]'); } catch(e) {}
+const CONTATOS_MF = load('crm-contatos-mf', []);
 
 function isClienteMF(phone){ return leads.some(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,'')); }
 
@@ -1982,6 +1811,7 @@ let opModalMode = null, opModalId = null;
 
 function opTab(tab) {
   opCurrentTab = tab;
+  // Esconder todos os paineis
   ['tarefas','fretes','agenda','docs'].forEach(function(t){
     var v=document.getElementById('op-view-'+t);
     if(v) v.style.display='none';
@@ -1994,6 +1824,7 @@ function opTab(tab) {
     var el=document.getElementById('op-tab-'+t);
     if(el){el.style.borderBottomColor='transparent';el.style.color='var(--text2)';}
   });
+  // Mostrar painel ativo
   if(['tarefas','fretes','agenda','docs'].indexOf(tab)>=0){
     var v=document.getElementById('op-view-'+tab);
     if(v) v.style.display='block';
@@ -2428,8 +2259,8 @@ const PERFIS = {
   }
 };
 
-var perfilAtivo = localStorage.getItem('crm-perfil') || null;
-var verTodos = false;
+let perfilAtivo = localStorage.getItem('crm-perfil') || null;
+let verTodos = false;
 
 function selecionarPerfil(perfil) {
   perfilAtivo = perfil;
@@ -2443,6 +2274,7 @@ function sincronizarLeadsServidor() {
   fetch('/kanban').then(function(r){return r.json();}).then(function(data){
     if(data && data.cards && data.cards.length > 0) {
       var serverLeads = data.cards;
+      // Servidor e fonte de verdade: mesclar favorecendo dados do servidor
       serverLeads.forEach(function(sl){
         var idx = leads.findIndex(function(l){ return l.id === sl.id; });
         if(idx < 0) {
@@ -2563,7 +2395,7 @@ var nfseTipoPessoa = 'juridica';
 var nfseLeadAtual = null;
 var nfseEmitidas = JSON.parse(localStorage.getItem('crm-nfse-emitidas') || '[]');
 
-// opTab duplicado removido
+// opTab duplicado removido — usar apenas a função opTab definida acima
 
 function renderNFSeLeads() {
   var lista = document.getElementById('nfse-leads-lista');
