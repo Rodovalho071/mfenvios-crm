@@ -165,6 +165,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
   <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
   <div class="tab" onclick="showView('operacional')" id="tab-operacional">⚙️ Operacional</div>
+  <div class="tab" onclick="showView('financeiro')" id="tab-financeiro">💰 Financeiro</div>
   <div class="tabs-right"><button class="btn btn-primary btn-sm" onclick="openNewLead()">+ Novo Lead</button></div>
 </div>
 
@@ -716,7 +717,7 @@ function showView(v){
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   const t=document.getElementById('tab-'+v);if(t)t.classList.add('active');
-  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();
+  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}
   updateAgentFilters();
 }
 
@@ -1186,7 +1187,6 @@ function getClienteNomes() {
     <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
     <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📄 Documentos</div>
     <div class="tab" id="op-tab-nfse" onclick="opTab('nfse')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🧾 NFSe</div>
-    <div class="tab" id="op-tab-financeiro" onclick="opTab('financeiro')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">💰 Financeiro</div>
   </div>
 
   <!-- TAREFAS -->
@@ -1226,6 +1226,38 @@ function getClienteNomes() {
   </div>
 
 </div>
+<div class="view" id="view-financeiro" style="padding:20px;max-width:1100px;margin:0 auto">
+<div id="op-content-financeiro" style="display:block">
+    <div id="fin-stats" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px;"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <input id="fin-busca" type="text" placeholder="Buscar cliente..." oninput="renderFinanceiro()" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px;flex:1;min-width:180px;">
+      <select id="fin-filtro" onchange="renderFinanceiro()" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px;">
+        <option value="todos">Todos</option>
+        <option value="aberto">Em aberto</option>
+        <option value="hoje">Vence hoje</option>
+        <option value="atrasado">Atrasado</option>
+        <option value="recebido">Recebido</option>
+      </select>
+      <button onclick="abrirModalVenda(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">+ Nova Venda</button>
+    </div>
+    <div id="fin-leads-prontos" style="margin-bottom:20px;"></div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);">
+          <th style="padding:10px 14px;text-align:left;">Cliente</th>
+          <th style="padding:10px 14px;text-align:left;">Descricao</th>
+          <th style="padding:10px 14px;text-align:left;">Valor</th>
+          <th style="padding:10px 14px;text-align:left;">Pagamento</th>
+          <th style="padding:10px 14px;text-align:left;">Vencimento</th>
+          <th style="padding:10px 14px;text-align:left;">Status</th>
+          <th style="padding:10px 14px;text-align:left;">Acoes</th>
+        </tr></thead>
+        <tbody id="fin-lista"><tr><td colspan="7" style="padding:32px;text-align:center;color:var(--text3);">Nenhuma venda lancada ainda.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 
 <!-- MODAIS OPERACIONAL -->
 <div id="modal-op" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center">
@@ -1336,35 +1368,7 @@ function getClienteNomes() {
   </div>
 
 
-  <div id="op-content-financeiro" style="display:none">
-    <div id="fin-stats" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px;"></div>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-      <input id="fin-busca" type="text" placeholder="Buscar cliente..." oninput="renderFinanceiro()" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px;flex:1;min-width:180px;">
-      <select id="fin-filtro" onchange="renderFinanceiro()" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px;">
-        <option value="todos">Todos</option>
-        <option value="aberto">Em aberto</option>
-        <option value="hoje">Vence hoje</option>
-        <option value="atrasado">Atrasado</option>
-        <option value="recebido">Recebido</option>
-      </select>
-      <button onclick="abrirModalVenda(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">+ Nova Venda</button>
-    </div>
-    <div id="fin-leads-prontos" style="margin-bottom:20px;"></div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
-      <table style="width:100%;border-collapse:collapse;">
-        <thead><tr style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);">
-          <th style="padding:10px 14px;text-align:left;">Cliente</th>
-          <th style="padding:10px 14px;text-align:left;">Descricao</th>
-          <th style="padding:10px 14px;text-align:left;">Valor</th>
-          <th style="padding:10px 14px;text-align:left;">Pagamento</th>
-          <th style="padding:10px 14px;text-align:left;">Vencimento</th>
-          <th style="padding:10px 14px;text-align:left;">Status</th>
-          <th style="padding:10px 14px;text-align:left;">Acoes</th>
-        </tr></thead>
-        <tbody id="fin-lista"><tr><td colspan="7" style="padding:32px;text-align:center;color:var(--text3);">Nenhuma venda lancada ainda.</td></tr></tbody>
-      </table>
-    </div>
-  </div>
+  
 
   <div id="modal-financeiro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;align-items:center;justify-content:center;padding:16px;">
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5);">
@@ -1625,7 +1629,7 @@ function opTab(tab) {
     var el=document.getElementById('op-tab-'+t);
     if(el){el.style.borderBottomColor='transparent';el.style.color='';}
   });
-  ['nfse','financeiro'].forEach(function(t){
+  ['nfse'].forEach(function(t){
     var c=document.getElementById('op-content-'+t);
     if(c) c.style.display='none';
     var el=document.getElementById('op-tab-'+t);
@@ -1645,7 +1649,6 @@ function opTab(tab) {
   if(tab==='agenda') loadAgenda();
   if(tab==='docs') loadDocs();
   if(tab==='nfse'&&typeof renderNFSeLeads==='function') renderNFSeLeads();
-  if(tab==='financeiro') carregarVendas().then(function(){renderFinanceiro();renderFinLeadsProntos();});
 }
 
 // ── TAREFAS ─────────────────────────────────
