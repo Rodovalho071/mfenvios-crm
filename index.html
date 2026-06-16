@@ -387,10 +387,7 @@ function deletarVendaAPI(id) {
 }
 function carregarVendas() {
   return fetch('/vendas').then(function(r){return r.json();}).then(function(data){
-    vendas = (Array.isArray(data) ? data : []).map(function(v){
-      if(typeof v.valor === 'number' && Number.isInteger(v.valor) && v.valor >= 1000) v.valor = v.valor/100;
-      return v;
-    });
+    vendas = Array.isArray(data) ? data : [];
     localStorage.removeItem('crm-vendas');
   }).catch(function(){
     vendas = JSON.parse(localStorage.getItem('crm-vendas')||'[]');
@@ -414,13 +411,43 @@ function formatMoeda(v){var n=parseMoeda(v);if(isNaN(n))return 'R$ 0,00';return 
 function parseMoeda(v){if(v===null||v===undefined||v==='')return 0;if(typeof v==='number')return v;var s=v.toString().replace(/R[$]\s*/g,'').replace(/\s/g,'').trim();if(!s)return 0;if(s.indexOf(',')!==-1){s=s.replace(/[.]/g,'').replace(',','.');return parseFloat(s)||0;}if(s.indexOf('.')!==-1){var p=s.split('.');if(p.length===2&&p[1].length<=2)return parseFloat(s)||0;s=s.replace(/[.]/g,'');}return parseFloat(s)||0;}
 
 function mascaraMoeda(el){
-  var d=el.value.replace(/\D/g,'');if(!d){el.value='';el.dataset.valor='0';return;}
-  d=d.replace(/^0+/,'')||'0';while(d.length<3)d='0'+d;
-  var i=d.slice(0,-2)||'0',dc=d.slice(-2);
-  i=i.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
-  el.value=i+','+dc;el.dataset.valor=(parseInt(d)/100).toFixed(2);
+  var raw=el.value;
+  // Remove tudo exceto digitos e virgula/ponto
+  var cleaned=raw.replace(/[^\d,]/g,'');
+  if(!cleaned){el.value='';el.dataset.valor='0';return;}
+  // Extrai parte inteira e decimal separadas por virgula
+  var partes=cleaned.split(',');
+  var intPart=partes[0].replace(/\D/g,'').replace(/^0+/,'')||'0';
+  var decPart=partes.length>1?partes[partes.length-1].replace(/\D/g,'').substring(0,2):'';
+  // Formata parte inteira com pontos de milhar
+  intPart=intPart.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  var displayVal=decPart!==''?intPart+','+decPart:intPart;
+  // Preserva virgula no final para usuario continuar digitando
+  if(raw.endsWith(',')&&!displayVal.includes(','))displayVal+=',';
+  el.value=displayVal;
+  // Calcula valor numerico para salvar
+  var numStr=intPart.replace(/\./g,'')+(decPart?'.'+decPart:'');
+  el.dataset.valor=parseFloat(numStr)||'0';
 }
 function valorParaSalvar(el){return el.dataset&&el.dataset.valor?parseFloat(el.dataset.valor):parseMoeda(el.value);}
+function atualizarDatalistClientes(){
+  var dl=document.getElementById('fin-clientes-list');
+  if(!dl)return;
+  var nomes=[];
+  if(typeof clientesFin!=='undefined'&&clientesFin.length){
+    nomes=clientesFin.map(function(c){return c.nome;});
+  }
+  dl.innerHTML=nomes.map(function(n){return '<option value="'+n+'">';}).join('');
+}
+function atualizarDatalistClientes(){
+  var dl=document.getElementById('fin-clientes-list');
+  if(!dl)return;
+  var nomes=[];
+  if(typeof clientesFin!=='undefined'&&clientesFin.length){
+    nomes=clientesFin.map(function(c){return c.nome;});
+  }
+  dl.innerHTML=nomes.map(function(n){return '<option value="'+n+'">';}).join('');
+}
 
 function statusVenda(venda) {
   if(venda.pago) return 'recebido';
@@ -1162,7 +1189,7 @@ function abrirRelatorio(){
 <div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto">
 
   <!-- Sub-tabs -->
-  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
+  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap;">
     <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">âœ… Tarefas</div>
     <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">ðŸšš Fretes</div>
     <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">ðŸ“… Agenda</div>
@@ -1262,7 +1289,7 @@ function abrirRelatorio(){
       </div>
       <div style="display:grid;gap:12px">
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Nome / Razao Social *</label><input id="cli-nome" type="text" placeholder="Nome completo" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box"></div>
-        <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNPJ / CPF</label><input id="cli-cnpj" type="text" placeholder="00.000.000/0000-00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box"></div>
+        <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNPJ / CPF</label><input id="cli-cnpj" type="text" onblur="consultarCNPJ(this.value)" onblur="consultarCNPJ(this.value)" placeholder="00.000.000/0000-00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box"></div>
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Telefone</label><input id="cli-tel" type="text" placeholder="(00) 00000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box"></div>
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Email</label><input id="cli-email" type="text" placeholder="email@empresa.com" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box"></div>
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Endereco</label><input id="cli-end" type="text" placeholder="Rua, numero, cidade" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box"></div>
@@ -2402,11 +2429,51 @@ function renderFinLeadsProntos() {
 
 
 var clientesFin=[];var clienteEditandoFin=null;
+carregarClientesFin();
+carregarClientesFin();
 function carregarClientesFin(){return fetch('/clientes').then(function(r){return r.json();}).then(function(d){clientesFin=Array.isArray(d)?d:[];renderClientesFin();}).catch(function(){clientesFin=JSON.parse(localStorage.getItem('crm-clientes-fin')||'[]');renderClientesFin();});}
 function salvarClientesFinLocal(){localStorage.setItem('crm-clientes-fin',JSON.stringify(clientesFin));}
 function renderClientesFin(){var b=(document.getElementById('busca-cliente-fin')||{}).value||'';b=b.toLowerCase();var l=clientesFin.filter(function(c){return !b||(c.nome||'').toLowerCase().includes(b)||(c.cnpj||'').includes(b);});var el=document.getElementById('lista-clientes-fin');if(!el)return;if(!l.length){el.innerHTML='<div style="text-align:center;color:var(--text3);padding:32px;font-size:13px">Nenhum cliente encontrado.</div>';return;}el.innerHTML=l.map(function(c){var vc=vendas.filter(function(v){return v.cliente===c.nome;});var tc=vc.reduce(function(s,v){return s+parseMoeda(v.valor||0);},0);return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700;font-size:14px">'+c.nome+'</div>'+(c.cnpj?'<div style="font-size:12px;color:var(--text3)">'+c.cnpj+'</div>':'')+(c.tel?'<div style="font-size:12px;color:var(--text3)">'+c.tel+'</div>':'')+(c.email?'<div style="font-size:12px;color:var(--text3)">'+c.email+'</div>':'')+(tc?'<div style="font-size:12px;color:var(--green);font-weight:600">Total: R$ '+tc.toLocaleString("pt-BR",{minimumFractionDigits:2})+'</div>':'')+'</div><div style="display:flex;gap:8px"><button onclick="editarClienteFin(''+c.id+'')" style="background:var(--surface2);color:var(--text);border:none;border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer">✏️</button><button onclick="deletarClienteFin(''+c.id+'')" style="background:rgba(239,68,68,.15);color:#ef4444;border:none;border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer">🗑️</button></div></div>';}).join('');}
 function abrirModalCliente(id){clienteEditandoFin=id||null;['cli-nome','cli-cnpj','cli-tel','cli-email','cli-end','cli-obs'].forEach(function(f){var e=document.getElementById(f);if(e)e.value='';});if(id){var c=clientesFin.find(function(x){return x.id===id;});if(c){document.getElementById('modal-cliente-titulo').textContent='Editar Cliente';document.getElementById('cli-nome').value=c.nome||'';document.getElementById('cli-cnpj').value=c.cnpj||'';document.getElementById('cli-tel').value=c.tel||'';document.getElementById('cli-email').value=c.email||'';document.getElementById('cli-end').value=c.end||'';document.getElementById('cli-obs').value=c.obs||'';}}else{document.getElementById('modal-cliente-titulo').textContent='Novo Cliente';}document.getElementById('modal-cliente-fin').style.display='flex';}
 function fecharModalCliente(){document.getElementById('modal-cliente-fin').style.display='none';}
+function consultarCNPJ(cnpjRaw){
+  var cnpj=cnpjRaw.replace(/\D/g,'');
+  if(cnpj.length!==14)return;
+  fetch('https://brasilapi.com.br/api/cnpj/v1/'+cnpj)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.razao_social){
+        var nomeEl=document.getElementById('cli-nome');
+        if(nomeEl&&!nomeEl.value.trim()) nomeEl.value=d.razao_social;
+        var endEl=document.getElementById('cli-end');
+        if(endEl&&!endEl.value.trim()){
+          var end=[d.logradouro,d.numero,d.complemento,d.bairro,d.municipio,d.uf].filter(Boolean).join(', ');
+          endEl.value=end;
+        }
+        if(typeof showToast==='function') showToast('CNPJ encontrado: '+d.razao_social);
+      }
+    })
+    .catch(function(){});
+}
+function consultarCNPJ(cnpjRaw){
+  var cnpj=cnpjRaw.replace(/\D/g,'');
+  if(cnpj.length!==14)return;
+  fetch('https://brasilapi.com.br/api/cnpj/v1/'+cnpj)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.razao_social){
+        var nomeEl=document.getElementById('cli-nome');
+        if(nomeEl&&!nomeEl.value.trim()) nomeEl.value=d.razao_social;
+        var endEl=document.getElementById('cli-end');
+        if(endEl&&!endEl.value.trim()){
+          var end=[d.logradouro,d.numero,d.complemento,d.bairro,d.municipio,d.uf].filter(Boolean).join(', ');
+          endEl.value=end;
+        }
+        if(typeof showToast==='function') showToast('CNPJ encontrado: '+d.razao_social);
+      }
+    })
+    .catch(function(){});
+}
 function salvarClienteFin(){var nome=document.getElementById('cli-nome').value.trim();if(!nome){alert('Nome obrigatorio!');return;}var obj={id:clienteEditandoFin||(Date.now().toString(36)+Math.random().toString(36).slice(2,6)),nome:nome,cnpj:document.getElementById('cli-cnpj').value.trim(),tel:document.getElementById('cli-tel').value.trim(),email:document.getElementById('cli-email').value.trim(),end:document.getElementById('cli-end').value.trim(),obs:document.getElementById('cli-obs').value.trim(),ts:Date.now()};if(clienteEditandoFin){var idx=clientesFin.findIndex(function(c){return c.id===clienteEditandoFin;});if(idx>=0)clientesFin[idx]=obj;fetch('/clientes/'+obj.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){});}else{clientesFin.push(obj);fetch('/clientes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){});}salvarClientesFinLocal();fecharModalCliente();renderClientesFin();if(typeof atualizarDatalistClientes==='function')atualizarDatalistClientes();if(typeof showToast==='function')showToast('Cliente salvo: '+nome);}
 function editarClienteFin(id){abrirModalCliente(id);}
 function deletarClienteFin(id){if(!confirm('Excluir este cliente?'))return;clientesFin=clientesFin.filter(function(c){return c.id!==id;});fetch('/clientes/'+id,{method:'DELETE'}).catch(function(){});salvarClientesFinLocal();renderClientesFin();}

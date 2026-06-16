@@ -18,6 +18,8 @@ let db = null;
 let messagesCol = null, kanbanCol = null;
 let tarefasCol = null, fretesCol = null, agendaCol = null, docsCol = null;
 let vendasCol = null;
+let clientesCol = null;
+let clientesCol = null;
 
 async function connectMongo() {
   if (!MONGODB_URI) { console.log('[DB] Sem MONGODB_URI - memoria'); return; }
@@ -33,6 +35,8 @@ async function connectMongo() {
     agendaCol   = db.collection('agenda');
     docsCol     = db.collection('documentos');
     vendasCol   = db.collection('vendas');
+    clientesCol = db.collection('clientes');
+    clientesCol = db.collection('clientes');
     await messagesCol.createIndex({ id: 1 }, { unique: true });
     await messagesCol.createIndex({ ts: -1 });
     await kanbanCol.createIndex({ phone: 1 }, { unique: true });
@@ -41,6 +45,8 @@ async function connectMongo() {
     await agendaCol.createIndex({ id: 1 }, { unique: true });
     await docsCol.createIndex({ id: 1 }, { unique: true });
     await vendasCol.createIndex({ id: 1 }, { unique: true });
+    await clientesCol.createIndex({ id: 1 }, { unique: true });
+    await clientesCol.createIndex({ id: 1 }, { unique: true });
     console.log('[DB] MongoDB Atlas conectado!');
   } catch(e) {
     console.error('[DB] Erro:', e.message);
@@ -282,12 +288,23 @@ app.put('/documentos/:id',async function(req,res){const item=Object.assign({ts:D
 app.delete('/documentos/:id',async function(req,res){await colDelete(docsCol,memDocs,req.params.id);res.json({ok:true});});
 
 // VENDAS — salvas no MongoDB
-let clientesCol = null;
 // rotas clientes
-app.get('/clientes',async function(req,res){res.json(await colFind(clientesCol,[]));});
-app.post('/clientes',async function(req,res){var item=req.body;await colFind(clientesCol,[]);res.json({ok:true});});
-app.put('/clientes/:id',async function(req,res){res.json({ok:true});});
-app.delete('/clientes/:id',async function(req,res){res.json({ok:true});});
+let memClientes = [];
+app.get('/clientes',async function(req,res){res.json(await colFind(clientesCol,memClientes));});
+app.post('/clientes',async function(req,res){
+  var item=Object.assign({id:req.body.id||(Date.now().toString(36)+Math.random().toString(36).slice(2,6)),ts:Date.now()},req.body);
+  await colUpsert(clientesCol,memClientes,item);
+  res.json({ok:true,item});
+});
+app.put('/clientes/:id',async function(req,res){
+  var item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});
+  await colUpsert(clientesCol,memClientes,item);
+  res.json({ok:true,item});
+});
+app.delete('/clientes/:id',async function(req,res){
+  await colDelete(clientesCol,memClientes,req.params.id);
+  res.json({ok:true});
+});
 app.get('/vendas',async function(req,res){res.json(await colFind(vendasCol,memVendas));});
 app.post('/vendas',async function(req,res){
   const item=Object.assign({id:nowId(),ts:Date.now(),pago:false},req.body);
