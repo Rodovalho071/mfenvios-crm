@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MF Envios CRM</title>
+<style>
+:root {
+  --bg:#0a1931;--surface:#102a50;--surface2:#183a6b;--border:#1e467a;--border2:#2c5a94;
+  --text:#ffffff;--text2:#cbd5e1;--text3:#94a3b8;--green:#22c55e;--green-bg:rgba(34,197,94,0.2);
+  --red:#ef4444;--red-bg:rgba(239,68,68,0.2);--blue:#3b82f6;--blue-bg:rgba(59,130,246,0.2);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,0.2);--purple:#a78bfa;--orange:#f97316;
+  --radius:10px;--radius-sm:6px;--shadow:0 4px 12px rgba(0,0,0,.5);--shadow-md:0 8px 24px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topbar{display:flex;align-items:center;gap:16px;padding:0 24px;height:56px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.logo{font-size:17px;font-weight:800}.logo .envios{color:var(--orange)}.logo .crm{color:var(--text3);font-weight:400;font-size:14px;margin-left:2px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.wpp-status-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px}
+.wpp-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.agent-badge{font-size:12px;color:var(--text2);padding:5px 12px;background:var(--surface2);border-radius:20px;cursor:pointer;border:1px solid var(--border2)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--surface2);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text);cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--border)}.btn-primary{background:var(--text);color:var(--bg);border-color:var(--text)}.btn-primary:hover{background:var(--text2)}
+.btn-sm{padding:4px 10px;font-size:11px}.btn-danger{color:var(--red);border-color:var(--red-bg);background:var(--red-bg)}.btn-danger:hover{background:var(--red);color:#fff}
+.btn-report{background:var(--orange);color:#fff;border-color:var(--orange)}.btn-report:hover{background:#ea6c0a}
+.stats-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.stat-item{flex:1;padding:14px 24px;border-right:1px solid var(--border);cursor:pointer;transition:background .15s}.stat-item:last-child{border-right:none}.stat-item:hover{background:var(--surface2)}
+.stat-val{font-size:28px;font-weight:700;color:var(--orange);line-height:1}.stat-val.blue{color:var(--blue)}.stat-val.green{color:var(--green)}.stat-val.white{color:var(--text)}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+.tabs-bar{display:flex;align-items:center;padding:0 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:6px}.tab:hover{color:var(--text2)}.tab.active{color:var(--text);border-bottom-color:var(--orange)}
+.tab-badge{background:var(--green);color:#0a1931;border-radius:20px;padding:1px 7px;font-size:10px;font-weight:700}
+.tabs-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.view{display:none;flex:1;overflow:hidden}.view.active{display:flex;flex-direction:column}
+.kanban-toolbar{padding:10px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--bg)}
+.search-box{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);flex:1;max-width:260px}
+.search-box input{border:none;background:none;outline:none;font-size:13px;color:var(--text);width:100%}.search-box input::placeholder{color:var(--text3)}
+.filter-select{padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:13px;color:var(--text);outline:none}
+.kanban-board{display:flex;gap:14px;padding:14px 20px;overflow-x:auto;flex:1;align-items:flex-start}
+.kanban-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-width:250px;max-width:250px;display:flex;flex-direction:column;max-height:100%}
+.col-header{padding:12px 14px 10px;display:flex;align-items:center;gap:8px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.col-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}.col-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);flex:1}
+.col-count{font-size:12px;background:var(--surface2);border-radius:20px;padding:1px 8px;color:var(--text3)}
+.col-cards{overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all .15s}.card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow)}
+.card-name{font-size:13px;font-weight:700;margin-bottom:2px}.card-phone{font-size:11px;color:var(--text3);margin-bottom:4px}.card-route{font-size:11px;color:var(--blue);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-msg{font-size:12px;color:var(--text2);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-footer{display:flex;align-items:center;justify-content:space-between}.card-time{font-size:11px;color:var(--text3)}
+.card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}.tag{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:500}
+.tag-wpp{background:var(--green-bg);color:var(--green)}.tag-hot{background:var(--red-bg);color:var(--red)}.tag-followup{background:var(--amber-bg);color:var(--amber)}.tag-urgente{background:rgba(239,68,68,.3);color:#fca5a5}
+.add-col-btn{margin:0 10px 10px;padding:8px;border-radius:var(--radius-sm);border:1px dashed var(--border2);background:none;color:var(--text3);font-size:12px;cursor:pointer;text-align:center;transition:all .15s}.add-col-btn:hover{background:var(--surface2);color:var(--text)}
+.leads-toolbar{padding:10px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--bg)}
+.leads-content{flex:1;overflow-y:auto;padding:0 20px 16px}
+table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+thead{position:sticky;top:0;z-index:1}th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);background:var(--surface2);border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}tr:last-child td{border-bottom:none}tr:hover td{background:var(--surface2);cursor:pointer}
+.stage-pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.dash-content{flex:1;overflow-y:auto;padding:20px}
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+.metric-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}.metric-val{font-size:28px;font-weight:600;line-height:1}.metric-sub{font-size:12px;color:var(--text3);margin-top:4px}
+.dash-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.dash-card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:14px}
+.funnel-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}.funnel-label{font-size:12px;color:var(--text2);min-width:130px}
+.funnel-bar-bg{flex:1;background:var(--surface2);border-radius:4px;height:18px;overflow:hidden}.funnel-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:#fff;transition:width .5s ease}.funnel-count{font-size:12px;color:var(--text2);min-width:20px;text-align:right}
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer}.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}.activity-text{font-size:12px;color:var(--text2);line-height:1.5}.activity-time{font-size:11px;color:var(--text3);margin-top:1px}
+.wpp-toolbar{padding:10px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--bg)}.wpp-content{flex:1;overflow-y:auto;padding:0 20px 16px}
+.ia-content{flex:1;overflow-y:auto;padding:20px;display:flex;gap:16px}.ia-left{flex:1;display:flex;flex-direction:column;gap:12px}.ia-right{width:340px;flex-shrink:0}
+.ia-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.ia-card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:12px}
+textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);resize:vertical;outline:none;transition:border .15s}textarea:focus{border-color:var(--border2)}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border .15s}input:focus,select:focus{border-color:var(--border2)}
+select option{background:var(--surface);color:var(--text)}.form-label{font-size:12px;color:var(--text2);margin-bottom:4px;display:block}.form-group{margin-bottom:12px}
+.ia-result .field{margin-bottom:6px}.ia-result .field-label{font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);display:block;margin-bottom:1px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--surface);border-radius:var(--radius);width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-md)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-title{font-size:15px;font-weight:600}.modal-close{width:28px;height:28px;border-radius:var(--radius-sm);border:none;background:var(--surface2);cursor:pointer;font-size:16px;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.modal-body{padding:20px}.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:var(--surface)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.section-divider{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--orange);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.detail-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--blue-bg);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;flex-shrink:0}
+.detail-name{font-size:18px;font-weight:600}.detail-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:10px;margin-top:18px}
+.history-item{display:flex;gap:12px;margin-bottom:12px}.history-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);margin-top:4px;flex-shrink:0}
+.history-bubble{background:var(--surface2);border-radius:var(--radius-sm);padding:10px 12px;flex:1;font-size:13px;line-height:1.5}.history-meta{font-size:11px;color:var(--text3);margin-top:4px}
+.followup-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:6px}
+.followup-check{width:16px;height:16px;accent-color:var(--orange);cursor:pointer}.followup-text{flex:1;font-size:13px}.followup-date{font-size:11px;color:var(--text3)}.followup-done{text-decoration:line-through;color:var(--text3)}
+.frete-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px}
+.frete-field label{font-size:11px;color:var(--text3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}.frete-field span{font-size:13px;color:var(--text)}
+.dash-f-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}.dash-f-btn:hover{background:var(--surface2)}.dash-f-btn.active{background:#0a1931;color:#fff;border-color:var(--border2)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none}.toast.show{opacity:1}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+<!-- SPLASH PERFIL -->
+<div id="splash-perfil" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center">
+  <div style="text-align:center;max-width:480px;padding:32px">
+    <div style="font-size:28px;font-weight:800;margin-bottom:4px">MF <span style="color:var(--orange)">Envios</span> <span style="color:var(--text3);font-weight:400;font-size:18px">CRM</span></div>
+    <div style="font-size:14px;color:var(--text3);margin-bottom:40px">Selecione seu perfil para continuar</div>
+    <div style="display:flex;gap:16px;justify-content:center">
+      <div onclick="selecionarPerfil('beatriz')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--orange)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+        <div style="font-size:40px;margin-bottom:12px">👩‍💼</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">Beatriz</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">Comercial</div>
+        <div style="font-size:11px;color:var(--orange);margin-top:8px;font-weight:600">mfenvios</div>
+      </div>
+      <div onclick="selecionarPerfil('davi')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+        <div style="font-size:40px;margin-bottom:12px">👨‍💼</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text)">Davi</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">Operacional</div>
+        <div style="font-size:11px;color:var(--blue);margin-top:8px;font-weight:600">mfenvios-davi</div>
+      </div>
+    </div>
+    <div style="margin-top:24px;font-size:12px;color:var(--text3)">Você pode alternar o perfil a qualquer momento clicando no seu nome</div>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="logo">MF <span class="envios">Envios</span><span class="crm"> CRM</span></div>
+  <div class="topbar-right">
+    <div class="wpp-status-badge"><span class="wpp-dot" id="wpp-dot"></span><span id="wpp-status-text">Verificando...</span></div>
+    <span class="agent-badge" onclick="mostrarTrocaPerfil()" id="agent-label" style="cursor:pointer">👤 Carregando...</span>
+    <button class="btn btn-report btn-sm" onclick="abrirRelatorio()">📄 Relatório do Dia</button>
+    <div style="position:relative;display:inline-flex">
+      <button class="btn btn-sm" onclick="toggleLembretes()" id="btn-sino" title="Lembretes">🔔</button>
+      <span id="sino-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1">0</span>
+    </div>
+    <button class="btn btn-sm" onclick="exportData()">↓ Exportar</button>
+    <button class="btn btn-sm" onclick="document.getElementById('import-file').click()">↑ Importar</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"/>
+  </div>
+</div>
+<div class="stats-bar" id="stats-bar-principal">
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" id="stat-total">0</div><div class="stat-label" id="stat-total-label">Total do mês</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val green" id="stat-ganho">R$ 0</div><div class="stat-label">💰 Valor Ganho</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" style="color:var(--red)" id="stat-perdido">R$ 0</div><div class="stat-label">📉 Valor Perdido</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val blue" id="stat-negociacao">R$ 0</div><div class="stat-label">🔄 Em Negociação</div></div>
+  <div class="stat-item" onclick="showView('kanban')"><div class="stat-val" style="color:var(--amber)" id="stat-semretorno">0</div><div class="stat-label">⏳ Sem Retorno</div></div>
+</div>
+<!-- STATS DO OUTRO PERFIL -->
+<div id="stats-bar-outro" style="display:none;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0">
+  <div style="padding:4px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <span id="stats-outro-label" style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap"></span>
+    <div style="display:flex;gap:0;flex:1;flex-wrap:wrap">
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--text)" id="outro-total">0</div><div style="font-size:10px;color:var(--text3)">Total</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--green)" id="outro-ganho">R$0</div><div style="font-size:10px;color:var(--text3)">💰 Ganho</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--red)" id="outro-perdido">R$0</div><div style="font-size:10px;color:var(--text3)">📉 Perdido</div></div>
+      <div style="padding:6px 20px;border-right:1px solid var(--border)"><div style="font-size:16px;font-weight:700;color:var(--blue)" id="outro-neg">R$0</div><div style="font-size:10px;color:var(--text3)">🔄 Negociação</div></div>
+      <div style="padding:6px 20px"><div style="font-size:16px;font-weight:700;color:var(--amber)" id="outro-semretorno">0</div><div style="font-size:10px;color:var(--text3)">⏳ Sem Retorno</div></div>
+    </div>
+    <button onclick="alternarParaOutro()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text2);white-space:nowrap">Ver funil →</button>
+  </div>
+</div>
+<div class="tabs-bar">
+  <div class="tab active" onclick="showView('kanban')" id="tab-kanban">🗂 Funil</div>
+  <div class="tab" onclick="showView('clientes')" id="tab-clientes">👥 Clientes</div>
+  <div class="tab" onclick="showView('cadastro')" id="tab-cadastro">📋 Cadastro</div>
+  <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">📊 Dashboard</div>
+  <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
+  <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
+  <div class="tab" onclick="showView('operacional')" id="tab-operacional">⚙️ Operacional</div>
+  <div class="tab" onclick="showView('financeiro')" id="tab-financeiro">💰 Financeiro</div>
+  <div class="tabs-right"><button class="btn btn-primary btn-sm" onclick="openNewLead()">+ Novo Lead</button></div>
+</div>
+
+<div class="view active" id="view-kanban">
+  <div class="kanban-toolbar">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 8px">
+      <button onclick="navMes(-1)" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0 4px">&#9664;</button>
+      <span id="mes-label" style="font-size:13px;font-weight:600;min-width:110px;text-align:center"></span>
+      <button onclick="navMes(1)" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0 4px">&#9654;</button>
+    </div>
+    <div class="search-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Buscar lead..." id="kanban-search" oninput="renderKanban()"/></div>
+    <select class="filter-select" id="kanban-agent" onchange="renderKanban()"><option value="">Todos os responsáveis</option></select>
+  </div>
+  <div class="kanban-board" id="kanban-board"></div>
+</div>
+
+<div class="view" id="view-clientes">
+  <div class="leads-toolbar">
+    <div class="search-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Buscar..." id="leads-search" oninput="renderLeads()"/></div>
+    <select class="filter-select" id="leads-stage" onchange="renderLeads()"><option value="">Todas as etapas</option></select>
+    <select class="filter-select" id="leads-agent" onchange="renderLeads()"><option value="">Todos os responsáveis</option></select>
+    <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="leads-count"></span>
+  </div>
+  <div class="leads-content">
+    <table><thead><tr><th>Nome</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>Responsável</th><th>Horário</th><th>Follow-up</th></tr></thead><tbody id="leads-tbody"></tbody></table>
+  </div>
+</div>
+
+<div class="view" id="view-dashboard">
+  <div style="flex-shrink:0;display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap">
+    <button class="dash-f-btn active" onclick="dashFiltro(this,'hoje')">Hoje</button>
+    <button class="dash-f-btn" onclick="dashFiltro(this,'ontem')">Ontem</button>
+    <button class="dash-f-btn" onclick="dashFiltro(this,'semana')">Semana</button>
+    <button class="dash-f-btn" onclick="dashFiltro(this,'mes')">Mês</button>
+    <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="dash-periodo-label">Hoje</span>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 20px">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+      <div class="dash-card">
+        <div class="dash-card-title">Mensagens recebidas</div>
+        <div style="font-size:32px;font-weight:600;color:var(--text);margin-bottom:4px" id="d-msgs">0</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">no período</div>
+        <div id="d-canais"></div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-msgs-delta"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Conversas ativas</div>
+        <div style="font-size:32px;font-weight:600;color:#a78bfa;margin-bottom:4px" id="d-conv">0</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">leads em andamento</div>
+        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--green)" id="d-conv-delta"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Sem follow-up</div>
+        <div style="font-size:32px;font-weight:600;color:#f97316;margin-bottom:4px" id="d-semfu">0</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">leads sem tarefa</div>
+        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-semfu-delta"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Taxa de conversão</div>
+        <div style="font-size:32px;font-weight:600;color:#22c55e;margin-bottom:4px" id="d-taxa">0%</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:12px">fechados / total</div>
+        <div style="padding-top:10px;border-top:1px solid var(--border);font-size:13px;color:var(--text3)" id="d-taxa-sub"></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px">
+      <div class="dash-card">
+        <div class="dash-card-title">Leads</div>
+        <div style="font-size:28px;font-weight:600;color:#a78bfa" id="d-leads">0</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-leads-val">R$ 0</div>
+        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--green)" id="d-leads-hoje">0 hoje</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Leads ativos</div>
+        <div style="font-size:28px;font-weight:600;color:#a78bfa" id="d-ativos">0</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-ativos-val">R$ 0</div>
+        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--green)" id="d-ativos-hoje">0 hoje</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">Leads perdidos</div>
+        <div style="font-size:28px;font-weight:600;color:var(--red)" id="d-perdidos">0</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px" id="d-perdidos-val">R$ 0</div>
+        <div style="padding-top:8px;border-top:1px solid var(--border);font-size:12px;color:var(--text3)" id="d-perdidos-hoje">0 hoje</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="dash-card"><div class="dash-card-title">Funil por etapa</div><div id="dash-funnel"></div></div>
+      <div class="dash-card"><div class="dash-card-title">Follow-ups pendentes</div><div id="dash-followups"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-wpp">
+  <div style="display:flex;flex:1;overflow:hidden;height:100%">
+
+    <!-- LISTA DE CONVERSAS -->
+    <div style="width:320px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--surface)">
+      <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+        <div style="flex:1;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="wpp-search" placeholder="Buscar conversa..." style="border:none;background:none;outline:none;font-size:13px;color:var(--text);width:100%" oninput="filtrarConversas()"/>
+        </div>
+        <button class="btn btn-sm" onclick="loadWppMessages()" title="Atualizar">↻</button>
+      </div>
+      <div style="padding:8px 12px;display:flex;gap:6px;border-bottom:1px solid var(--border)">
+        <span style="font-size:11px;background:rgba(249,115,22,.2);color:var(--orange);padding:2px 8px;border-radius:20px;font-weight:600">● Novos leads</span>
+        <span style="font-size:11px;background:rgba(59,130,246,.2);color:var(--blue);padding:2px 8px;border-radius:20px;font-weight:600">● Clientes MF</span>
+      </div>
+      <div style="flex:1;overflow-y:auto" id="wpp-conv-list">
+        <div style="text-align:center;padding:40px;color:var(--text3);font-size:13px">Carregando...</div>
+      </div>
+      <div style="padding:10px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);text-align:center" id="wpp-count">0 conversas</div>
+    </div>
+
+    <!-- ÁREA DO CHAT -->
+    <div style="flex:1;display:flex;flex-direction:column;background:var(--bg)" id="wpp-chat-area">
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3)">
+        <div style="font-size:40px">💬</div>
+        <div style="font-size:14px">Selecione uma conversa para começar</div>
+        <div style="font-size:12px">As mensagens aparecem aqui automaticamente</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="view" id="view-ia">
+  <div class="ia-content">
+    <div class="ia-left">
+      <div class="ia-card">
+        <div class="ia-card-title">Mensagem do WhatsApp</div>
+        <div class="form-group"><textarea id="ia-msg" rows="6" placeholder="Cole aqui a mensagem recebida no WhatsApp..."></textarea></div>
+        <div class="form-group"><label class="form-label">Chave da API Anthropic</label><input type="password" id="ia-key" placeholder="sk-ant-..." oninput="saveKey()"/></div>
+        <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="analisarMsg()">Analisar com IA ↗</button><button class="btn" onclick="document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none'">Limpar</button></div>
+      </div>
+      <div class="ia-card" id="ia-output" style="display:none">
+        <div class="ia-card-title">Resultado</div><div id="ia-result-content"></div><div id="ia-add-btn" style="margin-top:12px;display:none"></div>
+      </div>
+    </div>
+    <div class="ia-right">
+      <div class="ia-card"><div class="ia-card-title">Como usar</div><div style="font-size:13px;color:var(--text2);line-height:1.7"><p style="margin-bottom:10px">1. Cole a mensagem do WhatsApp.</p><p style="margin-bottom:10px">2. A IA extrai nome, telefone, produto, etapa e observações.</p><p>3. Revise e clique em Adicionar ao funil.</p></div></div>
+      <div class="ia-card" style="margin-top:12px"><div class="ia-card-title">Últimas análises</div><div id="ia-history"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay" style="display:none" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal-content"></div></div>
+<div class="toast" id="toast"></div>
+
+<!-- PAINEL LEMBRETES -->
+<div id="painel-lembretes" style="display:none;position:fixed;top:56px;right:16px;width:360px;max-height:80vh;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:500;overflow:hidden;flex-direction:column">
+  <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+    <strong style="font-size:14px">🔔 Lembretes</strong>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary btn-sm" onclick="abrirModalLembrete()">+ Novo</button>
+      <span onclick="toggleLembretes()" style="cursor:pointer;color:var(--text3);font-size:18px;line-height:1">&times;</span>
+    </div>
+  </div>
+  <div style="overflow-y:auto;flex:1" id="lembretes-lista"></div>
+</div>
+
+<!-- MODAL NOVO LEMBRETE -->
+<div id="modal-lembrete" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:400px;max-width:95vw;box-shadow:var(--shadow-md)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <strong style="font-size:15px">Novo Lembrete</strong>
+      <span onclick="document.getElementById('modal-lembrete').style.display='none'" style="cursor:pointer;color:var(--text3);font-size:20px">&times;</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">TIPO</label>
+        <select id="lemb-tipo" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+          <option value="cobranca">💰 Cobrar cliente</option>
+          <option value="coleta">📦 Coleta agendada</option>
+          <option value="entrega">🚚 Entrega prevista</option>
+          <option value="reuniao">🤝 Reunião / Ligação</option>
+          <option value="outro">📌 Outro</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">DESCRIÇÃO *</label>
+        <input id="lemb-desc" placeholder="Ex: Ligar para João sobre proposta" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">CLIENTE (opcional)</label>
+        <input id="lemb-cliente" placeholder="Nome do cliente" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">DATA *</label>
+          <input id="lemb-data" type="date" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">HORA</label>
+          <input id="lemb-hora" type="time" value="08:00" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:13px">
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="document.getElementById('modal-lembrete').style.display='none'">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarLembrete()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ═══════════════════════════════════════════════════════
+// MÓDULO FINANCEIRO — Lançamento de Vendas
+// ═══════════════════════════════════════════════════════
+var vendas = [];
+var vendaEditando = null;
+function salvarVendas() {}
+function carregarVendas() {
+  return fetch('/vendas').then(function(r){return r.json();}).then(function(data){
+    vendas = (Array.isArray(data) ? data : []).map(function(v){
+      // Corrigir valores inteiros grandes que foram salvos errado (ex: 10025 -> 100.25)
+      if(typeof v.valor === 'number' && Number.isInteger(v.valor) && v.valor > 1000) {
+        v.valor = v.valor / 100;
+      }
+      return v;
+    });
+  }).catch(function(){
+    vendas = JSON.parse(localStorage.getItem('crm-vendas')||'[]');
+  });
+}
+
+function uid_fin() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+}
+
+function calcVencimento(dias) {
+  var d = new Date();
+  d.setDate(d.getDate() + parseInt(dias));
+  return d.toISOString().split('T')[0];
+}
+
+function formatMoeda(v) {
+  var n = parseFloat((v||'0').toString().replace(/\./g,'').replace(',','.'));
+  if(isNaN(n)) return 'R$ 0,00';
+  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function parseMoeda(v) {
+  if(!v && v!==0) return 0;
+  var s = v.toString().replace(/[R$\s]/g,'').trim();
+  // Remove tudo exceto números, ponto e vírgula
+  // Formato BR: 1.500,75 ou 1500,75
+  // Formato US: 1500.75
+  if(s.indexOf(',') !== -1) {
+    // Tem vírgula — formato brasileiro
+    s = s.replace(/\./g,'').replace(',','.');
+  }
+  // Se não tem vírgula, pode ser inteiro ou formato US
+  var n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
+function statusVenda(venda) {
+  if(venda.pago) return 'recebido';
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  var venc = new Date(venda.vencimento + 'T00:00:00');
+  var diff = Math.floor((venc - hoje) / 86400000);
+  if(diff < 0) return 'atrasado';
+  if(diff === 0) return 'hoje';
+  return 'aberto';
+}
+
+function renderFinanceiro() {
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  var mes = hoje.getMonth();
+  var ano = hoje.getFullYear();
+
+  // Stats do mês
+  var doMes = vendas.filter(function(v){
+    var d = new Date(v.ts);
+    return d.getMonth()===mes && d.getFullYear()===ano;
+  });
+
+  var totalFaturado = doMes.reduce(function(s,v){ return s + parseMoeda(v.valor); }, 0);
+  var totalRecebido = doMes.filter(function(v){ return v.pago; }).reduce(function(s,v){ return s + parseMoeda(v.valor); }, 0);
+  var totalAberto = doMes.filter(function(v){ return !v.pago; }).reduce(function(s,v){ return s + parseMoeda(v.valor); }, 0);
+  var totalAtrasado = vendas.filter(function(v){ return statusVenda(v)==='atrasado'; }).reduce(function(s,v){ return s + parseMoeda(v.valor); }, 0);
+
+  var stats = document.getElementById('fin-stats');
+  if(stats) stats.innerHTML =
+    '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">' +
+      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Faturado no mês</div>' +
+      '<div style="font-size:22px;font-weight:800;color:var(--text);">' + formatMoeda(totalFaturado) + '</div>' +
+    '</div>' +
+    '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">' +
+      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Recebido</div>' +
+      '<div style="font-size:22px;font-weight:800;color:#22c55e;">' + formatMoeda(totalRecebido) + '</div>' +
+    '</div>' +
+    '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">' +
+      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">A Receber</div>' +
+      '<div style="font-size:22px;font-weight:800;color:#3b82f6;">' + formatMoeda(totalAberto) + '</div>' +
+    '</div>' +
+    '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">' +
+      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Atrasado</div>' +
+      '<div style="font-size:22px;font-weight:800;color:#ef4444;">' + formatMoeda(totalAtrasado) + '</div>' +
+    '</div>';
+
+  // Lista de vendas
+  var filtro = document.getElementById('fin-filtro') ? document.getElementById('fin-filtro').value : 'todos';
+  var busca = document.getElementById('fin-busca') ? document.getElementById('fin-busca').value.toLowerCase() : '';
+
+  var lista = vendas.slice().sort(function(a,b){ return b.ts - a.ts; });
+
+  if(filtro !== 'todos') lista = lista.filter(function(v){ return statusVenda(v) === filtro; });
+  if(busca) lista = lista.filter(function(v){ return (v.cliente||'').toLowerCase().includes(busca); });
+
+  var tbody = document.getElementById('fin-lista');
+  if(!tbody) return;
+
+  if(!lista.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="padding:32px;text-align:center;color:var(--text3);">Nenhuma venda encontrada.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = lista.map(function(v) {
+    var st = statusVenda(v);
+    var stColor = st==='recebido'?'#22c55e': st==='atrasado'?'#ef4444': st==='hoje'?'#eab308':'#3b82f6';
+    var stLabel = st==='recebido'?'Recebido': st==='atrasado'?'Atrasado': st==='hoje'?'Vence hoje':'Em aberto';
+    var venc = new Date(v.vencimento+'T00:00:00').toLocaleDateString('pt-BR');
+    var pgIcon = {pix:'⚡',credito:'💳',link:'🔗',boleto:'📄',debito:'🏦'}[v.formaPag] || '💰';
+    var pgLabel = {pix:'PIX',credito:'Crédito',link:'Link Cartão',boleto:'Boleto',debito:'Débito'}[v.formaPag] || v.formaPag;
+    return '<tr style="border-bottom:1px solid var(--border);">' +
+      '<td style="padding:12px 14px;font-size:13px;font-weight:600;">' + (v.cliente||'-') + '</td>' +
+      '<td style="padding:12px 14px;font-size:12px;color:var(--text3);">' + (v.descricao||'-') + '</td>' +
+      '<td style="padding:12px 14px;font-size:13px;font-weight:700;color:#22c55e;">' + formatMoeda(v.valor) + '</td>' +
+      '<td style="padding:12px 14px;font-size:12px;">' + pgIcon + ' ' + pgLabel + '</td>' +
+      '<td style="padding:12px 14px;font-size:12px;color:var(--text3);">' + venc + '</td>' +
+      '<td style="padding:12px 14px;">' +
+        '<span style="background:' + stColor + '22;color:' + stColor + ';border:1px solid ' + stColor + '44;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;">' + stLabel + '</span>' +
+      '</td>' +
+      '<td style="padding:12px 14px;display:flex;gap:6px;">' +
+        (!v.pago ? '<button onclick="finDarBaixa(\'' + v.id + '\')" style="background:#22c55e;color:white;border:none;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">✓ Baixar</button>' : '') +
+        '<button onclick="finEditar(\'' + v.id + '\')" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;">✏</button>' +
+        '<button onclick="finExcluir(\'' + v.id + '\')" style="background:var(--bg3);color:#ef4444;border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;">🗑</button>' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function abrirModalVenda(leadId) {
+  vendaEditando = null;
+  document.getElementById('fin-form-titulo').textContent = 'Nova Venda';
+
+  // Limpar campos
+  var campos = ['fin-cliente','fin-cnpj','fin-descricao','fin-valor','fin-obs'];
+  campos.forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('fin-forma').value = 'pix';
+  document.getElementById('fin-vencimento').value = new Date().toISOString().split('T')[0];
+
+  // Se veio de um lead
+  if(leadId) {
+    var lead = leads.find(function(l){ return l.id===leadId; });
+    if(lead) {
+      var el = document.getElementById('fin-cliente');
+      if(el) el.value = lead.name || '';
+      var ev = document.getElementById('fin-valor');
+      if(ev) ev.value = (lead.valorFrete||'').replace('R$','').trim();
+      var ed = document.getElementById('fin-descricao');
+      if(ed) ed.value = (lead.rota||lead.origem||'') ? 'Frete: ' + (lead.rota || (lead.origem||'') + ' → ' + (lead.destino||'')) : '';
+      document.getElementById('fin-lead-id').value = lead.id;
+    }
+  } else {
+    document.getElementById('fin-lead-id').value = '';
+  }
+
+  finAtualizarVencimento();
+  document.getElementById('modal-financeiro').style.display = 'flex';
+}
+
+function fecharModalVenda() {
+  document.getElementById('modal-financeiro').style.display = 'none';
+}
+
+function finAtualizarVencimento() { /* prazo agora é select de atalho */ }
+
+
+function autoPreencherClienteFin(nome) {
+  if(!nome) return;
+  var fontes = (window.clientesFin||[]);
+  var cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'') === nome; });
+  if(!cli) cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'').toLowerCase().includes(nome.toLowerCase()); });
+  if(!cli) return;
+  var cnpj = document.getElementById('fin-cnpj');
+  if(cnpj && (cli.cnpj||cli.cpf)) cnpj.value = cli.cnpj||cli.cpf||'';
+  var end = '';
+  if(cli.logradouro) {
+    end = (cli.logradouro||'') + (cli.numero?', '+cli.numero:'') +
+          (cli.comp?' '+cli.comp:'') + (cli.bairro?' - '+cli.bairro:'') +
+          (cli.cidade?' - '+cli.cidade:'') + (cli.estado?' / '+cli.estado:'') +
+          (cli.cep?' CEP: '+cli.cep:'');
+  } else if(cli.endereco) { end = cli.endereco; }
+  var endEl = document.getElementById('fin-endereco');
+  if(endEl && end) endEl.value = end.trim();
+}
+function finSalvar() {
+  var cliente = document.getElementById('fin-cliente').value.trim();
+  var valor = document.getElementById('fin-valor').value.trim();
+  var forma = document.getElementById('fin-forma').value;
+  var venc = document.getElementById('fin-vencimento').value;
+  var desc = document.getElementById('fin-descricao').value.trim();
+  var obs = document.getElementById('fin-obs').value.trim();
+  var leadId = document.getElementById('fin-lead-id').value;
+
+  if(!cliente || !valor || !venc) {
+    alert('Preencha Cliente, Valor e Vencimento.');
+    return;
+  }
+
+  if(vendaEditando) {
+    var idx = vendas.findIndex(function(v){ return v.id===vendaEditando; });
+    if(idx >= 0) {
+      vendas[idx].cliente = cliente;
+      vendas[idx].valor = parseMoeda(valor);
+      vendas[idx].formaPag = forma;
+      vendas[idx].vencimento = venc;
+      vendas[idx].descricao = desc;
+      vendas[idx].obs = obs;
+    }
+  } else {
+    vendas.push({
+      id: uid_fin(),
+      cliente: cliente,
+      valor: parseMoeda(valor),
+      formaPag: forma,
+      vencimento: venc,
+      descricao: desc,
+      obs: obs,
+      endereco: (document.getElementById('fin-endereco')||{}).value||'',
+      leadId: leadId,
+      pago: false,
+      ts: Date.now()
+    });
+  }
+
+  salvarVendas();
+  fecharModalVenda();
+  renderFinanceiro();
+  if(typeof showToast === 'function') showToast('Venda salva — ' + cliente);
+}
+
+function finDarBaixa(id) {
+  var v = vendas.find(function(x){ return x.id===id; });
+  if(!v) return;
+  if(confirm('Confirmar recebimento de ' + formatMoeda(v.valor) + ' de ' + v.cliente + '?')) {
+    fetch('/vendas/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({pago:true,dataPagamento:new Date().toISOString().split('T')[0]})})
+      .then(function(){carregarVendas().then(renderFinanceiro);});
+    if(typeof showToast==='function') showToast('Pagamento registrado!');
+  }
+}
+
+function finEditar(id) {
+  var v = vendas.find(function(x){ return x.id===id; });
+  if(!v) return;
+  vendaEditando = id;
+  document.getElementById('fin-form-titulo').textContent = 'Editar Venda';
+  document.getElementById('fin-cliente').value = v.cliente || '';
+  document.getElementById('fin-valor').value = v.valor || '';
+  document.getElementById('fin-forma').value = v.formaPag || 'pix';
+  document.getElementById('fin-vencimento').value = v.vencimento || '';
+  document.getElementById('fin-descricao').value = v.descricao || '';
+  document.getElementById('fin-obs').value = v.obs || '';
+  document.getElementById('fin-lead-id').value = v.leadId || '';
+  document.getElementById('fin-prazo-noop').value = '0';
+  document.getElementById('modal-financeiro').style.display = 'flex';
+}
+
+function finExcluir(id) {
+  if(!confirm('Excluir esta venda?')) return;
+  fetch('/vendas/'+id,{method:'DELETE'}).then(function(){carregarVendas().then(renderFinanceiro);});
+}
+
+
+
+const STAGES=['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'];
+const STAGE_COLORS={'Primeiro contato':'#3b82f6','Qualificação':'#8b5cf6','Proposta enviada':'#f59e0b','Negociação':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'};
+const STAGE_PILL={'Primeiro contato':'background:rgba(59,130,246,.25);color:#93c5fd','Qualificação':'background:rgba(139,92,246,.25);color:#c4b5fd','Proposta enviada':'background:rgba(245,158,11,.25);color:#fcd34d','Negociação':'background:rgba(249,115,22,.25);color:#fdba74','Fechado / Ganho':'background:rgba(34,197,94,.25);color:#86efac','Perdido':'background:rgba(239,68,68,.25);color:#fca5a5'};
+
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
+let leads=load('crm-leads',[]),activity=load('crm-activity',[]),agentName=load('crm-agent',''),iaKey=load('crm-ia-key',''),iaPreview=null;
+function saveLeads(){
+  save('crm-leads',leads);
+  updateStats();
+  // Sincronizar cada lead com MongoDB
+  leads.forEach(function(lead){
+    fetch('/kanban-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(function(){});
+  });
+}
+function saveActivity(){save('crm-activity',activity.slice(0,100));}
+function addActivity(msg){activity.unshift({msg,ts:Date.now()});saveActivity();}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function fmtDate(ts){const d=new Date(ts),now=new Date(),diff=Math.floor((now-d)/1000);if(diff<60)return 'agora';if(diff<3600)return Math.floor(diff/60)+'min atrás';if(diff<86400)return Math.floor(diff/3600)+'h atrás';return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});}
+function fmtTime(ts){return new Date(ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+function fmtDateFull(ts){return new Date(ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function initials(name){return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';}
+
+function fmtValorStat(v){
+  if(!v||v===0) return 'R$ 0';
+  if(v>=1000000) return 'R$'+(v/1000000).toFixed(1)+'M';
+  if(v>=1000) return 'R$'+(v/1000).toFixed(0)+'k';
+  return 'R$'+Math.round(v);
+}
+function somaFrete(arr){
+  return arr.reduce((s,l)=>{
+    const v=parseFloat((l.valorFrete||'0').replace(/\./g,'').replace(',','.'));
+    return s+(isNaN(v)?0:v);
+  },0);
+}
+function updateStats(){
+  const todosMes = typeof getLeadsMes === 'function' ? getLeadsMes() : leads;
+  const mes = typeof getMesAtual === 'function' ? getMesAtual() : new Date();
+  const nomeMes = typeof MESES !== 'undefined' ? MESES[mes.getMonth()]+' '+mes.getFullYear() : '';
+  const el = id => document.getElementById(id);
+
+  // Filtrar por perfil ativo
+  let leadsMes = todosMes;
+  if(typeof perfilAtivo !== 'undefined' && perfilAtivo && typeof PERFIS !== 'undefined' && !verTodos) {
+    const p = PERFIS[perfilAtivo];
+    const outro = perfilAtivo === 'beatriz' ? 'davi' : 'beatriz';
+    const pOutro = PERFIS[outro];
+    // Leads do perfil ativo: por agente ou por etapa
+    leadsMes = todosMes.filter(l => {
+      if(l.agent && l.agent !== '') return l.agent === p.nome;
+      return p.stages.includes(l.stage);
+    });
+    const leadsOutro = todosMes.filter(l => {
+      if(l.agent && l.agent !== '') return l.agent === pOutro.nome;
+      return pOutro.stages.includes(l.stage) && !p.stages.includes(l.stage);
+    });
+    // Mini barra do outro perfil
+    const stagesNegOutro = pOutro.stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido');
+    const ganhosOutro = leadsOutro.filter(l=>l.stage==='Fechado / Ganho');
+    const perdidosOutro = leadsOutro.filter(l=>l.stage==='Perdido');
+    const negOutro = leadsOutro.filter(l=>stagesNegOutro.includes(l.stage));
+    const srOutro = leadsOutro.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
+    if(el('stats-bar-outro')) el('stats-bar-outro').style.display='flex';
+    if(el('stats-outro-label')) el('stats-outro-label').textContent = pOutro.emoji+' '+pOutro.nome;
+    if(el('outro-total')) el('outro-total').textContent = leadsOutro.length;
+    if(el('outro-ganho')) el('outro-ganho').textContent = fmtValorStat(somaFrete(ganhosOutro));
+    if(el('outro-perdido')) el('outro-perdido').textContent = fmtValorStat(somaFrete(perdidosOutro));
+    if(el('outro-neg')) el('outro-neg').textContent = fmtValorStat(somaFrete(negOutro));
+    if(el('outro-semretorno')) el('outro-semretorno').textContent = srOutro.length;
+    if(el('stat-total-label')) el('stat-total-label').textContent = p.emoji+' '+p.nome+' · '+nomeMes;
+  } else {
+    if(el('stats-bar-outro')) el('stats-bar-outro').style.display='none';
+    if(el('stat-total-label')) el('stat-total-label').textContent = nomeMes||'Total do mês';
+  }
+
+  const stagesNeg = typeof PERFIS !== 'undefined' && perfilAtivo && PERFIS[perfilAtivo]
+    ? PERFIS[perfilAtivo].stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido')
+    : ['Proposta enviada','Negociação','Qualificação','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal'];
+
+  const ganhos = leadsMes.filter(l=>l.stage==='Fechado / Ganho');
+  const perdidos = leadsMes.filter(l=>l.stage==='Perdido');
+  const emNeg = leadsMes.filter(l=>stagesNeg.includes(l.stage));
+  const semRetorno = leadsMes.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
+
+  if(el('stat-total')) el('stat-total').textContent = leadsMes.length;
+  if(el('stat-ganho')) el('stat-ganho').textContent = fmtValorStat(somaFrete(ganhos));
+  if(el('stat-perdido')) el('stat-perdido').textContent = fmtValorStat(somaFrete(perdidos));
+  if(el('stat-negociacao')) el('stat-negociacao').textContent = fmtValorStat(somaFrete(emNeg));
+  if(el('stat-semretorno')) el('stat-semretorno').textContent = semRetorno.length;
+}
+
+function showView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  const t=document.getElementById('tab-'+v);if(t)t.classList.add('active');
+  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}if(v==='operacional'){opTab('tarefas');}
+  updateAgentFilters();
+}
+
+function promptAgent(){const n=prompt('Seu nome:',agentName);if(n!==null){agentName=n.trim();save('crm-agent',agentName);updateAgentLabel();}}
+function updateAgentLabel(){document.getElementById('agent-label').textContent=agentName?'👤 '+agentName:'👤 Definir nome';}
+function updateAgentFilters(){
+  const agents=[...new Set(leads.map(l=>l.agent).filter(Boolean))];
+  ['kanban-agent','leads-agent'].forEach(id=>{const sel=document.getElementById(id);if(!sel)return;const val=sel.value;sel.innerHTML='<option value="">Todos os responsáveis</option>'+agents.map(a=>`<option value="${a}">${a}</option>`).join('');sel.value=val;});
+  const sel=document.getElementById('leads-stage');if(sel)sel.innerHTML='<option value="">Todas as etapas</option>'+STAGES.map(s=>`<option value="${s}">${s}</option>`).join('');
+}
+
+function renderKanban(){
+  atualizarLabelMes();
+  const q=(document.getElementById('kanban-search')||{}).value?.toLowerCase()||'';
+  const ag=(document.getElementById('kanban-agent')||{}).value||'';
+  const board=document.getElementById('kanban-board');board.innerHTML='';
+  const leadsMes=getLeadsMes();
+  const stagesAtivos = window.STAGES || STAGES;
+  const stageColorsAtivos = window.STAGE_COLORS || STAGE_COLORS;
+  // Filtrar por perfil ativo
+  let leadsPerfilMes;
+  if(verTodos || !perfilAtivo) {
+    leadsPerfilMes = leadsMes;
+  } else {
+    const pAtivo = PERFIS[perfilAtivo];
+    leadsPerfilMes = pAtivo ? leadsMes.filter(l => {
+      if(l.agent && l.agent !== '') return l.agent === pAtivo.nome;
+      return pAtivo.stages.includes(l.stage);
+    }) : leadsMes;
+  }
+  stagesAtivos.forEach(stage=>{
+    let cards=leadsPerfilMes.filter(l=>l.stage===stage);
+    if(q)cards=cards.filter(l=>(l.name+l.prod+l.tel+l.obs+(l.rota||'')).toLowerCase().includes(q));
+    if(ag)cards=cards.filter(l=>l.agent===ag);
+    const col=document.createElement('div');col.className='kanban-col';
+    col.innerHTML=`<div class="col-header"><div class="col-dot" style="background:${stageColorsAtivos[stage]||'#666'}"></div><span class="col-title">${stage}</span><span class="col-count">${cards.length}</span></div><div class="col-cards" id="col-${stage.replace(/[\s\/]/g,'_')}"></div><button class="add-col-btn" onclick="openNewLead('${stage}')">+ Adicionar lead</button>`;
+    board.appendChild(col);
+    const container=col.querySelector('.col-cards');
+    cards.sort((a,b)=>b.ts-a.ts).forEach(lead=>{
+      const hasFu=lead.followups?.some(f=>!f.done);
+      const textoObs=(lead.obs||'').toLowerCase();
+      const palavrasCotacao=['cotacao','cotacao','anuncio','anuncio','tabela','quanto fica','quanto custa','me passa','me manda','preciso enviar','quero enviar','valor do frete','preco do frete'];
+      const isAnuncio=palavrasCotacao.some(function(p){return textoObs.includes(p);});
+      const card=document.createElement('div');card.className='card';
+      if(isAnuncio) card.style.borderColor='var(--red)';
+      card.innerHTML=`
+        <div class="card-name">${lead.name}</div>
+        <div class="card-phone">${lead.tel||'Sem telefone'}</div>
+        ${lead.rota?`<div class="card-route">📦 ${lead.rota}</div>`:''}
+        ${lead.obs?`<div class="card-msg">${lead.obs.slice(0,55)}</div>`:''}
+        <div class="card-tags">
+          ${lead.source==='whatsapp'?'<span class="tag tag-wpp">WhatsApp</span>':''}
+          ${hasFu?'<span class="tag tag-followup">Follow-up</span>':''}
+          ${lead.hot?'<span class="tag tag-hot">🔥 Quente</span>':''}
+          ${lead.urgencia==='Alta'?'<span class="tag tag-urgente">⚡ Urgente</span>':''}
+        </div>
+        <div class="card-footer">
+          <span style="font-size:11px;color:var(--text3)">${lead.agent||''}${lead.valorFrete?' · <span style="color:var(--green)">R$ '+lead.valorFrete+'</span>':''}</span>
+          <span class="card-time">${fmtDate(lead.ts)}</span>
+        </div>`;
+      card.onclick=()=>openLead(lead.id);container.appendChild(card);
+    });
+  });
+}
+
+function renderLeads(){
+  const q=(document.getElementById('leads-search')||{}).value?.toLowerCase()||'';
+  const stage=(document.getElementById('leads-stage')||{}).value||'';
+  const ag=(document.getElementById('leads-agent')||{}).value||'';
+  let filtered=[...leads];
+  if(q)filtered=filtered.filter(l=>(l.name+l.prod+l.tel+l.obs+l.agent+(l.rota||'')).toLowerCase().includes(q));
+  if(stage)filtered=filtered.filter(l=>l.stage===stage);
+  if(ag)filtered=filtered.filter(l=>l.agent===ag);
+  filtered.sort((a,b)=>b.ts-a.ts);
+  document.getElementById('leads-count').textContent=filtered.length+' lead'+(filtered.length!==1?'s':'');
+  const tbody=document.getElementById('leads-tbody');
+  tbody.innerHTML=filtered.length?filtered.map(l=>{
+    const fu=l.followups?.find(f=>!f.done);
+    return `<tr onclick="openLead('${l.id}')">
+      <td><strong>${l.name}</strong></td>
+      <td style="color:var(--blue);font-size:12px">${l.rota||l.prod||'—'}</td>
+      <td><span class="stage-pill" style="${STAGE_PILL[l.stage]||''}">${l.stage}</span></td>
+      <td style="color:var(--green)">${l.valorNF?'R$ '+l.valorNF:'—'}</td>
+      <td style="color:var(--text2)">${l.agent||'—'}</td>
+      <td style="color:var(--text3)">${fmtTime(l.ts)}</td>
+      <td style="color:${fu?'var(--amber)':'var(--text3)'}">${fu?fu.text:'—'}</td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text3)">Nenhum lead encontrado.</td></tr>`;
+}
+
+let dashPeriodo='hoje';
+function dashFiltro(btn,periodo){
+  document.querySelectorAll('.dash-f-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');dashPeriodo=periodo;renderDashboard();
+}
+function getLeadsPeriodo(){
+  const agora=Date.now();
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const hojets=hoje.getTime();
+  const ontemI=hojets-86400000,ontemF=hojets;
+  const semanaI=hojets-7*86400000;
+  const mesI=new Date(hoje.getFullYear(),hoje.getMonth(),1).getTime();
+  if(dashPeriodo==='hoje') return leads.filter(l=>l.ts>=hojets);
+  if(dashPeriodo==='ontem') return leads.filter(l=>l.ts>=ontemI&&l.ts<ontemF);
+  if(dashPeriodo==='semana') return leads.filter(l=>l.ts>=semanaI);
+  if(dashPeriodo==='mes') return leads.filter(l=>l.ts>=mesI);
+  return leads;
+}
+function somaValorNF(arr){
+  return arr.reduce((s,l)=>{const v=parseFloat((l.valorNF||'0').replace(/\./g,'').replace(',','.'));return s+(isNaN(v)?0:v);},0);
+}
+function fmtValor(v){return v>=1000000?'R$ '+(v/1000000).toFixed(1)+'M':v>=1000?'R$ '+(v/1000).toFixed(0)+'k':'R$ '+Math.round(v);}
+function renderDashboard(){
+  const periodo=getLeadsPeriodo();
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const leadsHoje=leads.filter(l=>l.ts>=hoje.getTime());
+  const total=leads.length;
+  const fechados=leads.filter(l=>l.stage==='Fechado / Ganho').length;
+  const perdidosAll=leads.filter(l=>l.stage==='Perdido');
+  const ativos=leads.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage));
+  const semFu=leads.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
+  const taxa=total?Math.round(fechados/total*100):0;
+  const periodoAtivos=periodo.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage));
+  const periodoPerdidos=periodo.filter(l=>l.stage==='Perdido');
+
+  // Mensagens por canal (simulado por source)
+  const wpp=periodo.filter(l=>l.source==='whatsapp').length;
+  const ig=periodo.filter(l=>l.source==='instagram').length;
+  const site=periodo.filter(l=>l.source==='site').length;
+  const google=periodo.filter(l=>l.source==='google').length;
+  const outros=periodo.filter(l=>!['whatsapp','instagram','site','google'].includes(l.source)).length;
+  const totalMsgs=wpp+ig+site+google+outros;
+
+  const s=id=>document.getElementById(id);
+  if(s('d-msgs'))s('d-msgs').textContent=totalMsgs;
+  if(s('d-canais'))s('d-canais').innerHTML=[
+    {cor:'#25D366',nome:'WhatsApp',v:wpp},
+    {cor:'#E1306C',nome:'Instagram',v:ig},
+    {cor:'#378ADD',nome:'Site/Google',v:google+site},
+    {cor:'#888',nome:'Outros',v:outros}
+  ].map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${c.cor};display:inline-block"></span>${c.nome}</span><span style="font-size:13px;font-weight:600;color:#22c55e">${c.v}</span></div>`).join('');
+  if(s('d-msgs-delta'))s('d-msgs-delta').textContent=periodo.length+' leads no período';
+  if(s('d-conv'))s('d-conv').textContent=ativos.length;
+  if(s('d-conv-delta'))s('d-conv-delta').textContent='+'+leadsHoje.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length+' hoje';
+  if(s('d-semfu'))s('d-semfu').textContent=semFu.length;
+  if(s('d-semfu-delta'))s('d-semfu-delta').textContent=semFu.length+' sem tarefa pendente';
+  if(s('d-taxa'))s('d-taxa').textContent=taxa+'%';
+  if(s('d-taxa-sub'))s('d-taxa-sub').textContent=fechados+' fechados de '+total+' total';
+  if(s('d-leads'))s('d-leads').textContent=periodo.length;
+  if(s('d-leads-val'))s('d-leads-val').textContent=fmtValor(somaValorNF(periodo));
+  if(s('d-leads-hoje'))s('d-leads-hoje').textContent=leadsHoje.length+' hoje';
+  if(s('d-ativos'))s('d-ativos').textContent=periodoAtivos.length;
+  if(s('d-ativos-val'))s('d-ativos-val').textContent=fmtValor(somaValorNF(periodoAtivos));
+  if(s('d-ativos-hoje'))s('d-ativos-hoje').textContent=leadsHoje.filter(l=>!['Fechado / Ganho','Perdido'].includes(l.stage)).length+' hoje';
+  if(s('d-perdidos'))s('d-perdidos').textContent=periodoPerdidos.length;
+  if(s('d-perdidos-val'))s('d-perdidos-val').textContent=fmtValor(somaValorNF(periodoPerdidos));
+  if(s('d-perdidos-hoje'))s('d-perdidos-hoje').textContent=leadsHoje.filter(l=>l.stage==='Perdido').length+' hoje';
+
+  const max=Math.max(1,...STAGES.map(st=>leads.filter(l=>l.stage===st).length));
+  document.getElementById('dash-funnel').innerHTML=STAGES.map(st=>{const n=leads.filter(l=>l.stage===st).length,pct=Math.round(n/max*100);return `<div class="funnel-row"><div class="funnel-label">${st}</div><div class="funnel-bar-bg"><div class="funnel-bar" style="width:${pct}%;background:${STAGE_COLORS[st]}">${n>0?n:''}</div></div><div class="funnel-count">${n}</div></div>`;}).join('');
+  const allFu=leads.flatMap(l=>(l.followups||[]).filter(f=>!f.done).map(f=>({...f,leadName:l.name,leadId:l.id})));
+  document.getElementById('dash-followups').innerHTML=allFu.length?allFu.slice(0,6).map(f=>`<div class="activity-item" onclick="openLead('${f.leadId}')"><div class="activity-dot" style="background:var(--amber)"></div><div><div class="activity-text"><strong>${f.leadName}</strong>: ${f.text}</div><div class="activity-time">${f.date||'Sem data'}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhum follow-up pendente.</div>';
+}
+
+// ─── NOVO LEAD ───────────────────────────────────────────────
+function openNewLead(stage='Primeiro contato'){
+  const stageOpts=STAGES.map(s=>`<option value="${s}" ${s===stage?'selected':''}>${s}</option>`).join('');
+  showModal(`
+    <div class="modal-header"><span class="modal-title">Novo lead</span><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="section-divider">📋 Dados do cliente</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Nome *</label><input id="nl-name" placeholder="Nome do cliente"/></div>
+        <div class="form-group"><label class="form-label">Telefone / WhatsApp</label><input id="nl-tel" placeholder="(11) 99999-9999"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Etapa</label><select id="nl-stage">${stageOpts}</select></div>
+        <div class="form-group"><label class="form-label">Responsável</label><input id="nl-agent" value="${agentName}" placeholder="Seu nome"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Origem</label><select id="nl-source"><option value="">—</option><option value="whatsapp">WhatsApp</option><option value="google">Google</option><option value="instagram">Instagram</option><option value="site">Site</option><option value="indicacao">Indicação</option><option value="outro">Outro</option></select></div>
+        <div class="form-group"><label class="form-label">Urgência</label><select id="nl-urgencia"><option value="">Normal</option><option value="Alta">Alta</option><option value="Muito alta">Muito alta</option></select></div>
+      </div>
+
+      <div class="section-divider">📦 Dados do frete</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Material / Produto</label><input id="nl-material" placeholder="Ex: Rolamento, Brindes, Eletrônicos"/></div>
+        <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="nl-valorNF" placeholder="Ex: 15.000,00"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Valor do Frete (R$)</label><input id="nl-valorFrete" placeholder="Ex: 1.200,00"/></div>
+        <div class="form-group"><label class="form-label">Transportadora</label><select id="nl-transportadora"><option value="">—</option><option value="FedEx">FedEx</option><option value="DHL">DHL</option><option value="Correios">Correios</option><option value="Jadlog">Jadlog</option><option value="Próprio">Próprio</option><option value="Outro">Outro</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Origem (cidade/UF)</label><input id="nl-origem" placeholder="Ex: São Paulo/SP"/></div>
+        <div class="form-group"><label class="form-label">Destino (cidade/UF)</label><input id="nl-destino" placeholder="Ex: Manaus/AM"/></div>
+      </div>
+      <div class="form-row-3">
+        <div class="form-group"><label class="form-label">Volumes</label><input id="nl-volumes" placeholder="Ex: 3 volumes"/></div>
+        <div class="form-group"><label class="form-label">Peso total (kg)</label><input id="nl-peso" placeholder="Ex: 42kg"/></div>
+        <div class="form-group"><label class="form-label">Medidas (cm)</label><input id="nl-medidas" placeholder="Ex: 50x30x40"/></div>
+      </div>
+
+      <div class="section-divider">📝 Observações</div>
+      <div class="form-group"><textarea id="nl-obs" rows="3" placeholder="Contexto, proposta enviada, status da negociação..."></textarea></div>
+      <div class="form-group"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="nl-hot" style="width:auto"/> Marcar como lead quente 🔥</label></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveLead()">Adicionar lead</button></div>
+  `);
+  setTimeout(()=>document.getElementById('nl-name').focus(),100);
+}
+
+function saveLead(){
+  const name=document.getElementById('nl-name').value.trim();
+  if(!name){toast('Informe o nome do lead.');return;}
+  const origem=document.getElementById('nl-origem').value.trim();
+  const destino=document.getElementById('nl-destino').value.trim();
+  const rota=origem&&destino?origem+' → '+destino:'';
+  const lead={
+    id:uid(),name,tel:document.getElementById('nl-tel').value.trim(),
+    stage:document.getElementById('nl-stage').value,agent:document.getElementById('nl-agent').value.trim(),
+    source:document.getElementById('nl-source').value,urgencia:document.getElementById('nl-urgencia').value,
+    material:document.getElementById('nl-material').value.trim(),
+    valorNF:document.getElementById('nl-valorNF').value.trim(),
+    valorFrete:document.getElementById('nl-valorFrete').value.trim(),
+    transportadora:document.getElementById('nl-transportadora').value,
+    origem,destino,rota,
+    volumes:document.getElementById('nl-volumes').value.trim(),
+    peso:document.getElementById('nl-peso').value.trim(),
+    medidas:document.getElementById('nl-medidas').value.trim(),
+    obs:document.getElementById('nl-obs').value.trim(),
+    hot:document.getElementById('nl-hot').checked,
+    ts:Date.now(),history:[],followups:[]
+  };
+  if(lead.obs)lead.history.push({text:lead.obs,ts:Date.now(),type:'note'});
+  // Ajustar timestamp para o mês do funil se não for o mês atual
+  if(kanbanMesOffset !== 0) {
+    const mesBase = getMesAtual();
+    mesBase.setDate(15);mesBase.setHours(12,0,0,0);
+    lead.ts = mesBase.getTime();
+  }
+  leads.push(lead);saveLeads();addActivity(`Lead <strong>${lead.name}</strong> adicionado em <strong>${lead.stage}</strong>`);
+  closeModal();renderKanban();updateAgentFilters();toast('Lead adicionado!');
+}
+
+// ─── LEAD DETAIL ───────────────────────────────────────────────
+function openLead(id){const l=leads.find(x=>x.id===id);if(!l)return;renderLeadModal(l);}
+
+function renderLeadModal(l){
+  const stageOpts=STAGES.map(s=>`<option value="${s}" ${s===l.stage?'selected':''}>${s}</option>`).join('');
+  const history=(l.history||[]).slice().reverse().map(h=>`<div class="history-item"><div class="history-dot"></div><div><div class="history-bubble">${h.text}</div><div class="history-meta">${fmtDateFull(h.ts)}${h.agent?' · '+h.agent:''}</div></div></div>`).join('');
+  const fus=(l.followups||[]).map((f,i)=>`<div class="followup-item"><input type="checkbox" class="followup-check" ${f.done?'checked':''} onchange="toggleFollowup('${l.id}',${i},this.checked)"/><span class="followup-text ${f.done?'followup-done':''}">${f.text}</span><span class="followup-date">${f.date||''}</span><button class="btn btn-sm btn-danger" onclick="deleteFollowup('${l.id}',${i})">×</button></div>`).join('');
+  showModal(`
+    <div class="modal-header">
+      <span class="modal-title">Detalhes do lead</span>
+      <div style="display:flex;gap:6px"><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')">Excluir</button><button class="modal-close" onclick="closeModal()">×</button></div>
+    </div>
+    <div class="modal-body">
+      <div class="detail-header">
+        <div class="avatar">${initials(l.name)}</div>
+        <div><div class="detail-name">${l.name}</div><div class="detail-sub">${l.tel||''}${l.rota?' · '+l.rota:''}</div></div>
+        ${l.tel?`<a href="https://wa.me/55${l.tel.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="margin-left:auto;background:var(--green-bg);color:var(--green);border-color:var(--green)">Abrir WhatsApp ↗</a>`:''}
+      </div>
+
+      <div class="section-divider">📋 Dados do lead</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Etapa</label><select id="d-stage" onchange="updateLeadStage('${l.id}',this.value)">${stageOpts}</select></div>
+        <div class="form-group"><label class="form-label">Responsável</label><input id="d-agent" value="${l.agent||''}" onblur="updateLeadField('${l.id}','agent',this.value)"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Telefone</label><input id="d-tel" value="${l.tel||''}" onblur="updateLeadField('${l.id}','tel',this.value)"/></div>
+        <div class="form-group"><label class="form-label">Urgência</label><select id="d-urgencia" onchange="updateLeadField('${l.id}','urgencia',this.value)"><option value="" ${!l.urgencia?'selected':''}>Normal</option><option value="Alta" ${l.urgencia==='Alta'?'selected':''}>Alta</option><option value="Muito alta" ${l.urgencia==='Muito alta'?'selected':''}>Muito alta</option></select></div>
+      </div>
+
+      <div class="section-divider">📦 Dados do frete</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Material / Produto</label><input id="d-material" value="${l.material||''}" onblur="updateLeadField('${l.id}','material',this.value)"/></div>
+        <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="d-valorNF" value="${l.valorNF||''}" onblur="updateLeadField('${l.id}','valorNF',this.value)"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Valor do Frete (R$)</label><input id="d-valorFrete" value="${l.valorFrete||''}" onblur="updateLeadField('${l.id}','valorFrete',this.value)" placeholder="Ex: 1.200,00"/></div>
+        <div class="form-group"><label class="form-label">Transportadora</label><select id="d-transportadora" onchange="updateLeadField('${l.id}','transportadora',this.value)"><option value="" ${!l.transportadora?'selected':''}>—</option><option value="FedEx" ${l.transportadora==='FedEx'?'selected':''}>FedEx</option><option value="DHL" ${l.transportadora==='DHL'?'selected':''}>DHL</option><option value="Correios" ${l.transportadora==='Correios'?'selected':''}>Correios</option><option value="Jadlog" ${l.transportadora==='Jadlog'?'selected':''}>Jadlog</option><option value="Próprio" ${l.transportadora==='Próprio'?'selected':''}>Próprio</option><option value="Outro" ${l.transportadora==='Outro'?'selected':''}>Outro</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Origem</label><input id="d-origem" value="${l.origem||''}" onblur="updateRotaField('${l.id}')"/></div>
+        <div class="form-group"><label class="form-label">Destino</label><input id="d-destino" value="${l.destino||''}" onblur="updateRotaField('${l.id}')"/></div>
+      </div>
+      <div class="form-row-3">
+        <div class="form-group"><label class="form-label">Volumes</label><input id="d-volumes" value="${l.volumes||''}" onblur="updateLeadField('${l.id}','volumes',this.value)"/></div>
+        <div class="form-group"><label class="form-label">Peso (kg)</label><input id="d-peso" value="${l.peso||''}" onblur="updateLeadField('${l.id}','peso',this.value)"/></div>
+        <div class="form-group"><label class="form-label">Medidas (cm)</label><input id="d-medidas" value="${l.medidas||''}" onblur="updateLeadField('${l.id}','medidas',this.value)"/></div>
+      </div>
+
+      <div class="section-divider">📝 Anotações</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <textarea id="d-note" rows="2" placeholder="Escreva uma anotação..." style="flex:1"></textarea>
+        <button class="btn btn-primary" style="align-self:flex-end" onclick="addNote('${l.id}')">Salvar</button>
+      </div>
+      <div style="max-height:180px;overflow-y:auto;margin-bottom:16px">${history||'<div style="color:var(--text3);font-size:13px">Sem histórico ainda.</div>'}</div>
+
+      <div class="section-title">Follow-ups</div>
+      <div id="fu-list">${fus}</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input id="fu-text" placeholder="Próxima ação..." style="flex:1"/>
+        <input id="fu-date" type="date" style="width:140px"/>
+        <button class="btn btn-primary" onclick="addFollowup('${l.id}')">+ Adicionar</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-right:auto"><input type="checkbox" id="d-hot" ${l.hot?'checked':''} style="width:auto" onchange="updateLeadField('${l.id}','hot',this.checked)"/>Lead quente 🔥</label>
+      <button class="btn" onclick="closeModal()">Fechar</button>
+    </div>
+  `);
+}
+
+function updateRotaField(id){
+  const l=leads.find(x=>x.id===id);if(!l)return;
+  const origem=document.getElementById('d-origem').value.trim();
+  const destino=document.getElementById('d-destino').value.trim();
+  l.origem=origem;l.destino=destino;l.rota=origem&&destino?origem+' → '+destino:'';saveLeads();
+}
+function updateLeadStage(id,stage){const l=leads.find(x=>x.id===id);if(!l)return;const old=l.stage;l.stage=stage;l.history=l.history||[];l.history.push({text:`Etapa: <em>${old}</em> → <strong>${stage}</strong>`,ts:Date.now(),agent:agentName});saveLeads();addActivity(`<strong>${l.name}</strong>: ${old} → <strong>${stage}</strong>`);renderKanban();toast('Etapa atualizada!');}
+function updateLeadField(id,field,value){const l=leads.find(x=>x.id===id);if(!l)return;l[field]=value;saveLeads();}
+function addNote(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=document.getElementById('d-note').value.trim();if(!text)return;l.history=l.history||[];l.history.push({text,ts:Date.now(),agent:agentName});saveLeads();addActivity(`Nota em <strong>${l.name}</strong>`);renderLeadModal(l);toast('Anotação salva!');}
+function addFollowup(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=document.getElementById('fu-text').value.trim();if(!text)return;l.followups=l.followups||[];l.followups.push({text,date:document.getElementById('fu-date').value,done:false});saveLeads();renderLeadModal(l);toast('Follow-up adicionado!');}
+function toggleFollowup(id,idx,done){const l=leads.find(x=>x.id===id);if(!l)return;l.followups[idx].done=done;saveLeads();if(done)toast('Follow-up concluído!');}
+function deleteFollowup(id,idx){const l=leads.find(x=>x.id===id);if(!l)return;l.followups.splice(idx,1);saveLeads();renderLeadModal(l);}
+function deleteLead(id){if(!confirm('Excluir este lead?'))return;const l=leads.find(x=>x.id===id);leads=leads.filter(x=>x.id!==id);saveLeads();addActivity(`Lead <strong>${l?.name}</strong> excluído.`);closeModal();renderKanban();toast('Lead excluído.');}
+
+// ─── RELATÓRIO DO DIA ───────────────────────────────────────────────
+function abrirRelatorio(){
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const leadsHoje=leads.filter(l=>new Date(l.ts)>=hoje).sort((a,b)=>a.ts-b.ts);
+  const dataStr=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const novos=leadsHoje.filter(l=>l.stage==='Primeiro contato').length;
+  const proposta=leadsHoje.filter(l=>l.stage==='Proposta enviada').length;
+  const negociacao=leadsHoje.filter(l=>l.stage==='Negociação').length;
+  const qualificacao=leadsHoje.filter(l=>l.stage==='Qualificação').length;
+  const perdidos=leadsHoje.filter(l=>l.stage==='Perdido').length;
+  const followupsPendentes=leads.flatMap(l=>(l.followups||[]).filter(f=>!f.done).map(f=>({...f,leadName:l.name,leadTel:l.tel,leadId:l.id,valor:l.valorNF,rota:l.rota})));
+
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório ${dataStr}</title>
+  <style>
+    body{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:32px;background:#fff;color:#1a1a2e;font-size:13px}
+    .header{margin-bottom:24px}.header h1{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+    .header p{color:#666;font-size:13px}
+    .counters{display:flex;gap:0;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:28px}
+    .counter{flex:1;padding:16px;text-align:center;border-right:1px solid #e2e8f0}.counter:last-child{border-right:none}
+    .counter-val{font-size:28px;font-weight:700;color:#f97316;line-height:1}.counter-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+    .section-title{font-size:14px;font-weight:700;color:#1a1a2e;margin:24px 0 14px;padding-bottom:8px;border-bottom:2px solid #f97316}
+    .lead-card{border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;page-break-inside:avoid}
+    .lead-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .lead-name{font-size:15px;font-weight:700;color:#1a1a2e}.lead-stage{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+    .lead-phone{font-size:12px;color:#666;margin-bottom:10px}
+    .lead-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+    .lead-field label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px}
+    .lead-field span{font-size:13px;color:#1a1a2e;font-weight:500}
+    .lead-obs{font-size:12px;color:#444;background:#f8fafc;padding:10px;border-radius:6px;line-height:1.6}
+    .lead-horario{font-size:11px;color:#888;margin-bottom:8px}
+    .recomendacoes{margin-top:28px}
+    .rec-item{display:flex;gap:12px;padding:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px}
+    .rec-num{width:24px;height:24px;border-radius:50%;background:#f97316;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .rec-text{font-size:13px;color:#1a1a2e;line-height:1.5}
+    .footer{margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#888;text-align:center}
+    .stage-proposta{background:#fef3c7;color:#92400e}.stage-negociacao{background:#fee2e2;color:#991b1b}
+    .stage-qualificacao{background:#ede9fe;color:#5b21b6}.stage-novo{background:#dbeafe;color:#1e40af}
+    .stage-fechado{background:#dcfce7;color:#166534}.stage-perdido{background:#fee2e2;color:#991b1b}
+    @media print{body{padding:16px}}
+  </style></head><body>
+  <div class="header">
+    <h1>Leads novos — ${dataStr}</h1>
+    <p>${dataStr} &nbsp;·&nbsp; Atendente: ${agentName||'MF Envios'} &nbsp;·&nbsp; MF Envios · Clientes captados via Google / WhatsApp</p>
+  </div>
+  <div class="counters">
+    <div class="counter"><div class="counter-val">${leadsHoje.length}</div><div class="counter-label">Leads novos</div></div>
+    <div class="counter"><div class="counter-val">${proposta}</div><div class="counter-label">Proposta enviada</div></div>
+    <div class="counter"><div class="counter-val">${negociacao}</div><div class="counter-label">Negociação</div></div>
+    <div class="counter"><div class="counter-val">${qualificacao}</div><div class="counter-label">Qualificação</div></div>
+    <div class="counter"><div class="counter-val">${perdidos}</div><div class="counter-label">Perdidos</div></div>
+  </div>
+  <div class="section-title">LEADS DO DIA</div>
+  ${leadsHoje.length?leadsHoje.map(l=>{
+    const stageClass={'Proposta enviada':'stage-proposta','Negociação':'stage-negociacao','Qualificação':'stage-qualificacao','Primeiro contato':'stage-novo','Fechado / Ganho':'stage-fechado','Perdido':'stage-perdido'}[l.stage]||'';
+    return `<div class="lead-card">
+      <div class="lead-header"><span class="lead-name">${l.name}</span><span class="lead-stage ${stageClass}">${l.stage}</span></div>
+      <div class="lead-phone">${l.tel||'Sem telefone'}</div>
+      <div class="lead-grid">
+        <div class="lead-field"><label>Material</label><span>${l.material||l.prod||'—'}</span></div>
+        <div class="lead-field"><label>Volumes / Peso</label><span>${[l.volumes,l.peso,l.medidas].filter(Boolean).join(' · ')||'—'}</span></div>
+        <div class="lead-field"><label>Valor da NF</label><span>${l.valorNF?'R$ '+l.valorNF:'—'}</span></div>
+      </div>
+      <div class="lead-field" style="margin-bottom:8px"><label>Rota</label><span>${l.rota||'—'}</span></div>
+      <div class="lead-horario">Horário: ${fmtTime(l.ts)}${l.urgencia?' · Urgência: '+l.urgencia:''}${l.transportadora?' · '+l.transportadora:''}</div>
+      ${l.valorFrete?`<div style="font-size:13px;font-weight:700;color:#f97316;margin-bottom:8px">💰 Valor do Frete: R$ ${l.valorFrete}</div>`:''}
+      ${l.obs?`<div class="lead-obs"><strong>Obs:</strong> ${l.obs}</div>`:''}
+      ${(l.history&&l.history.length)?`<div style="margin-top:8px"><div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Anotações</div>${l.history.slice(-3).reverse().map(h=>`<div style="font-size:12px;color:#444;background:#f1f5f9;padding:8px 10px;border-radius:6px;margin-bottom:4px;border-left:3px solid #f97316">${h.text}${h.agent?' <span style="color:#888;font-size:11px">· '+h.agent+'</span>':''}</div>`).join('')}</div>`:''}
+    </div>`;
+  }).join(''):'<p style="color:#888">Nenhum lead registrado hoje.</p>'}
+  ${followupsPendentes.length?`
+  <div class="recomendacoes">
+    <div class="section-title">RECOMENDAÇÕES PARA AMANHÃ</div>
+    ${followupsPendentes.slice(0,6).map((f,i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div class="rec-text"><strong>${f.leadName}</strong>${f.leadTel?' ('+f.leadTel+')':''} — ${f.text}${f.rota?' · '+f.rota:''}${f.valor?' · R$ '+f.valor:''}${f.date?' · '+new Date(f.date).toLocaleDateString('pt-BR'):''}</div></div>`).join('')}
+  </div>`:''}
+  <div class="footer">Gerado automaticamente · MF Envios · ${dataStr}</div>
+
+<div class="view" id="view-cadastro" style="padding:20px;max-width:900px;margin:0 auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div>
+      <div style="font-size:18px;font-weight:700">📋 Cadastro de Clientes</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:2px">Gerencie seus clientes para agilizar vendas e documentações</div>
+    </div>
+    <button onclick="abrirModalCadastro(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer">+ Novo Cliente</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <input id="cad-busca" type="text" placeholder="Buscar por nome, CNPJ ou cidade..." oninput="renderCadastro()" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px">
+    <select id="cad-tipo-filter" onchange="renderCadastro()" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px">
+      <option value="">Todos os tipos</option>
+      <option value="pj">Pessoa Jurídica</option>
+      <option value="pf">Pessoa Física</option>
+    </select>
+  </div>
+  <div id="cadastro-lista"></div>
+</div>
+
+<!-- MODAL CADASTRO -->
+<div id="modal-cadastro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1">
+      <div id="cad-modal-titulo" style="font-size:16px;font-weight:700">Novo Cliente</div>
+      <button onclick="fecharModalCadastro()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px">&times;</button>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- Tipo -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Tipo de Pessoa</div>
+        <div style="display:flex;gap:20px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pj" id="cad-tipo-pj" checked onchange="toggleCadTipo()"> Pessoa Jurídica
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pf" id="cad-tipo-pf" onchange="toggleCadTipo()"> Pessoa Física
+          </label>
+        </div>
+      </div>
+
+      <!-- Dados Básicos -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Dados Básicos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label id="cad-doc-label" style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNPJ</label>
+            <input id="cad-doc" type="text" placeholder="00.000.000/0000-00" onblur="buscarCNPJ(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Razão Social / Nome</label>
+            <input id="cad-razao" type="text" placeholder="Razão social ou nome completo" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Nome Fantasia</label>
+            <input id="cad-fantasia" type="text" placeholder="Nome fantasia (opcional)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Estadual</label>
+            <input id="cad-ie" type="text" placeholder="Inscrição estadual" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Municipal</label>
+            <input id="cad-im" type="text" placeholder="Inscrição municipal" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNAE</label>
+            <input id="cad-cnae" type="text" placeholder="Código CNAE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contato -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Informações de Contato</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Celular</label>
+            <input id="cad-cel" type="text" placeholder="(00) 00000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Comercial</label>
+            <input id="cad-tel" type="text" placeholder="(00) 0000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail</label>
+            <input id="cad-email" type="email" placeholder="email@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail Cobrança</label>
+            <input id="cad-email-cob" type="email" placeholder="cobranca@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Endereço -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Endereço</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CEP</label>
+            <input id="cad-cep" type="text" placeholder="00000-000" onblur="buscarCEP(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Estado</label>
+            <input id="cad-estado" type="text" placeholder="UF" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Cidade</label>
+            <input id="cad-cidade" type="text" placeholder="Cidade" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Bairro</label>
+            <input id="cad-bairro" type="text" placeholder="Bairro" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Logradouro</label>
+            <input id="cad-logradouro" type="text" placeholder="Rua, Av..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Número</label>
+              <input id="cad-numero" type="text" placeholder="Nº" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Compl.</label>
+              <input id="cad-comp" type="text" placeholder="Apto..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div>
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Observações</label>
+        <textarea id="cad-obs" placeholder="Observações gerais sobre o cliente..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">
+        <button onclick="fecharModalCadastro()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button>
+        <button onclick="salvarCadastro()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer">Salvar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body></html>`;
+
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+// ═══════════════════════════════════════════
+// MÓDULO CLIENTES
+// ═══════════════════════════════════════════
+var clientesFin = [];
+function carregarClientesFin() {
+  return fetch('/clientes').then(function(r){return r.json();}).then(function(d){
+    clientesFin = Array.isArray(d) ? d : [];
+  }).catch(function(){
+    clientesFin = JSON.parse(localStorage.getItem('crm-clientes-fin')||'[]');
+  });
+}
+function salvarClienteFin(obj) {
+  var existe = clientesFin.findIndex(function(c){ return c.id === obj.id; });
+  if(existe >= 0) {
+    clientesFin[existe] = obj;
+    fetch('/clientes/'+obj.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){});
+  } else {
+    clientesFin.push(obj);
+    fetch('/clientes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){});
+  }
+  localStorage.setItem('crm-clientes-fin', JSON.stringify(clientesFin));
+}
+function getClienteNomes() {
+  return clientesFin.map(function(c){ return c.nome; });
+}
+
+</script>
+
+
+
+<!-- OPERACIONAL VIEW -->
+
+
+<!-- MODAIS OPERACIONAL -->
+<div id="modal-op" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:420px;max-width:95vw;box-shadow:var(--shadow)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <strong id="modal-op-title" style="font-size:15px"></strong>
+      <span onclick="closeModalOp()" style="cursor:pointer;color:var(--text3);font-size:18px">&times;</span>
+    </div>
+    <div id="modal-op-body"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="closeModalOp()">Cancelar</button>
+      <button class="btn btn-primary" id="modal-op-save" onclick="saveModalOp()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- OPERACIONAL VIEW -->
+<div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto;overflow-y:auto;">
+
+  <!-- Sub-tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
+    <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">✅ Tarefas</div>
+    <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
+    <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
+    <div class="tab" id="op-tab-docs" onclick="opTab('docs')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📄 Documentos</div>
+    <div class="tab" id="op-tab-nfse" onclick="opTab('nfse')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🧾 NFSe</div>
+  </div>
+
+  <!-- TAREFAS -->
+  <div id="op-view-tarefas" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Tarefas</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddTarefa()">+ Nova Tarefa</button>
+    </div>
+    <div id="tarefas-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- FRETES KANBAN -->
+  <div id="op-view-fretes" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Fretes em andamento</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddFrete()">+ Novo Frete</button>
+    </div>
+    <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px" id="fretes-kanban"></div>
+  </div>
+
+  <!-- AGENDA -->
+  <div id="op-view-agenda" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Agenda</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddAgenda()">+ Novo Evento</button>
+    </div>
+    <div id="agenda-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- DOCUMENTOS -->
+  <div id="op-view-docs" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;font-size:15px">Documentos</h3>
+      <button class="btn btn-primary btn-sm" onclick="openAddDoc()">+ Novo Documento</button>
+    </div>
+    <div id="docs-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+
+  <!-- NFSe SUB-TAB -->
+  <div id="op-content-nfse" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <div style="font-size:16px;font-weight:700;">🧾 Notas Fiscais de Serviço</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px;">Prepare e emita NFSe no sistema Metrópole de Lauro de Freitas</div>
+      </div>
+      <button onclick="abrirModalNFSe(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;">+ Nova NFSe</button>
+    </div>
+    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Leads prontos para emissão (Fechado/Ganho)</div>
+    <div id="nfse-leads-lista" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;"></div>
+    <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Notas emitidas este mês</div>
+    <div id="nfse-historico" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Clique em "Marcar como Emitida" após emitir no Metrópole.</div>
+    </div>
+  </div>
+</div>
+<div class="view" id="view-financeiro" style="padding:20px;max-width:1100px;margin:0 auto">
+<div id="op-content-financeiro" style="display:block">
+    <div id="fin-stats" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px;"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <input id="fin-busca" type="text" placeholder="Buscar cliente..." oninput="renderFinanceiro()" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px;flex:1;min-width:180px;">
+      <select id="fin-filtro" onchange="renderFinanceiro()" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px;">
+        <option value="todos">Todos</option>
+        <option value="aberto">Em aberto</option>
+        <option value="hoje">Vence hoje</option>
+        <option value="atrasado">Atrasado</option>
+        <option value="recebido">Recebido</option>
+      </select>
+      <button onclick="abrirModalVenda(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">+ Nova Venda</button>
+    </div>
+    <div id="fin-leads-prontos" style="margin-bottom:20px;"></div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);">
+          <th style="padding:10px 14px;text-align:left;">Cliente</th>
+          <th style="padding:10px 14px;text-align:left;">Descricao</th>
+          <th style="padding:10px 14px;text-align:left;">Valor</th>
+          <th style="padding:10px 14px;text-align:left;">Pagamento</th>
+          <th style="padding:10px 14px;text-align:left;">Vencimento</th>
+          <th style="padding:10px 14px;text-align:left;">Status</th>
+          <th style="padding:10px 14px;text-align:left;">Acoes</th>
+        </tr></thead>
+        <tbody id="fin-lista"><tr><td colspan="7" style="padding:32px;text-align:center;color:var(--text3);">Nenhuma venda lancada ainda.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAIS OPERACIONAL -->
+<div id="modal-op" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:420px;max-width:95vw;box-shadow:var(--shadow)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <strong id="modal-op-title" style="font-size:15px"></strong>
+      <span onclick="closeModalOp()" style="cursor:pointer;color:var(--text3);font-size:18px">&times;</span>
+    </div>
+    <div id="modal-op-body"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="closeModalOp()">Cancelar</button>
+      <button class="btn btn-primary" id="modal-op-save" onclick="saveModalOp()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  <!-- MODAL NFSe -->
+  <div id="modal-nfse" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5);">
+      <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1;">
+        <div style="font-size:16px;font-weight:700;">🧾 Emitir <span style="color:var(--orange)">NFSe</span></div>
+        <button onclick="fecharModalNFSe()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;">✕</button>
+      </div>
+      <div style="padding:16px 24px 0;">
+        <div style="display:flex;gap:0;background:var(--bg3);border-radius:8px;padding:4px;">
+          <div id="nfse-step-1" onclick="nfseIrStep(1)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:var(--orange);color:white;">1 · Tomador</div>
+          <div id="nfse-step-2" onclick="nfseIrStep(2)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);">2 · Serviço</div>
+          <div id="nfse-step-3" onclick="nfseIrStep(3)" style="flex:1;padding:8px 12px;text-align:center;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);">3 · Emitir</div>
+        </div>
+      </div>
+      <div style="padding:24px;">
+        <!-- Step 1 -->
+        <div id="nfse-content-1">
+          <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text2);margin-bottom:16px;">ℹ Confirme os dados do tomador (quem contratou o serviço).</div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px;">Tipo de Pessoa</div>
+            <div style="display:flex;gap:8px;">
+              <div id="nfse-tipo-jur" onclick="nfseTipo('juridica')" style="flex:1;padding:8px;background:var(--orange);border:1px solid var(--orange);border-radius:6px;color:white;font-size:12px;font-weight:600;cursor:pointer;text-align:center;">🏢 Jurídica</div>
+              <div id="nfse-tipo-fis" onclick="nfseTipo('fisica')" style="flex:1;padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;text-align:center;">👤 Física</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CNPJ/CPF *</label><input id="nf-cnpj" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="00.000.000/0000-00"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Razão Social *</label><input id="nf-razao" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          </div>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Endereço</label><input id="nf-end" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 130px;gap:12px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Município *</label><input id="nf-mun" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">UF *</label><input id="nf-uf" type="text" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;text-transform:uppercase;"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CEP</label><input id="nf-cep" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="00000-000"></div>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div id="nfse-content-2" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Competência (MM/AAAA) *</label><input id="nf-comp" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="06/2026"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Valor Total R$ *</label><input id="nf-valor" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;" placeholder="0,00"></div>
+          </div>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Discriminação do Serviço *</label><textarea id="nf-disc" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;resize:vertical;min-height:72px;font-family:inherit;" placeholder="Ex: Coleta em Sao Paulo/SP e entrega em Salvador/BA"></textarea></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Atividade *</label>
+            <select id="nf-ativ" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
+              <option value="0005120000">0005120000 - Transporte Aereo De Carga</option>
+              <option value="0005110000">0005110000 - Transporte Rodoviario De Carga</option>
+            </select></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Alíquota (%) *</label><input id="nf-aliq" type="text" value="3,00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Informações Complementares</label><input id="nf-info" type="text" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+        </div>
+        <!-- Step 3 -->
+        <div id="nfse-content-3" style="display:none;">
+          <div id="nf-valor-dest" style="font-size:24px;font-weight:800;color:var(--orange);text-align:center;padding:16px;background:rgba(249,115,22,.08);border-radius:8px;margin-bottom:16px;">R$ 0,00</div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;">
+            <div style="padding:12px 16px;background:rgba(249,115,22,.1);border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--orange);">📋 Passo a passo no Metrópole</div>
+            <div id="nf-instrucoes"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Footer modal -->
+      <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:var(--bg2);">
+        <div id="nf-btn-voltar" style="display:none;"><button onclick="nfseIrStep(nfseStep-1)" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">← Voltar</button></div>
+        <button onclick="fecharModalNFSe()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+        <div id="nf-btn-avancar"><button onclick="nfseIrStep(nfseStep+1)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Avançar →</button></div>
+        <div id="nf-btn-emitir" style="display:none;"><button onclick="nfseAbrirMetropole()" style="background:#22c55e;color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">🌐 Abrir Metrópole</button></div>
+        <div id="nf-btn-marcar" style="display:none;"><button onclick="nfseMarcarEmitida()" style="background:var(--blue);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">✓ Marcar como Emitida</button></div>
+      </div>
+    </div>
+  </div>
+
+
+  
+
+  <div id="modal-financeiro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5);">
+      <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1;">
+        <div id="fin-form-titulo" style="font-size:16px;font-weight:700;">Nova Venda</div>
+        <button onclick="fecharModalVenda()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;">x</button>
+      </div>
+      <div style="padding:24px;display:flex;flex-direction:column;gap:14px;">
+        <input type="hidden" id="fin-lead-id">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Cliente</label><input id="fin-cliente" type="text" list="fin-clientes-list" onchange="autoPreencherClienteFin(this.value)" placeholder="Nome do cliente" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CNPJ/CPF</label><input id="fin-cnpj" type="text" placeholder="00.000.000/0000-00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+        </div>
+        <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Descricao</label><input id="fin-descricao" type="text" placeholder="Ex: Frete Sao Paulo - Salvador" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Valor R$</label><input id="fin-valor" type="text" placeholder="0,00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Forma de Pagamento</label>
+          <select id="fin-forma" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
+            <option value="pix">PIX</option>
+            <option value="credito">Credito</option>
+            <option value="link">Link Cartao</option>
+            <option value="boleto">Boleto</option>
+            <option value="debito">Debito</option>
+          </select></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Data de Vencimento *</label><input id="fin-vencimento" type="date" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Prazo rápido</label>
+          <select onchange="if(this.value){var d=new Date();d.setDate(d.getDate()+parseInt(this.value));document.getElementById('fin-vencimento').value=d.toISOString().split('T')[0];this.value='';}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;">
+            <option value="">Selecionar prazo...</option>
+            <option value="0">Hoje (à vista)</option>
+            <option value="7">+7 dias</option>
+            <option value="10">+10 dias</option>
+            <option value="15">+15 dias</option>
+            <option value="30">+30 dias</option>
+          </select></div>
+        </div>
+        <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Observacoes</label><input id="fin-obs" type="text" placeholder="Informacoes adicionais" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div style="grid-column:1/-1"><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Endereço</label><input id="fin-endereco" type="text" placeholder="Endereço completo do cliente" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+      </div>
+      <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="fecharModalVenda()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+        <button onclick="finSalvar()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+
+
+<script>
+
+// ─── IA ───────────────────────────────────────────────
+function saveKey(){iaKey=document.getElementById('ia-key').value;save('crm-ia-key',iaKey);}
+async function analisarMsg(){
+  const msg=document.getElementById('ia-msg').value.trim(),key=document.getElementById('ia-key').value.trim()||iaKey;
+  if(!msg){toast('Cole uma mensagem primeiro.');return;}if(!key){toast('Informe sua chave da API Anthropic.');return;}
+  const out=document.getElementById('ia-output'),res=document.getElementById('ia-result-content'),addBtn=document.getElementById('ia-add-btn');
+  out.style.display='block';res.innerHTML='<div style="color:var(--text3)">⏳ Analisando...</div>';addBtn.style.display='none';iaPreview=null;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:`Analise a mensagem de WhatsApp de frete/logística e extraia:\n1. nome\n2. tel\n3. material\n4. origem\n5. destino\n6. volumes\n7. peso\n8. medidas\n9. valorNF\n10. etapa (uma de: Primeiro contato, Qualificação, Proposta enviada, Negociação, Fechado / Ganho, Perdido)\n11. obs\n\nResponda APENAS JSON puro:\n{"nome":"...","tel":"...","material":"...","origem":"...","destino":"...","volumes":"...","peso":"...","medidas":"...","valorNF":"...","etapa":"...","obs":"..."}\n\nMensagem:\n"""\n${msg}\n"""`}]})});
+    const data=await r.json();const text=data.content?.filter(c=>c.type==='text').map(c=>c.text).join('')||'';
+    const p=JSON.parse(text.replace(/```json|```/g,'').trim());iaPreview=p;
+    res.innerHTML=`<div class="field"><span class="field-label">Nome</span>${p.nome}</div><div class="field"><span class="field-label">Telefone</span>${p.tel||'—'}</div><div class="field"><span class="field-label">Material</span>${p.material||'—'}</div><div class="field"><span class="field-label">Rota</span>${p.origem&&p.destino?p.origem+' → '+p.destino:'—'}</div><div class="field"><span class="field-label">Volumes / Peso</span>${[p.volumes,p.peso,p.medidas].filter(Boolean).join(' · ')||'—'}</div><div class="field"><span class="field-label">Valor NF</span>${p.valorNF?'R$ '+p.valorNF:'—'}</div><div class="field"><span class="field-label">Etapa</span><span class="stage-pill" style="${STAGE_PILL[p.etapa]||''}">${p.etapa}</span></div><div class="field" style="margin-top:8px"><span class="field-label">Obs</span>${p.obs}</div>`;
+    addBtn.style.display='block';addBtn.innerHTML=`<button class="btn btn-primary" onclick="addFromIA()">✓ Adicionar ao funil</button>`;
+    const iaHist=load('crm-ia-hist',[]);iaHist.unshift({nome:p.nome,etapa:p.etapa,ts:Date.now()});save('crm-ia-hist',iaHist.slice(0,10));renderIAHistory();
+  }catch(e){res.innerHTML=`<div style="color:var(--red)">Erro ao analisar. Verifique a chave.<br><small>${e.message}</small></div>`;}
+}
+function addFromIA(){
+  if(!iaPreview)return;
+  const rota=iaPreview.origem&&iaPreview.destino?iaPreview.origem+' → '+iaPreview.destino:'';
+  const lead={id:uid(),name:iaPreview.nome||'Desconhecido',tel:iaPreview.tel||'',material:iaPreview.material||'',origem:iaPreview.origem||'',destino:iaPreview.destino||'',rota,volumes:iaPreview.volumes||'',peso:iaPreview.peso||'',medidas:iaPreview.medidas||'',valorNF:iaPreview.valorNF||'',stage:iaPreview.etapa||'Primeiro contato',agent:agentName,source:'whatsapp',obs:iaPreview.obs||'',hot:false,ts:Date.now(),followups:[],history:[{text:`Captado via WhatsApp: ${iaPreview.obs}`,ts:Date.now(),agent:agentName}]};
+  leads.push(lead);saveLeads();addActivity(`Lead <strong>${lead.name}</strong> captado via IA`);
+  document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none';iaPreview=null;showView('kanban');toast('Lead adicionado!');
+}
+function renderIAHistory(){const hist=load('crm-ia-hist',[]);document.getElementById('ia-history').innerHTML=hist.length?hist.map(h=>`<div class="activity-item"><div class="activity-dot" style="background:var(--green)"></div><div><div class="activity-text"><strong>${h.nome}</strong></div><div class="activity-time">${h.etapa} · ${fmtDate(h.ts)}</div></div></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Nenhuma análise ainda.</div>';}
+
+// ─── MODAL ───────────────────────────────────────────────
+function showModal(html){document.getElementById('modal-content').innerHTML=html;document.getElementById('modal-overlay').style.display='flex';}
+function closeModal(){document.getElementById('modal-overlay').style.display='none';renderKanban();renderLeads();updateAgentFilters();}
+
+// ─── EXPORT / IMPORT ───────────────────────────────────────────────
+function exportData(){const blob=new Blob([JSON.stringify({leads,activity,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`crm-export-${new Date().toISOString().slice(0,10)}.json`;a.click();toast('Dados exportados!');}
+function importData(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(data.leads){leads=data.leads;saveLeads();}if(data.activity){activity=data.activity;saveActivity();}renderKanban();renderLeads();updateAgentFilters();toast('Importado com sucesso!');}catch{toast('Erro ao importar.');}};reader.readAsText(file);e.target.value='';}
+
+// ─── TOAST ───────────────────────────────────────────────
+function toast(msg){const t=document.getElementById('toast');t.innerHTML=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ─── WHATSAPP CHAT ───────────────────────────────────────────────
+const WPP_SERVER='https://mf-envios-crm.onrender.com';
+let wppMsgs=[];
+let chatAtivo=null;
+let enviando=false;
+
+// Contatos conhecidos da MF Envios (clientes com contato salvo)
+const CONTATOS_MF = load('crm-contatos-mf', []);
+
+function isClienteMF(phone){ return leads.some(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,'')); }
+
+function fmtDateChat(ts){
+  const d=new Date(ts),now=new Date();
+  const diff=Math.floor((now-d)/1000);
+  if(diff<86400) return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+}
+
+function agruparMsgs(msgs){
+  const grupos={};
+  msgs.forEach(m=>{
+    const phone=m.phone||'';
+    if(!grupos[phone]){grupos[phone]={phone,name:m.name||'Desconhecido',msgs:[],lastTs:0,lastText:''};}
+    grupos[phone].msgs.push(m);
+    if(m.ts>grupos[phone].lastTs){grupos[phone].lastTs=m.ts;grupos[phone].lastText=m.text||'';}
+  });
+  return Object.values(grupos).sort((a,b)=>b.lastTs-a.lastTs);
+}
+
+function filtrarConversas(){
+  const q=(document.getElementById('wpp-search')||{}).value?.toLowerCase()||'';
+  renderConvList(q);
+}
+
+function renderConvList(q=''){
+  const grupos=agruparMsgs(wppMsgs);
+  const filtrados=q?grupos.filter(g=>g.name.toLowerCase().includes(q)||g.phone.includes(q)):grupos;
+  const list=document.getElementById('wpp-conv-list');
+  if(!filtrados.length){list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px">Nenhuma conversa</div>';return;}
+  list.innerHTML=filtrados.map(g=>{
+    const cliente=isClienteMF(g.phone);
+    const cor=cliente?'var(--blue)':'var(--orange)';
+    const bgCor=cliente?'rgba(59,130,246,.15)':'rgba(249,115,22,.15)';
+    const ativo=chatAtivo===g.phone;
+    const ini=g.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';
+    return `<div onclick="abrirChat('${g.phone}')" style="display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;border-bottom:1px solid var(--border);background:${ativo?'var(--surface2)':'transparent'};transition:background .15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='${ativo?'var(--surface2)':'transparent'}'">
+      <div style="width:40px;height:40px;border-radius:50%;background:${bgCor};color:${cor};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;border:2px solid ${cor}">${ini}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+          <span style="font-size:13px;font-weight:700;color:var(--text)">${g.name}</span>
+          <span style="font-size:10px;color:var(--text3)">${fmtDateChat(g.lastTs)}</span>
+        </div>
+        <div style="font-size:11px;color:${cor};margin-bottom:3px;font-weight:600">${cliente?'● Cliente MF':'● Novo lead'}</div>
+        <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.lastText.slice(0,45)}</div>
+      </div>
+      <div style="width:8px;height:8px;border-radius:50%;background:${cor};flex-shrink:0"></div>
+    </div>`;
+  }).join('');
+  document.getElementById('wpp-count').textContent=filtrados.length+' conversa'+(filtrados.length!==1?'s':'');
+}
+
+function abrirChat(phone){
+  chatAtivo=phone;
+  renderConvList((document.getElementById('wpp-search')||{}).value||'');
+  const grupos=agruparMsgs(wppMsgs);
+  const grupo=grupos.find(g=>g.phone===phone);
+  if(!grupo)return;
+  const cliente=isClienteMF(phone);
+  const cor=cliente?'var(--blue)':'var(--orange)';
+  const bgCor=cliente?'rgba(59,130,246,.15)':'rgba(249,115,22,.15)';
+  const leadInfo=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
+  const area=document.getElementById('wpp-chat-area');
+  area.innerHTML=`
+    <div style="padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <div style="width:38px;height:38px;border-radius:50%;background:${bgCor};color:${cor};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid ${cor}">${grupo.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?'}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700;color:var(--text)">${grupo.name}</div>
+        <div style="font-size:11px;color:${cor};font-weight:600">${cliente?'● Cliente MF Envios':'● Novo lead'} · ${phone}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        ${leadInfo?`<button class="btn btn-sm" onclick="openLead('${leadInfo.id}')">Ver ficha</button>`:'<button class="btn btn-sm btn-primary" onclick="wppToLead(\''+grupo.msgs[0]?.id+'\',\''+grupo.name+'\',\''+phone+'\',\''+grupo.lastText.replace(/'/g,"\\'")+'\')">+ Funil</button>'}
+        <a href="https://wa.me/${phone}" target="_blank" class="btn btn-sm" style="background:rgba(34,197,94,.2);color:var(--green);border-color:var(--green)">Abrir WA ↗</a>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px" id="chat-msgs">
+      ${grupo.msgs.sort((a,b)=>a.ts-b.ts).map(m=>`
+        <div style="display:flex;flex-direction:column;align-items:flex-start;max-width:70%">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:0 10px 10px 10px;padding:10px 14px;font-size:13px;color:var(--text);line-height:1.5">${m.text||''}</div>
+          <span style="font-size:10px;color:var(--text3);margin-top:3px;padding-left:4px">${new Date(m.ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>
+        </div>`).join('')}
+    </div>
+    <div style="padding:12px 16px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0">
+      <textarea id="chat-input" placeholder="Digite uma mensagem..." rows="2" style="flex:1;resize:none;border-radius:var(--radius);font-size:13px" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg('${phone}');}"></textarea>
+      <button class="btn btn-primary" onclick="enviarMsg('${phone}')" style="height:58px;padding:0 20px;font-size:18px">➤</button>
+    </div>`;
+  const chatMsgs=document.getElementById('chat-msgs');
+  if(chatMsgs)chatMsgs.scrollTop=chatMsgs.scrollHeight;
+}
+
+async function enviarMsg(phone){
+  if(enviando)return;
+  const input=document.getElementById('chat-input');
+  const texto=(input?.value||'').trim();
+  if(!texto)return;
+  enviando=true;
+  input.value='';input.disabled=true;
+  const chatMsgs=document.getElementById('chat-msgs');
+  if(chatMsgs){
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;flex-direction:column;align-items:flex-end;max-width:70%;align-self:flex-end;margin-left:auto';
+    div.innerHTML=`<div style="background:#25D366;border-radius:10px 0 10px 10px;padding:10px 14px;font-size:13px;color:#fff;line-height:1.5">${texto}</div><span style="font-size:10px;color:var(--text3);margin-top:3px;padding-right:4px">Agora ✓</span>`;
+    chatMsgs.appendChild(div);chatMsgs.scrollTop=chatMsgs.scrollHeight;
+  }
+  try{
+    await fetch(WPP_SERVER+'/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,text:texto})});
+  }catch(e){toast('Mensagem enviada localmente');}
+  enviando=false;if(input)input.disabled=false;if(input)input.focus();
+}
+
+async function loadWppMessages(){
+  const dot=document.getElementById('wpp-dot'),st=document.getElementById('wpp-status-text');
+  try{
+    var _inst = (typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
+    var _url = WPP_SERVER+'/messages'+(_inst?'?instance='+_inst:'');
+    const res=await fetch(_url);if(!res.ok)throw new Error();
+    wppMsgs=await res.json();
+    dot.style.background='var(--green)';st.textContent='WhatsApp conectado';
+    const badge=document.getElementById('wpp-badge');
+    if(wppMsgs.length>0){badge.style.display='inline';badge.textContent=wppMsgs.length;}else badge.style.display='none';
+    renderConvList();
+    if(chatAtivo)abrirChat(chatAtivo);
+  }catch(e){
+    dot.style.background='var(--red)';st.textContent='Servidor offline';
+    document.getElementById('wpp-conv-list').innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px">Servidor offline</div>';
+  }
+}
+
+async function wppToLead(id,name,phone,text){
+  try{
+    await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
+    const exists=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
+    // Sempre cria novo lead (permite múltiplos leads por contato em meses diferentes)
+    const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);
+    toast('Lead adicionado ao funil!');showView('kanban');renderKanban();
+  }catch(e){toast('Erro ao adicionar.');}
+}
+
+async function deleteWppMsg(id){try{await fetch(WPP_SERVER+'/messages/'+id,{method:'DELETE'});loadWppMessages();}catch(e){}}
+function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',function(e){
+    try{
+      var d=JSON.parse(e.data);
+      var inst=(typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
+      if(!inst||!d.instance||d.instance===inst) loadWppMessages();
+    }catch(ex){loadWppMessages();}
+  });es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
+conectarSSE();
+setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
+
+
+// ═══════════════════════════════════════════
+//  OPERACIONAL — Tarefas, Fretes, Agenda, Docs
+// ═══════════════════════════════════════════
+const OP_API = window.location.origin;
+let opCurrentTab = 'tarefas';
+let opModalMode = null, opModalId = null;
+
+function opTab(tab) {
+  opCurrentTab = tab;
+  ['tarefas','fretes','agenda','docs'].forEach(function(t){
+    var v=document.getElementById('op-view-'+t);
+    if(v) v.style.display='none';
+    var el=document.getElementById('op-tab-'+t);
+    if(el){el.style.borderBottomColor='transparent';el.style.color='var(--text2)';}
+  });
+  ['nfse'].forEach(function(t){
+    var c=document.getElementById('op-content-'+t);
+    if(c) c.style.display='none';
+    var el=document.getElementById('op-tab-'+t);
+    if(el){el.style.borderBottomColor='transparent';el.style.color='var(--text2)';}
+  });
+  if(['tarefas','fretes','agenda','docs'].indexOf(tab)>=0){
+    var v=document.getElementById('op-view-'+tab);
+    if(v) v.style.display='block';
+  } else {
+    var c=document.getElementById('op-content-'+tab);
+    if(c) c.style.display='block';
+  }
+  var active=document.getElementById('op-tab-'+tab);
+  if(active){active.style.borderBottomColor='var(--orange)';active.style.color='var(--orange)';}
+  if(tab==='tarefas') loadTarefas();
+  if(tab==='fretes') loadFretes();
+  if(tab==='agenda') loadAgenda();
+  if(tab==='docs') loadDocs();
+  if(tab==='nfse'&&typeof renderNFSeLeads==='function') renderNFSeLeads();
+}
+
+// ── TAREFAS ─────────────────────────────────
+async function loadTarefas() {
+  const res = await fetch(OP_API+'/tarefas').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('tarefas-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhuma tarefa ainda.</div>'; return; }
+  list.innerHTML = res.map(t => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;border-left:3px solid ${t.done?'var(--green)':'var(--orange)'}">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleTarefa('${t.id}',this.checked)" style="width:16px;height:16px;cursor:pointer">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;${t.done?'text-decoration:line-through;color:var(--text3)':''}">${t.titulo||'Sem título'}</div>
+        ${t.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${t.desc}</div>`:''}
+        ${t.data?`<div style="font-size:11px;color:var(--text3);margin-top:4px">📅 ${t.data}</div>`:''}
+      </div>
+      <button onclick="deleteTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddTarefa() {
+  opModalMode='tarefa'; opModalId=null;
+  document.getElementById('modal-op-title').textContent='Nova Tarefa';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Ligar para cliente" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function saveModalOp() {
+  if(opModalMode==='tarefa') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,done:false})});
+    closeModalOp(); loadTarefas();
+  } else if(opModalMode==='frete') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta'})});
+    closeModalOp(); loadFretes();
+  } else if(opModalMode==='agenda') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value})});
+    closeModalOp(); loadAgenda();
+  } else if(opModalMode==='doc') {
+    const titulo = document.getElementById('op-f-titulo').value.trim();
+    if(!titulo) return alert('Título obrigatório');
+    await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value})});
+    closeModalOp(); loadDocs();
+  }
+}
+
+async function toggleTarefa(id, done) {
+  await fetch(OP_API+'/tarefas/'+id, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({done})});
+  loadTarefas();
+}
+async function deleteTarefa(id) {
+  if(!confirm('Remover tarefa?')) return;
+  await fetch(OP_API+'/tarefas/'+id, {method:'DELETE'});
+  loadTarefas();
+}
+
+// ── FRETES KANBAN ───────────────────────────
+const FRETE_COLS = ['Aguardando coleta','Em trânsito','Entregue','Problema'];
+const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','Entregue':'#22c55e','Problema':'#ef4444'};
+
+async function loadFretes() {
+  const res = await fetch(OP_API+'/fretes').then(r=>r.json()).catch(()=>[]);
+  const kb = document.getElementById('fretes-kanban');
+  kb.innerHTML = FRETE_COLS.map(col => `
+    <div style="min-width:220px;flex:1;background:var(--surface2);border-radius:var(--radius);padding:12px">
+      <div style="font-size:12px;font-weight:700;color:${FRETE_COLORS[col]};margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">${col} <span style="background:rgba(255,255,255,.1);border-radius:20px;padding:1px 7px;font-size:11px">${res.filter(f=>f.status===col).length}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${res.filter(f=>f.status===col).map(f=>`
+          <div style="background:var(--surface);border-radius:var(--radius-sm);padding:10px;border-left:3px solid ${FRETE_COLORS[col]}">
+            <div style="font-size:13px;font-weight:600">${f.titulo}</div>
+            ${f.origem?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${f.origem} → ${f.destino||'?'}</div>`:''}
+            ${f.valor?`<div style="font-size:12px;color:var(--green);margin-top:4px">R$ ${f.valor}</div>`:''}
+            <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
+              ${FRETE_COLS.filter(c=>c!==col).map(c=>`<button onclick="moveFrete('${f.id}','${c}')" style="font-size:10px;padding:2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text3)">→ ${c.split(' ')[0]}</button>`).join('')}
+              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5;margin-left:auto">🗑</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function openAddFrete() {
+  opModalMode='frete';
+  document.getElementById('modal-op-title').textContent='Novo Frete';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">IDENTIFICAÇÃO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Pedido #1234 - João" style="width:100%;margin-top:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:12px;color:var(--text3)">ORIGEM</label><input id="op-f-origem" class="form-input" placeholder="Cidade/UF" style="width:100%;margin-top:4px"></div>
+        <div><label style="font-size:12px;color:var(--text3)">DESTINO</label><input id="op-f-destino" class="form-input" placeholder="Cidade/UF" style="width:100%;margin-top:4px"></div>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">VALOR (R$)</label><input id="op-f-valor" class="form-input" placeholder="0,00" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">STATUS</label>
+        <select id="op-f-status" class="form-input" style="width:100%;margin-top:4px">
+          ${FRETE_COLS.map(c=>`<option value="${c}">${c}</option>`).join('')}
+        </select>
+      </div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function moveFrete(id, status) {
+  await fetch(OP_API+'/fretes/'+id, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+  loadFretes();
+}
+async function deleteFrete(id) {
+  if(!confirm('Remover frete?')) return;
+  await fetch(OP_API+'/fretes/'+id, {method:'DELETE'});
+  loadFretes();
+}
+
+// ── AGENDA ──────────────────────────────────
+async function loadAgenda() {
+  const res = await fetch(OP_API+'/agenda').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('agenda-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum evento ainda.</div>'; return; }
+  const sorted = [...res].sort((a,b)=>{ if(!a.data) return 1; if(!b.data) return -1; return a.data.localeCompare(b.data); });
+  list.innerHTML = sorted.map(e => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--blue,#3b82f6)">
+      <div style="text-align:center;min-width:44px">
+        ${e.data?`<div style="font-size:18px;font-weight:700;line-height:1">${e.data.slice(8)}</div><div style="font-size:10px;color:var(--text3)">${['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][parseInt(e.data.slice(5,7))]}</div>`:'<div style="font-size:20px">📅</div>'}
+      </div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${e.titulo}</div>
+        ${e.hora?`<div style="font-size:12px;color:var(--text3);margin-top:2px">⏰ ${e.hora}</div>`:''}
+        ${e.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${e.desc}</div>`:''}
+      </div>
+      <button onclick="deleteAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddAgenda() {
+  opModalMode='agenda';
+  document.getElementById('modal-op-title').textContent='Novo Evento';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Reunião com cliente" style="width:100%;margin-top:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" style="width:100%;margin-top:4px"></div>
+        <div><label style="font-size:12px;color:var(--text3)">HORA</label><input id="op-f-hora" type="time" class="form-input" style="width:100%;margin-top:4px"></div>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function deleteAgenda(id) {
+  if(!confirm('Remover evento?')) return;
+  await fetch(OP_API+'/agenda/'+id, {method:'DELETE'});
+  loadAgenda();
+}
+
+// ── DOCUMENTOS ──────────────────────────────
+async function loadDocs() {
+  const res = await fetch(OP_API+'/documentos').then(r=>r.json()).catch(()=>[]);
+  const list = document.getElementById('docs-list');
+  if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum documento ainda.</div>'; return; }
+  list.innerHTML = res.map(d => `
+    <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:24px">${{Contrato:'📝',NF:'🧾',Boleto:'💳',Proposta:'📋',Outro:'📄'}[d.tipo]||'📄'}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${d.titulo}</div>
+        ${d.tipo?`<div style="font-size:11px;color:var(--text3);margin-top:2px">${d.tipo}</div>`:''}
+        ${d.obs?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.obs}</div>`:''}
+        ${d.link?`<a href="${d.link}" target="_blank" style="font-size:12px;color:var(--orange);margin-top:4px;display:block">🔗 Abrir link</a>`:''}
+      </div>
+      <button onclick="deleteDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
+    </div>`).join('');
+}
+
+function openAddDoc() {
+  opModalMode='doc';
+  document.getElementById('modal-op-title').textContent='Novo Documento';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" placeholder="Ex: Contrato Wanderley Cruz" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">TIPO</label>
+        <select id="op-f-tipo" class="form-input" style="width:100%;margin-top:4px">
+          <option>Contrato</option><option>NF</option><option>Boleto</option><option>Proposta</option><option>Outro</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">LINK (opcional)</label><input id="op-f-link" class="form-input" placeholder="https://..." style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">OBSERVAÇÃO</label><input id="op-f-desc" class="form-input" placeholder="Detalhes..." style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function deleteDoc(id) {
+  if(!confirm('Remover documento?')) return;
+  await fetch(OP_API+'/documentos/'+id, {method:'DELETE'});
+  loadDocs();
+}
+
+function closeModalOp() {
+  document.getElementById('modal-op').style.display='none';
+}
+
+// Carregar tarefas ao abrir aba
+const _origShowView = typeof showView === 'function' ? showView : null;
+
+
+// ─── FUNIL POR MÊS ───────────────────────────────────────────
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+let kanbanMesOffset = 0; // 0 = mes atual, -1 = mes anterior, etc.
+
+function getMesAtual() {
+  const d = new Date();
+  d.setDate(1);
+  d.setHours(0,0,0,0);
+  d.setMonth(d.getMonth() + kanbanMesOffset);
+  return d;
+}
+
+function navMes(dir) {
+  kanbanMesOffset += dir;
+  renderKanban();
+  updateStats();
+}
+
+function atualizarLabelMes() {
+  const d = getMesAtual();
+  const label = MESES[d.getMonth()] + ' ' + d.getFullYear();
+  const el = document.getElementById('mes-label');
+  if(el) el.textContent = label;
+}
+
+function getLeadsMes() {
+  const inicio = getMesAtual();
+  const fim = new Date(inicio);
+  fim.setMonth(fim.getMonth() + 1);
+  return leads.filter(l => l.ts >= inicio.getTime() && l.ts < fim.getTime());
+}
+
+
+// ═══════════════════════════════════════════
+//  LEMBRETES
+// ═══════════════════════════════════════════
+let lembretes = JSON.parse(localStorage.getItem('crm-lembretes')||'[]');
+let painelAberto = false;
+
+function salvarLembretes() { localStorage.setItem('crm-lembretes', JSON.stringify(lembretes)); }
+
+function toggleLembretes() {
+  painelAberto = !painelAberto;
+  const p = document.getElementById('painel-lembretes');
+  p.style.display = painelAberto ? 'flex' : 'none';
+  if(painelAberto) renderLembretes();
+}
+
+function abrirModalLembrete() {
+  const hoje = new Date().toISOString().slice(0,10);
+  document.getElementById('lemb-data').value = hoje;
+  document.getElementById('lemb-desc').value = '';
+  document.getElementById('lemb-cliente').value = '';
+  document.getElementById('modal-lembrete').style.display = 'flex';
+}
+
+function salvarLembrete() {
+  const desc = document.getElementById('lemb-desc').value.trim();
+  const data = document.getElementById('lemb-data').value;
+  if(!desc || !data) { alert('Preencha descrição e data.'); return; }
+  const lemb = {
+    id: Date.now().toString(36),
+    tipo: document.getElementById('lemb-tipo').value,
+    desc,
+    cliente: document.getElementById('lemb-cliente').value.trim(),
+    data,
+    hora: document.getElementById('lemb-hora').value || '08:00',
+    done: false,
+    ts: Date.now()
+  };
+  lembretes.unshift(lemb);
+  salvarLembretes();
+  document.getElementById('modal-lembrete').style.display = 'none';
+  renderLembretes();
+  atualizarSino();
+  toast('Lembrete salvo!');
+}
+
+const LEMB_TIPOS = {
+  cobranca: {icon:'💰', label:'Cobrar cliente', cor:'var(--green)'},
+  coleta:   {icon:'📦', label:'Coleta', cor:'var(--orange)'},
+  entrega:  {icon:'🚚', label:'Entrega', cor:'var(--blue)'},
+  reuniao:  {icon:'🤝', label:'Reunião', cor:'var(--purple)'},
+  outro:    {icon:'📌', label:'Outro', cor:'var(--text3)'}
+};
+
+function renderLembretes() {
+  const el = document.getElementById('lembretes-lista');
+  if(!el) return;
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const amanha = new Date(hoje); amanha.setDate(amanha.getDate()+1);
+  
+  const pendentes = lembretes.filter(l=>!l.done).sort((a,b)=>a.data.localeCompare(b.data));
+  const concluidos = lembretes.filter(l=>l.done).slice(0,5);
+  
+  if(!pendentes.length && !concluidos.length) {
+    el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text3);font-size:13px">Nenhum lembrete ainda.<br>Clique em + Novo para criar.</div>';
+    return;
+  }
+  
+  const renderItem = l => {
+    const t = LEMB_TIPOS[l.tipo] || LEMB_TIPOS.outro;
+    const dataLemb = new Date(l.data+'T'+l.hora);
+    const dataBase = new Date(l.data); dataBase.setHours(0,0,0,0);
+    const atrasado = !l.done && dataBase < hoje;
+    const hoje_ = !l.done && dataBase.getTime() === hoje.getTime();
+    const amanha_ = !l.done && dataBase.getTime() === amanha.getTime();
+    const statusCor = atrasado ? '#ef4444' : hoje_ ? '#f97316' : amanha_ ? '#f59e0b' : 'var(--text3)';
+    const statusTxt = atrasado ? '⚠️ Atrasado' : hoje_ ? '🔴 Hoje' : amanha_ ? '🟡 Amanhã' : l.data.split('-').reverse().slice(0,2).join('/');
+    return `<div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;${l.done?'opacity:.5':''}">
+      <div style="font-size:20px;flex-shrink:0">${t.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;${l.done?'text-decoration:line-through;color:var(--text3)':''}">${l.desc}</div>
+        ${l.cliente?`<div style="font-size:12px;color:var(--text2);margin-top:2px">👤 ${l.cliente}</div>`:''}
+        <div style="font-size:11px;color:${statusCor};margin-top:4px;font-weight:600">${statusTxt} ${l.hora?'às '+l.hora:''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+        ${!l.done?`<button onclick="concluirLembrete('${l.id}')" style="font-size:10px;padding:3px 8px;background:rgba(34,197,94,.2);border:1px solid var(--green);border-radius:4px;cursor:pointer;color:var(--green)">✓ Ok</button>`:''}
+        <button onclick="deletarLembrete('${l.id}')" style="font-size:10px;padding:3px 8px;background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:4px;cursor:pointer;color:var(--red)">🗑</button>
+      </div>
+    </div>`;
+  };
+
+  let html = '';
+  if(pendentes.length) {
+    html += `<div style="padding:8px 16px;font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)">Pendentes (${pendentes.length})</div>`;
+    html += pendentes.map(renderItem).join('');
+  }
+  if(concluidos.length) {
+    html += `<div style="padding:8px 16px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)">Concluídos</div>`;
+    html += concluidos.map(renderItem).join('');
+  }
+  el.innerHTML = html;
+}
+
+function concluirLembrete(id) {
+  const l = lembretes.find(x=>x.id===id);
+  if(l) { l.done=true; salvarLembretes(); renderLembretes(); atualizarSino(); toast('Lembrete concluído!'); }
+}
+function deletarLembrete(id) {
+  lembretes = lembretes.filter(x=>x.id!==id);
+  salvarLembretes(); renderLembretes(); atualizarSino();
+}
+
+function atualizarSino() {
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const amanha = new Date(hoje); amanha.setDate(amanha.getDate()+1);
+  const urgentes = lembretes.filter(l => {
+    if(l.done) return false;
+    const d = new Date(l.data); d.setHours(0,0,0,0);
+    return d <= amanha;
+  });
+  const badge = document.getElementById('sino-badge');
+  if(badge) {
+    if(urgentes.length > 0) {
+      badge.style.display = 'flex';
+      badge.textContent = urgentes.length;
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+}
+
+function verificarLembretes() {
+  const agora = new Date();
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  lembretes.filter(l=>!l.done).forEach(l => {
+    const prazo = new Date(l.data+'T'+(l.hora||'08:00'));
+    const diff = prazo - agora;
+    // Disparar se estiver entre -1min e +5min do prazo
+    if(diff >= -60000 && diff <= 300000 && !l._notificado) {
+      l._notificado = true;
+      const t = LEMB_TIPOS[l.tipo]||LEMB_TIPOS.outro;
+      toast(t.icon+' '+l.desc+(l.cliente?' — '+l.cliente:''));
+      atualizarSino();
+      // Abrir painel automaticamente
+      if(!painelAberto) toggleLembretes();
+    }
+  });
+}
+
+// Verificar a cada 60 segundos
+setInterval(verificarLembretes, 60000);
+setInterval(atualizarSino, 300000);
+
+
+// ═══════════════════════════════════════════
+//  PERFIS — Beatriz e Davi
+// ═══════════════════════════════════════════
+const PERFIS = {
+  beatriz: {
+    nome: 'Beatriz',
+    emoji: '👩‍💼',
+    cor: 'var(--orange)',
+    instancia: 'mfenvios',
+    apikey: 'mfenvios2024',
+    stages: ['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'],
+    stageColors: {'Primeiro contato':'#3b82f6','Qualificação':'#8b5cf6','Proposta enviada':'#f59e0b','Negociação':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
+  },
+  davi: {
+    nome: 'Davi',
+    emoji: '👨‍💼',
+    cor: 'var(--blue)',
+    instancia: 'mfenvios-davi',
+    apikey: 'mfenvios2024',
+    stages: ['Novo','Aguardando Retorno','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal','Fechado / Ganho','Perdido'],
+    stageColors: {'Novo':'#3b82f6','Aguardando Retorno':'#f59e0b','Cotação Enviada':'#8b5cf6','Emissão':'#f97316','Coleta':'#06b6d4','Cobrança':'#ec4899','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
+  }
+};
+
+let perfilAtivo = localStorage.getItem('crm-perfil') || null;
+let verTodos = false;
+
+function selecionarPerfil(perfil) {
+  perfilAtivo = perfil;
+  localStorage.setItem('crm-perfil', perfil);
+  document.getElementById('splash-perfil').style.display = 'none';
+  aplicarPerfil();
+  sincronizarLeadsServidor();
+}
+
+function sincronizarLeadsServidor() {
+  fetch('/kanban').then(function(r){return r.json();}).then(function(data){
+    if(data && data.cards && data.cards.length > 0) {
+      var serverLeads = data.cards;
+      serverLeads.forEach(function(sl){
+        var idx = leads.findIndex(function(l){ return l.id === sl.id; });
+        if(idx < 0) {
+          leads.push(sl);
+        } else {
+          leads[idx] = Object.assign({}, leads[idx], sl);
+        }
+      });
+      save('crm-leads', leads);
+      updateStats();
+      if(typeof renderKanban === 'function') renderKanban();
+    }
+  }).catch(function(){});
+}
+function aplicarPerfil() {
+  if(!perfilAtivo) return;
+  const p = PERFIS[perfilAtivo];
+  
+  // Atualizar label
+  const label = document.getElementById('agent-label');
+  if(label) label.textContent = p.emoji + ' ' + p.nome;
+  
+  // Atualizar STAGES global
+  window.STAGES = p.stages;
+  window.STAGE_COLORS = p.stageColors;
+  
+  // Atualizar STAGE_PILL
+  window.STAGE_PILL = {};
+  Object.entries(p.stageColors).forEach(([k,v]) => {
+    window.STAGE_PILL[k] = 'background:'+v+'33;color:'+v;
+  });
+  
+  // Atualizar agentName
+  if(!agentName) { agentName = p.nome; save('crm-agent', p.nome); }
+  
+  // Atualizar WPP_SERVER instance (para envio de msgs)
+  window.WPP_INSTANCE = p.instancia;
+  window.WPP_APIKEY = p.apikey;
+  
+  renderKanban();
+  updateStats();
+  updateAgentFilters();
+  atualizarSino();
+}
+
+function mostrarTrocaPerfil() {
+  const outro = perfilAtivo === 'beatriz' ? 'davi' : 'beatriz';
+  const pOutro = PERFIS[outro];
+  
+  const opcoes = document.createElement('div');
+  opcoes.style.cssText = 'position:fixed;top:56px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:500;padding:8px;min-width:220px';
+  opcoes.innerHTML = `
+    <div style="padding:8px 12px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Trocar perfil</div>
+    <div onclick="selecionarPerfil('${outro}');this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-size:20px">${pOutro.emoji}</span>
+      <div><div style="font-size:13px;font-weight:600">${pOutro.nome}</div><div style="font-size:11px;color:var(--text3)">${pOutro.instancia}</div></div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0">
+    <div onclick="verTodosLeads();this.parentElement.remove()" style="padding:10px 12px;cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-size:20px">👥</span>
+      <div><div style="font-size:13px;font-weight:600">Ver todos os leads</div><div style="font-size:11px;color:var(--text3)">Beatriz + Davi</div></div>
+    </div>
+    <div onclick="this.parentElement.remove()" style="padding:8px 12px;font-size:12px;color:var(--text3);cursor:pointer;text-align:center">Fechar</div>
+  `;
+  document.body.appendChild(opcoes);
+  setTimeout(() => { document.addEventListener('click', function rm(e){ if(!opcoes.contains(e.target)){opcoes.remove();document.removeEventListener('click',rm);} }); }, 100);
+}
+
+function verTodosLeads() {
+  verTodos = true;
+  // Mostrar todos os estágios dos dois perfis
+  const allStages = [...new Set([...PERFIS.beatriz.stages, ...PERFIS.davi.stages])];
+  window.STAGES = allStages;
+  const allColors = {...PERFIS.beatriz.stageColors, ...PERFIS.davi.stageColors};
+  window.STAGE_COLORS = allColors;
+  const label = document.getElementById('agent-label');
+  if(label) label.textContent = '👥 Todos os leads';
+  renderKanban();
+  updateStats();
+  toast('Mostrando leads de todos os usuários');
+}
+
+// Filtrar leads por perfil no renderKanban
+function getLeadsPerfil() {
+  if(verTodos || !perfilAtivo) return leads;
+  const p = PERFIS[perfilAtivo];
+  if(!p) return leads;
+  return leads.filter(l => {
+    if(l.agent && l.agent !== '') return l.agent === p.nome;
+    return p.stages.includes(l.stage);
+  });
+}
+
+// ─── INIT ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  updateAgentLabel();updateAgentFilters();updateStats();
+  var iaKeyEl=document.getElementById('ia-key'); if(iaKeyEl) iaKeyEl.value=iaKey;
+  atualizarSino();
+  verificarLembretes();
+});
+// Inicializar perfil
+document.addEventListener('DOMContentLoaded', function() {
+  if(perfilAtivo) { var el=document.getElementById('splash-perfil'); if(el) el.style.display='none'; aplicarPerfil(); }
+});
+if(!leads.length){
+  const demo=[
+    {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'Macapá/AP',rota:'Tijucas/SC → Macapá/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 · 2 a 3 dias úteis. Intermediário — aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
+    {id:uid(),name:'Isabella Guarnier',tel:'5511982517687',material:'Volumes',origem:'São Paulo/SP',destino:'Itacoatiara/AM',rota:'São Paulo/SP → Itacoatiara/AM',volumes:'2 volumes',peso:'42kg',medidas:'47x47x50cm',valorNF:'3.258,75',stage:'Negociação',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 1.717,00 · 6 dias úteis. Lead disse "Perfeito. Obrigada!" Aguardando confirmação.',urgencia:'',hot:true,ts:Date.now()-7200000,followups:[{text:'Confirmar fechamento — R$ 1.717,00',date:'',done:false}],history:[{text:'Proposta enviada.',ts:Date.now()-7200000,agent:'Beatriz'}]},
+  ];
+  leads=demo;saveLeads();activity=[{msg:'Lead <strong>Wanderley Cruz</strong> em proposta',ts:Date.now()-3600000},{msg:'Lead <strong>Isabella Guarnier</strong> em negociação 🔥',ts:Date.now()-7200000}];saveActivity();updateAgentFilters();updateStats();
+}
+renderKanban();
+
+
+// MÓDULO NFSe
+var nfseStep = 1;
+var nfseTipoPessoa = 'juridica';
+var nfseLeadAtual = null;
+var nfseEmitidas = JSON.parse(localStorage.getItem('crm-nfse-emitidas') || '[]');
+
+// opTab duplicado removido
+
+function renderNFSeLeads() {
+  var lista = document.getElementById('nfse-leads-lista');
+  if(!lista) return;
+  var fechados = leads.filter(function(l){ return l.stage === 'Fechado / Ganho' || l.stage === 'Fechado/Ganho'; });
+  if(!fechados.length) {
+    lista.innerHTML = '<div style="grid-column:1/-1;padding:24px;text-align:center;color:var(--text3);font-size:13px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;">Nenhum lead em Fechado/Ganho ainda.</div>';
+    return;
+  }
+  lista.innerHTML = fechados.slice(0,6).map(function(l) {
+    var valor = l.valorFrete ? 'R$ ' + l.valorFrete.replace('R$','').trim() : 'Sem valor';
+    var rota = l.rota || l.origem || '';
+    return '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;" onclick="abrirModalNFSe(\'' + l.id + '\')">' +
+      '<div style="font-weight:700;font-size:13px;margin-bottom:4px;">' + l.name + '</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">' + rota + '</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="font-weight:700;color:var(--green);font-size:14px;">' + valor + '</div>' +
+        '<button style="background:var(--orange);color:white;border:none;border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;">🧾 Emitir</button>' +
+      '</div></div>';
+  }).join('');
+  renderNFSeHistorico();
+}
+
+function renderNFSeHistorico() {
+  var hist = document.getElementById('nfse-historico');
+  if(!hist) return;
+  var mes = new Date().getMonth();
+  var ano = new Date().getFullYear();
+  var doMes = nfseEmitidas.filter(function(n){ var d=new Date(n.ts); return d.getMonth()===mes && d.getFullYear()===ano; });
+  if(!doMes.length) {
+    hist.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text3);font-size:13px;">Nenhuma NFSe registrada este mês.</div>';
+    return;
+  }
+  hist.innerHTML = '<table style="width:100%;border-collapse:collapse;">' +
+    '<tr style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);">' +
+    '<th style="padding:10px 14px;text-align:left;">Cliente</th><th style="padding:10px 14px;text-align:left;">Discriminação</th>' +
+    '<th style="padding:10px 14px;text-align:right;">Valor</th><th style="padding:10px 14px;text-align:center;">Data</th></tr>' +
+    doMes.map(function(n){ return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-size:13px;font-weight:600;">' + n.razao + '</td>' +
+      '<td style="padding:10px 14px;font-size:12px;color:var(--text3);">' + (n.disc||'').substring(0,40) + '...</td>' +
+      '<td style="padding:10px 14px;font-size:13px;font-weight:700;color:var(--green);text-align:right;">R$ ' + n.valor + '</td>' +
+      '<td style="padding:10px 14px;font-size:12px;color:var(--text3);text-align:center;">' + new Date(n.ts).toLocaleDateString('pt-BR') + '</td></tr>'; }).join('') +
+    '</table>';
+}
+
+function abrirModalNFSe(leadId) {
+  nfseLeadAtual = null;
+  if(leadId) {
+    var lead = leads.find(function(l){ return l.id === leadId; });
+    if(lead) {
+      nfseLeadAtual = lead;
+      document.getElementById('nf-cnpj').value = '';
+      document.getElementById('nf-razao').value = lead.name || '';
+      document.getElementById('nf-end').value = '';
+      document.getElementById('nf-mun').value = '';
+      document.getElementById('nf-uf').value = '';
+      document.getElementById('nf-cep').value = '';
+      var v = (lead.valorFrete || '').replace('R$','').trim();
+      document.getElementById('nf-valor').value = v;
+      var origem = lead.origem || '';
+      var destino = lead.destino || '';
+      document.getElementById('nf-disc').value = origem && destino ? 'Coleta em ' + origem + ' e entrega em ' + destino : '';
+      var transp = (lead.transportadora||'').toLowerCase();
+      document.getElementById('nf-ativ').value = (transp.includes('dhl')||transp.includes('fedex')||transp.includes('gol')) ? '0005120000' : '0005110000';
+    }
+  }
+  var d = new Date();
+  var comp = String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+  document.getElementById('nf-comp').value = comp;
+  document.getElementById('nf-info').value = 'Competencia: ' + comp + ' - Tributado no Municipio de Lauro de Freitas - Nao Retido';
+  nfseIrStep(1);
+  document.getElementById('modal-nfse').style.display = 'flex';
+}
+
+function fecharModalNFSe() {
+  document.getElementById('modal-nfse').style.display = 'none';
+}
+
+function nfseTipo(tipo) {
+  nfseTipoPessoa = tipo;
+  var jur = document.getElementById('nfse-tipo-jur');
+  var fis = document.getElementById('nfse-tipo-fis');
+  if(!jur||!fis) return;
+  if(tipo === 'juridica') {
+    jur.style.background='var(--orange)';jur.style.borderColor='var(--orange)';jur.style.color='white';
+    fis.style.background='var(--bg3)';fis.style.borderColor='var(--border)';fis.style.color='var(--text2)';
+  } else {
+    fis.style.background='var(--orange)';fis.style.borderColor='var(--orange)';fis.style.color='white';
+    jur.style.background='var(--bg3)';jur.style.borderColor='var(--border)';jur.style.color='var(--text2)';
+  }
+}
+
+function nfseIrStep(n) {
+  if(n<1||n>3) return;
+  nfseStep = n;
+  for(var i=1;i<=3;i++) {
+    var s=document.getElementById('nfse-step-'+i);
+    var c=document.getElementById('nfse-content-'+i);
+    if(!s||!c) continue;
+    c.style.display = i===n?'block':'none';
+    if(i<n){s.style.background='var(--green)';s.style.color='white';}
+    else if(i===n){s.style.background='var(--orange)';s.style.color='white';}
+    else{s.style.background='transparent';s.style.color='var(--text3)';}
+  }
+  var bv=document.getElementById('nf-btn-voltar');
+  var ba=document.getElementById('nf-btn-avancar');
+  var be=document.getElementById('nf-btn-emitir');
+  var bm=document.getElementById('nf-btn-marcar');
+  if(bv) bv.style.display=n>1?'block':'none';
+  if(ba) ba.style.display=n<3?'block':'none';
+  if(be) be.style.display=n===3?'block':'none';
+  if(bm) bm.style.display=n===3?'block':'none';
+  if(n===3) nfsePreencherInstrucoes();
+}
+
+function nfsePreencherInstrucoes() {
+  var cnpj=document.getElementById('nf-cnpj').value;
+  var comp=document.getElementById('nf-comp').value;
+  var disc=document.getElementById('nf-disc').value;
+  var valor=document.getElementById('nf-valor').value;
+  var aliq=document.getElementById('nf-aliq').value;
+  var ativ=document.getElementById('nf-ativ');
+  var ativTxt=ativ.options[ativ.selectedIndex].text;
+  var tipo=nfseTipoPessoa==='juridica'?'Juridica':'Fisica';
+  
+  document.getElementById('nf-valor-dest').textContent = 'R$ ' + valor;
+
+  var itens = [
+    {n:1, txt:'Clique em <strong>"Abrir Metropole"</strong> abaixo. Faca login se necessario.', copy:null},
+    {n:2, txt:'No menu esquerdo: <strong>NFS-e &rarr; Nota Fiscal Eletronica</strong>', copy:null},
+    {n:3, txt:'<strong>Passo 1:</strong> Tipo de Pessoa = <strong>' + tipo + '</strong>', copy:null},
+    {n:'', txt:'CNPJ/CPF: <strong id="nfi-cnpj">' + cnpj + '</strong>', copy:'nfi-cnpj'},
+    {n:'', txt:'Local da Prestacao: <strong>Lauro de Freitas - BA</strong>', copy:null},
+    {n:'', txt:'Regime Especial: <strong>Nenhum</strong>', copy:null},
+    {n:'', txt:'Natureza: <strong>Tributado no Municipio de Lauro de Freitas</strong>', copy:null},
+    {n:4, txt:'<strong>Passo 3:</strong> Preencher servico', copy:null},
+    {n:'', txt:'Competencia: <strong id="nfi-comp">' + comp + '</strong>', copy:'nfi-comp'},
+    {n:'', txt:'Atividade: <strong>' + ativTxt + '</strong>', copy:null},
+    {n:'', txt:'Discriminacao: <strong id="nfi-disc">' + disc + '</strong>', copy:'nfi-disc'},
+    {n:'', txt:'Valor Total: <strong id="nfi-valor">' + valor + '</strong>', copy:'nfi-valor'},
+    {n:'', txt:'Aliquota: <strong id="nfi-aliq">' + aliq + '%</strong>', copy:'nfi-aliq'},
+    {n:'', txt:'ISS Retido: <strong>Nao</strong>', copy:null},
+    {n:5, txt:'Clique em <strong>Incluir</strong> para emitir.', copy:null}
+  ];
+
+  document.getElementById('nf-instrucoes').innerHTML = itens.map(function(item){
+    var num = item.n ? '<div style="width:22px;height:22px;background:var(--orange);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">' + item.n + '</div>' : '<div style="width:22px;flex-shrink:0;"></div>';
+    var btn = item.copy ? '<button onclick="nfseCopiar(\'' + item.copy + '\',this)" style="margin-left:auto;background:var(--bg2);border:1px solid var(--border);border-radius:4px;color:var(--text3);font-size:11px;padding:3px 8px;cursor:pointer;white-space:nowrap;flex-shrink:0;">Copiar</button>' : '';
+    return '<div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;font-size:12px;">' + num + '<div style="color:var(--text2);line-height:1.5;flex:1;">' + item.txt + '</div>' + btn + '</div>';
+  }).join('');
+}
+
+function nfseCopiar(id, btn) {
+  var el = document.getElementById(id);
+  if(!el) return;
+  navigator.clipboard.writeText(el.textContent).then(function(){
+    btn.textContent = 'Copiado!';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'var(--green)';
+    setTimeout(function(){ btn.textContent='Copiar'; btn.style.color='var(--text3)'; btn.style.borderColor='var(--border)'; }, 2000);
+  });
+}
+
+function nfseAbrirMetropole() {
+  window.open('https://lftributos.metropolisweb.com.br/metropolisWEB/', '_blank');
+}
+
+function nfseMarcarEmitida() {
+  var razao = document.getElementById('nf-razao').value;
+  var valor = document.getElementById('nf-valor').value;
+  var disc = document.getElementById('nf-disc').value;
+  nfseEmitidas.push({razao:razao, valor:valor, disc:disc, ts:Date.now()});
+  localStorage.setItem('crm-nfse-emitidas', JSON.stringify(nfseEmitidas));
+  fecharModalNFSe();
+  if(typeof showToast === 'function') showToast('NFSe registrada — ' + razao);
+  renderNFSeHistorico();
+}
+
+
+function renderFinLeadsProntos() {
+  var el = document.getElementById('fin-leads-prontos');
+  if(!el) return;
+  var fechados = leads.filter(function(l){
+    return (l.stage==='Fechado / Ganho'||l.stage==='Fechado/Ganho') && !vendas.find(function(v){ return v.leadId===l.id; });
+  });
+  if(!fechados.length) { el.innerHTML=''; return; }
+  // Guardar referência global temporária
+  window._finLeadsProntos = fechados.slice(0,5);
+  var cards = window._finLeadsProntos.map(function(l, idx){
+    var v = (l.valorFrete||'').replace('R$','').trim();
+    return '<div style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;">' +
+      '<div><div style="font-weight:700;font-size:13px;">' + l.name + '</div>' +
+      (v ? '<div style="font-size:12px;color:var(--green);">R$ '+v+'</div>' : '') +
+      '</div><button onclick="abrirModalVenda(window._finLeadsProntos[' + idx + '].id)" style="background:var(--orange);color:white;border:none;border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;">+ Lancar</button></div>';
+  }).join('');
+  el.innerHTML = '<div style="margin-bottom:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">Leads sem venda lancada</div><div style="display:flex;gap:8px;flex-wrap:wrap;">' + cards + '</div>';
+}
+
+
+
+</script>
+
+<div class="view" id="view-cadastro" style="padding:20px;max-width:900px;margin:0 auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div>
+      <div style="font-size:18px;font-weight:700">📋 Cadastro de Clientes</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:2px">Gerencie seus clientes para agilizar vendas e documentações</div>
+    </div>
+    <button onclick="abrirModalCadastro(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer">+ Novo Cliente</button>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <input id="cad-busca" type="text" placeholder="Buscar por nome, CNPJ ou cidade..." oninput="renderCadastro()" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px">
+    <select id="cad-tipo-filter" onchange="renderCadastro()" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px;font-size:13px">
+      <option value="">Todos os tipos</option>
+      <option value="pj">Pessoa Jurídica</option>
+      <option value="pf">Pessoa Física</option>
+    </select>
+  </div>
+  <div id="cadastro-lista"></div>
+</div>
+
+<!-- MODAL CADASTRO -->
+<div id="modal-cadastro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1">
+      <div id="cad-modal-titulo" style="font-size:16px;font-weight:700">Novo Cliente</div>
+      <button onclick="fecharModalCadastro()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px">&times;</button>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
+
+      <!-- Tipo -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Tipo de Pessoa</div>
+        <div style="display:flex;gap:20px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pj" id="cad-tipo-pj" checked onchange="toggleCadTipo()"> Pessoa Jurídica
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pf" id="cad-tipo-pf" onchange="toggleCadTipo()"> Pessoa Física
+          </label>
+        </div>
+      </div>
+
+      <!-- Dados Básicos -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Dados Básicos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label id="cad-doc-label" style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNPJ</label>
+            <input id="cad-doc" type="text" placeholder="00.000.000/0000-00" onblur="buscarCNPJ(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Razão Social / Nome</label>
+            <input id="cad-razao" type="text" placeholder="Razão social ou nome completo" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Nome Fantasia</label>
+            <input id="cad-fantasia" type="text" placeholder="Nome fantasia (opcional)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Estadual</label>
+            <input id="cad-ie" type="text" placeholder="Inscrição estadual" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Municipal</label>
+            <input id="cad-im" type="text" placeholder="Inscrição municipal" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNAE</label>
+            <input id="cad-cnae" type="text" placeholder="Código CNAE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contato -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Informações de Contato</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Celular</label>
+            <input id="cad-cel" type="text" placeholder="(00) 00000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Comercial</label>
+            <input id="cad-tel" type="text" placeholder="(00) 0000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail</label>
+            <input id="cad-email" type="email" placeholder="email@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail Cobrança</label>
+            <input id="cad-email-cob" type="email" placeholder="cobranca@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Endereço -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Endereço</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CEP</label>
+            <input id="cad-cep" type="text" placeholder="00000-000" onblur="buscarCEP(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Estado</label>
+            <input id="cad-estado" type="text" placeholder="UF" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Cidade</label>
+            <input id="cad-cidade" type="text" placeholder="Cidade" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Bairro</label>
+            <input id="cad-bairro" type="text" placeholder="Bairro" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Logradouro</label>
+            <input id="cad-logradouro" type="text" placeholder="Rua, Av..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Número</label>
+              <input id="cad-numero" type="text" placeholder="Nº" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Compl.</label>
+              <input id="cad-comp" type="text" placeholder="Apto..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div>
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Observações</label>
+        <textarea id="cad-obs" placeholder="Observações gerais sobre o cliente..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">
+        <button onclick="fecharModalCadastro()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button>
+        <button onclick="salvarCadastro()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer">Salvar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
