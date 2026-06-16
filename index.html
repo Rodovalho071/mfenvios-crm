@@ -544,7 +544,7 @@ function abrirModalVenda(leadId) {
   }
 
   finAtualizarVencimento();
-  document.getElementById('modal-financeiro').style.display = 'flex';
+  document.getElementById('modal-financeiro').style.display = 'flex'; atualizarDatalistClientes();
 }
 
 function fecharModalVenda() {
@@ -1357,8 +1357,8 @@ function abrirRelatorio(){
       <div style="padding:24px;display:flex;flex-direction:column;gap:14px;">
         <input type="hidden" id="fin-lead-id">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Cliente</label><input id="fin-cliente" type="text" placeholder="Nome do cliente" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
-          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CNPJ/CPF</label><input id="fin-cnpj" type="text" placeholder="00.000.000/0000-00" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Cliente</label><input id="fin-cliente" type="text" placeholder="Nome do cliente" list="fin-clientes-list" autocomplete="off" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"><datalist id="fin-clientes-list"></datalist></div>
+          <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">CNPJ/CPF</label><input id="fin-cnpj" type="text" placeholder="00.000.000/0000-00" list="fin-cnpj-list" autocomplete="off" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"><datalist id="fin-cnpj-list"></datalist></div>
         </div>
         <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;">Descricao</label><input id="fin-descricao" type="text" placeholder="Ex: Frete Sao Paulo - Salvador" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
