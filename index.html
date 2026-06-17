@@ -394,7 +394,12 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 // ═══════════════════════════════════════════════════════
 var vendas = [];
 var vendaEditando = null;
-function salvarVendas() {}
+function salvarVendas() {
+  // Persistir todas as vendas no MongoDB
+  vendas.forEach(function(v) {
+    fetch('/vendas', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(v)}).catch(function(){});
+  });
+}
 function carregarVendas() {
   return fetch('/vendas').then(function(r){return r.json();}).then(function(data){
     vendas = (Array.isArray(data) ? data : []).map(function(v){
