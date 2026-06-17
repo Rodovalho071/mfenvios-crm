@@ -1784,7 +1784,9 @@ function addFromIA(){
   const rota=iaPreview.origem&&iaPreview.destino?iaPreview.origem+' → '+iaPreview.destino:'';
   var _nomeIA=(iaPreview.nome||'');
   var _nomeEhNumeroIA=/^[\d\s\+\-\(\)]+$/.test(_nomeIA.trim());
-  var _tipoContatoIA=_nomeEhNumeroIA?'novo':'salvo';
+  var _palavrasNaoSalvoIA=['telefone','celular','número','numero','contato','unknown','desconhecido','sem nome'];
+  var _nomeDesconhecidoIA=_palavrasNaoSalvoIA.some(function(p){return _nomeIA.toLowerCase().includes(p);});
+  var _tipoContatoIA=(_nomeEhNumeroIA||_nomeDesconhecidoIA)?'novo':'salvo';
   var _palavrasQuentesIA=['urgente','urgência','hoje','agora','preciso','fechado','confirma','aceito','combinado'];
   var _obsIA=(iaPreview.obs||'').toLowerCase();
   var _isHotIA=_palavrasQuentesIA.some(function(p){return _obsIA.includes(p);});
@@ -1949,8 +1951,11 @@ async function wppToLead(id,name,phone,text){
     const exists=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
     // Sempre cria novo lead (permite múltiplos leads por contato em meses diferentes)
     // Qualificação automática
-    var nomeEhNumero = /^[\d\s\+\-\(\)]+$/.test((name||'').trim());
-    var tipoContato = nomeEhNumero ? 'novo' : 'salvo';
+    var _nome = (name||'').trim();
+    var _nomeEhNumero = /^[\d\s\+\-\(\)]+$/.test(_nome);
+    var _palavrasNaoSalvo = ['telefone','celular','número','numero','contato','unknown','desconhecido','sem nome','whatsapp'];
+    var _nomeEhDesconhecido = _palavrasNaoSalvo.some(function(p){return _nome.toLowerCase().includes(p);});
+    var tipoContato = (_nomeEhNumero || _nomeEhDesconhecido) ? 'novo' : 'salvo';
     var palavrasQuentes = ['urgente','urgência','hoje','agora','preciso','quanto custa','me passa','quanto fica','valor','fechado','confirma','aceito','pode ser','vamos','combinado'];
     var textoLower = (text||'').toLowerCase();
     var isHot = palavrasQuentes.some(function(p){return textoLower.includes(p);});
