@@ -1091,20 +1091,10 @@ function saveLead(){
 function openLead(id){const l=leads.find(x=>x.id===id);if(!l)return;renderLeadModal(l);}
 
 function renderLeadModal(l){
-  // Usar etapas do perfil do lead (ou do perfil ativo)
-  var _leadAgent=(l.agent||'').toLowerCase();
-  var _stagesModal;
-  if(_leadAgent==='davi'||(_leadAgent===''&&perfilAtivo==='davi')){
-    _stagesModal=PERFIS.davi.stages;
-  } else if(_leadAgent==='beatriz'||(_leadAgent===''&&perfilAtivo==='beatriz')){
-    _stagesModal=PERFIS.beatriz.stages;
-  } else {
-    // Incluir etapas dos dois perfis para não perder nenhuma
-    _stagesModal=[...new Set([...PERFIS.beatriz.stages,...PERFIS.davi.stages])];
-  }
-  // Garantir que a etapa atual do lead aparece mesmo que não esteja na lista
-  if(l.stage && !_stagesModal.includes(l.stage)) _stagesModal=[l.stage,..._stagesModal];
-  const stageOpts=_stagesModal.map(s=>`<option value="${s}" ${s===l.stage?'selected':''}>${s}</option>`).join('');
+  // Mostrar todas as etapas dos dois perfis juntas
+  var _allStages=[...new Set([...PERFIS.beatriz.stages,...PERFIS.davi.stages])];
+  if(l.stage && !_allStages.includes(l.stage)) _allStages=[l.stage,..._allStages];
+  const stageOpts=_allStages.map(s=>`<option value="${s}" ${s===l.stage?'selected':''}>${s}</option>`).join('');
   const history=(l.history||[]).slice().reverse().map(h=>`<div class="history-item"><div class="history-dot"></div><div><div class="history-bubble">${h.text}</div><div class="history-meta">${fmtDateFull(h.ts)}${h.agent?' · '+h.agent:''}</div></div></div>`).join('');
   const fus=(l.followups||[]).map((f,i)=>`<div class="followup-item"><input type="checkbox" class="followup-check" ${f.done?'checked':''} onchange="toggleFollowup('${l.id}',${i},this.checked)"/><span class="followup-text ${f.done?'followup-done':''}">${f.text}</span><span class="followup-date">${f.date||''}</span><button class="btn btn-sm btn-danger" onclick="deleteFollowup('${l.id}',${i})">×</button></div>`).join('');
   showModal(`
