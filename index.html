@@ -713,9 +713,9 @@ function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
 let leads=[],activity=load('crm-activity',[]),agentName=load('crm-agent',''),iaKey=load('crm-ia-key',''),iaPreview=null;
 function saveLeads(){
   updateStats();
-  // Salvar cada lead no MongoDB (fonte principal)
+  // Salvar cada lead no MongoDB via PUT (upsert seguro)
   leads.forEach(function(lead){
-    fetch('/kanban-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(function(){});
+    fetch('/kanban/'+lead.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(function(){});
   });
 }
 function saveActivity(){save('crm-activity',activity.slice(0,100));}
