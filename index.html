@@ -5,24 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MF Envios CRM</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* Nourd via CDN não disponível — Inter como fallback fiel (mesma geometria) */
 :root {
-  --bg:#0a1931;--surface:#102a50;--surface2:#183a6b;--border:#1e467a;--border2:#2c5a94;
-  --text:#ffffff;--text2:#cbd5e1;--text3:#94a3b8;--green:#22c55e;--green-bg:rgba(34,197,94,0.2);
-  --red:#ef4444;--red-bg:rgba(239,68,68,0.2);--blue:#3b82f6;--blue-bg:rgba(59,130,246,0.2);
-  --amber:#f59e0b;--amber-bg:rgba(245,158,11,0.2);--purple:#a78bfa;--orange:#f97316;
-  --radius:10px;--radius-sm:6px;--shadow:0 4px 12px rgba(0,0,0,.5);--shadow-md:0 8px 24px rgba(0,0,0,.6);
+  /* === MF ENVIOS — Identidade Visual v2.0 === */
+  --bg:#0D0F1F;
+  --surface:#1E2456;
+  --surface2:#2A3070;
+  --border:rgba(255,255,255,0.10);
+  --border2:rgba(255,255,255,0.18);
+  --text:#FFFFFF;
+  --text2:#cbd5e1;
+  --text3:#8B8FA8;
+  --green:#22c55e;--green-bg:rgba(34,197,94,0.2);
+  --red:#ef4444;--red-bg:rgba(239,68,68,0.2);
+  --blue:#3b82f6;--blue-bg:rgba(59,130,246,0.2);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,0.2);
+  --purple:#a78bfa;
+  --orange:#F97316;
+  --orange-hover:#EA6B10;
+  --orange-glow:rgba(249,115,22,0.35);
+  --orange-light:rgba(249,115,22,0.12);
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 4px 12px rgba(0,0,0,.5);
+  --shadow-md:0 8px 32px rgba(0,0,0,.6);
+  --shadow-orange:0 0 20px rgba(249,115,22,0.35);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.topbar{display:flex;align-items:center;gap:16px;padding:0 24px;height:56px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+body{font-family:'Inter','Nourd','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topbar{display:flex;align-items:center;gap:16px;padding:0 24px;height:60px;background:var(--surface);border-bottom:2px solid var(--orange);flex-shrink:0;box-shadow:0 2px 16px rgba(0,0,0,.4)}
 .logo{font-size:17px;font-weight:800}.logo .envios{color:var(--orange)}.logo .crm{color:var(--text3);font-weight:400;font-size:14px;margin-left:2px}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .wpp-status-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px}
 .wpp-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .agent-badge{font-size:12px;color:var(--text2);padding:5px 12px;background:var(--surface2);border-radius:20px;cursor:pointer;border:1px solid var(--border2)}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--surface2);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text);cursor:pointer;transition:all .15s;white-space:nowrap}
-.btn:hover{background:var(--border)}.btn-primary{background:var(--text);color:var(--bg);border-color:var(--text)}.btn-primary:hover{background:var(--text2)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border2);background:var(--surface2);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text);cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn:hover{background:var(--surface2);border-color:rgba(249,115,22,.4);box-shadow:var(--shadow-orange)}.btn-primary{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:var(--shadow-orange)}.btn-primary:hover{background:var(--orange-hover);box-shadow:0 0 28px rgba(249,115,22,.5)}
 .btn-sm{padding:4px 10px;font-size:11px}.btn-danger{color:var(--red);border-color:var(--red-bg);background:var(--red-bg)}.btn-danger:hover{background:var(--red);color:#fff}
 .btn-report{background:var(--orange);color:#fff;border-color:var(--orange)}.btn-report:hover{background:#ea6c0a}
 .stats-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
@@ -44,7 +63,7 @@ body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--t
 .col-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}.col-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);flex:1}
 .col-count{font-size:12px;background:var(--surface2);border-radius:20px;padding:1px 8px;color:var(--text3)}
 .col-cards{overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;flex:1}
-.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all .15s}.card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow)}
+.card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all .2s}.card:hover{border-color:rgba(249,115,22,.4);transform:translateY(-2px);box-shadow:var(--shadow-orange)}
 .card-name{font-size:13px;font-weight:700;margin-bottom:2px}.card-phone{font-size:11px;color:var(--text3);margin-bottom:4px}.card-route{font-size:11px;color:var(--blue);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-msg{font-size:12px;color:var(--text2);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-footer{display:flex;align-items:center;justify-content:space-between}.card-time{font-size:11px;color:var(--text3)}
@@ -73,7 +92,7 @@ td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;vertic
 .ia-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
 .ia-card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:12px}
 textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);resize:vertical;outline:none;transition:border .15s}textarea:focus{border-color:var(--border2)}
-input,select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border .15s}input:focus,select:focus{border-color:var(--border2)}
+input,select{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:rgba(255,255,255,0.06);outline:none;transition:all .2s;height:40px}input:focus,select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(249,115,22,0.15)}
 select option{background:var(--surface);color:var(--text)}.form-label{font-size:12px;color:var(--text2);margin-bottom:4px;display:block}.form-group{margin-bottom:12px}
 .ia-result .field{margin-bottom:6px}.ia-result .field-label{font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);display:block;margin-bottom:1px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
