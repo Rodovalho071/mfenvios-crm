@@ -972,7 +972,7 @@ function openNewLead(stage='Primeiro contato'){
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Etapa</label><select id="nl-stage">${stageOpts}</select></div>
-        <div class="form-group"><label class="form-label">Responsável</label><input id="nl-agent" value="${agentName}" placeholder="Seu nome"/></div>
+        <div class="form-group"><label class="form-label">Responsável</label><input id="nl-agent" value="${perfilAtivo&&PERFIS[perfilAtivo]?PERFIS[perfilAtivo].nome:agentName}" placeholder="Seu nome" ${perfilAtivo?"readonly style=\"opacity:0.7\"":""}  /></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Origem</label><select id="nl-source"><option value="">—</option><option value="whatsapp">WhatsApp</option><option value="google">Google</option><option value="instagram">Instagram</option><option value="site">Site</option><option value="indicacao">Indicação</option><option value="outro">Outro</option></select></div>
@@ -2332,11 +2332,25 @@ const PERFIS = {
 };
 
 var perfilAtivo = localStorage.getItem('crm-perfil') || null;
+// Se já tem perfil salvo, entrar direto sem mostrar splash
+if(perfilAtivo && PERFIS[perfilAtivo]) {
+  document.addEventListener('DOMContentLoaded', function() {
+    var splash = document.getElementById('splash-perfil');
+    if(splash) splash.style.display = 'none';
+    agentName = PERFIS[perfilAtivo].nome;
+    save('crm-agent', agentName);
+    aplicarPerfil();
+    sincronizarLeadsServidor();
+  });
+}
 var verTodos = false;
 
 function selecionarPerfil(perfil) {
   perfilAtivo = perfil;
   localStorage.setItem('crm-perfil', perfil);
+  // Definir agentName automaticamente pelo perfil
+  agentName = PERFIS[perfil].nome;
+  save('crm-agent', agentName);
   document.getElementById('splash-perfil').style.display = 'none';
   aplicarPerfil();
   sincronizarLeadsServidor();
