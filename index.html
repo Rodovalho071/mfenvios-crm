@@ -767,7 +767,12 @@ function showView(v){
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   const t=document.getElementById('tab-'+v);if(t)t.classList.add('active');
-  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}if(v==='operacional'){opTab('tarefas');}
+  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}if(v==='operacional'){
+    var opAbas=document.getElementById('op-abas-perfil');
+    if(opAbas) opAbas.style.display=perfilAtivo==='beatriz'?'flex':'none';
+    if(perfilAtivo==='beatriz') opPerfilAtivo='beatriz';
+    opTab('tarefas');
+  }
   updateAgentFilters();
 }
 
@@ -1406,7 +1411,12 @@ function buscarCEP(cep){
 <div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto;overflow-y:auto;">
 
   <!-- Sub-tabs -->
-  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
+  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0;flex-wrap:wrap;align-items:center">
+    <!-- Abas perfil operacional -->
+    <div id="op-abas-perfil" style="display:none;gap:4px;margin-right:8px">
+      <button id="op-aba-beatriz" onclick="selecionarOpPerfil('beatriz')" style="padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--orange);color:#fff;font-size:11px;font-weight:700;cursor:pointer">👩‍💼 Beatriz</button>
+      <button id="op-aba-davi" onclick="selecionarOpPerfil('davi')" style="padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer">👨‍💼 Davi</button>
+    </div>
     <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">✅ Tarefas</div>
     <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
     <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
@@ -1853,6 +1863,25 @@ const OP_API = window.location.origin;
 let opCurrentTab = 'tarefas';
 let opModalMode = null, opModalId = null;
 
+var opPerfilAtivo = 'beatriz'; // aba ativa no operacional
+
+function selecionarOpPerfil(p) {
+  opPerfilAtivo = p;
+  ['beatriz','davi'].forEach(function(x){
+    var btn = document.getElementById('op-aba-'+x);
+    if(!btn) return;
+    if(x===p){ btn.style.background=x==='davi'?'var(--blue)':'var(--orange)'; btn.style.color='#fff'; }
+    else{ btn.style.background='var(--surface2)'; btn.style.color='var(--text2)'; }
+  });
+  opTab(document.querySelector('.op-tab-btn.active')?.dataset?.tab||'tarefas');
+}
+
+function getOpPerfil() {
+  // Beatriz pode ver qualquer aba; Davi sempre o próprio
+  if(perfilAtivo==='davi') return 'davi';
+  return opPerfilAtivo;
+}
+
 function opTab(tab) {
   opCurrentTab = tab;
   ['tarefas','fretes','agenda','docs'].forEach(function(t){
@@ -1885,7 +1914,7 @@ function opTab(tab) {
 
 // ── TAREFAS ─────────────────────────────────
 async function loadTarefas() {
-  const res = await fetch(OP_API+'/tarefas').then(r=>r.json()).catch(()=>[]);
+  const res = await fetch(OP_API+'/tarefas?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('tarefas-list');
   if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhuma tarefa ainda.</div>'; return; }
   list.innerHTML = res.map(t => `
@@ -1916,22 +1945,22 @@ async function saveModalOp() {
   if(opModalMode==='tarefa') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,done:false})});
+    await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,done:false,perfil:getOpPerfil()})});
     closeModalOp(); loadTarefas();
   } else if(opModalMode==='frete') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta'})});
+    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta',perfil:getOpPerfil()})});
     closeModalOp(); loadFretes();
   } else if(opModalMode==='agenda') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value})});
+    await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value,perfil:getOpPerfil()})});
     closeModalOp(); loadAgenda();
   } else if(opModalMode==='doc') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value})});
+    await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value,perfil:getOpPerfil()})});
     closeModalOp(); loadDocs();
   }
 }
@@ -1951,7 +1980,7 @@ const FRETE_COLS = ['Aguardando coleta','Em trânsito','Entregue','Problema'];
 const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','Entregue':'#22c55e','Problema':'#ef4444'};
 
 async function loadFretes() {
-  const res = await fetch(OP_API+'/fretes').then(r=>r.json()).catch(()=>[]);
+  const res = await fetch(OP_API+'/fretes?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
   const kb = document.getElementById('fretes-kanban');
   kb.innerHTML = FRETE_COLS.map(col => `
     <div style="min-width:220px;flex:1;background:var(--surface2);border-radius:var(--radius);padding:12px">
@@ -2003,7 +2032,7 @@ async function deleteFrete(id) {
 
 // ── AGENDA ──────────────────────────────────
 async function loadAgenda() {
-  const res = await fetch(OP_API+'/agenda').then(r=>r.json()).catch(()=>[]);
+  const res = await fetch(OP_API+'/agenda?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('agenda-list');
   if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum evento ainda.</div>'; return; }
   const sorted = [...res].sort((a,b)=>{ if(!a.data) return 1; if(!b.data) return -1; return a.data.localeCompare(b.data); });
@@ -2044,7 +2073,7 @@ async function deleteAgenda(id) {
 
 // ── DOCUMENTOS ──────────────────────────────
 async function loadDocs() {
-  const res = await fetch(OP_API+'/documentos').then(r=>r.json()).catch(()=>[]);
+  const res = await fetch(OP_API+'/documentos?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('docs-list');
   if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum documento ainda.</div>'; return; }
   list.innerHTML = res.map(d => `

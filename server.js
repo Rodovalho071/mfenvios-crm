@@ -273,25 +273,25 @@ app.post('/kanban-import',async function(req,res){
 });
 
 // TAREFAS
-app.get('/tarefas',async function(req,res){res.json(await colFind(tarefasCol,memTarefas));});
+app.get('/tarefas',async function(req,res){const p=req.query.perfil;const all=await colFind(tarefasCol,memTarefas);res.json(p?all.filter(x=>x.perfil===p):all);});
 app.post('/tarefas',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(tarefasCol,memTarefas,item);res.json({ok:true,item});});
 app.put('/tarefas/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(tarefasCol,memTarefas,item);res.json({ok:true,item});});
 app.delete('/tarefas/:id',async function(req,res){await colDelete(tarefasCol,memTarefas,req.params.id);res.json({ok:true});});
 
 // FRETES
-app.get('/fretes',async function(req,res){res.json(await colFind(fretesCol,memFretes));});
+app.get('/fretes',async function(req,res){const p=req.query.perfil;const all=await colFind(fretesCol,memFretes);res.json(p?all.filter(x=>x.perfil===p):all);});
 app.post('/fretes',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(fretesCol,memFretes,item);res.json({ok:true,item});});
 app.put('/fretes/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(fretesCol,memFretes,item);res.json({ok:true,item});});
 app.delete('/fretes/:id',async function(req,res){await colDelete(fretesCol,memFretes,req.params.id);res.json({ok:true});});
 
 // AGENDA
-app.get('/agenda',async function(req,res){res.json(await colFind(agendaCol,memAgenda));});
+app.get('/agenda',async function(req,res){const p=req.query.perfil;const all=await colFind(agendaCol,memAgenda);res.json(p?all.filter(x=>x.perfil===p):all);});
 app.post('/agenda',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(agendaCol,memAgenda,item);res.json({ok:true,item});});
 app.put('/agenda/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(agendaCol,memAgenda,item);res.json({ok:true,item});});
 app.delete('/agenda/:id',async function(req,res){await colDelete(agendaCol,memAgenda,req.params.id);res.json({ok:true});});
 
 // DOCUMENTOS
-app.get('/documentos',async function(req,res){res.json(await colFind(docsCol,memDocs));});
+app.get('/documentos',async function(req,res){const p=req.query.perfil;const all=await colFind(docsCol,memDocs);res.json(p?all.filter(x=>x.perfil===p):all);});
 app.post('/documentos',async function(req,res){const item=Object.assign({id:nowId(),ts:Date.now()},req.body);await colUpsert(docsCol,memDocs,item);res.json({ok:true,item});});
 app.put('/documentos/:id',async function(req,res){const item=Object.assign({ts:Date.now()},req.body,{id:req.params.id});await colUpsert(docsCol,memDocs,item);res.json({ok:true,item});});
 app.delete('/documentos/:id',async function(req,res){await colDelete(docsCol,memDocs,req.params.id);res.json({ok:true});});
