@@ -35,7 +35,7 @@ async function connectMongo() {
     vendasCol   = db.collection('vendas');
     await messagesCol.createIndex({ id: 1 }, { unique: true });
     await messagesCol.createIndex({ ts: -1 });
-    await kanbanCol.createIndex({ phone: 1 }, { unique: true });
+    await kanbanCol.createIndex({ id: 1 }, { unique: true });
     await tarefasCol.createIndex({ id: 1 }, { unique: true });
     await fretesCol.createIndex({ id: 1 }, { unique: true });
     await agendaCol.createIndex({ id: 1 }, { unique: true });
@@ -83,7 +83,7 @@ async function getKanban() {
   return memKanban;
 }
 async function upsertKanbanCard(card) {
-  if(kanbanCol){ try{ await kanbanCol.updateOne({phone:card.phone},{$set:card,$setOnInsert:{ts:Date.now()}},{upsert:true}); }catch(e){} }
+  if(kanbanCol){ try{ await kanbanCol.updateOne({id:card.id},{$set:card,$setOnInsert:{ts:Date.now()}},{upsert:true}); }catch(e){console.error('[KANBAN]',e.message);} }
   else{ if(!memKanban.cards.find(c=>c.phone===card.phone)) memKanban.cards.unshift(card); }
 }
 async function updateKanbanColuna(id,coluna) {
