@@ -221,6 +221,21 @@ app.patch('/kanban/:id',async function(req,res){
   broadcast('kanban-update',await getKanban());
   res.json({ok:true});
 });
+app.put('/kanban/:id',async function(req,res){
+  const lead=Object.assign({},req.body,{id:req.params.id});
+  try{
+    if(kanbanCol){ await kanbanCol.updateOne({id:req.params.id},{$set:lead},{upsert:true}); }
+    else{ const i=memKanban.cards.findIndex(c=>c.id===req.params.id); if(i>=0) memKanban.cards[i]=lead; else memKanban.cards.push(lead); }
+    res.json({ok:true});
+  }catch(e){res.status(500).json({error:e.message});}
+});
+app.delete('/kanban/:id',async function(req,res){
+  try{
+    if(kanbanCol){ await kanbanCol.deleteOne({id:req.params.id}); }
+    else{ memKanban.cards=memKanban.cards.filter(c=>c.id!==req.params.id); }
+    res.json({ok:true});
+  }catch(e){res.status(500).json({error:e.message});}
+});
 app.post('/funil',async function(req,res){
   const messageId=req.body.messageId;
   const msgs=await getMessages();

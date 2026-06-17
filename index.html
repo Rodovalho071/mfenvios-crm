@@ -414,9 +414,11 @@ function calcVencimento(dias) {
 }
 
 function formatMoeda(v) {
-  var n = parseFloat((v||'0').toString().replace(/\./g,'').replace(',','.'));
-  if(isNaN(n)) return 'R$ 0,00';
-  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  if(typeof v==='number'){if(isNaN(v))return 'R$ 0,00';return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  var s=(v||'0').toString().replace(/[R$\s]/g,'').trim();
+  var n;if(s.indexOf(',')!==-1){n=parseFloat(s.replace(/\./g,'').replace(',','.'));}else{n=parseFloat(s);}
+  if(isNaN(n))return 'R$ 0,00';
+  return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 
 function parseMoeda(v) {
@@ -662,11 +664,10 @@ const STAGE_PILL={'Primeiro contato':'background:rgba(59,130,246,.25);color:#93c
 
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
 function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
-let leads=load('crm-leads',[]),activity=load('crm-activity',[]),agentName=load('crm-agent',''),iaKey=load('crm-ia-key',''),iaPreview=null;
+let leads=[],activity=load('crm-activity',[]),agentName=load('crm-agent',''),iaKey=load('crm-ia-key',''),iaPreview=null;
 function saveLeads(){
-  save('crm-leads',leads);
   updateStats();
-  // Sincronizar cada lead com MongoDB
+  // Salvar cada lead no MongoDB (fonte principal)
   leads.forEach(function(lead){
     fetch('/kanban-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(function(){});
   });
@@ -1088,7 +1089,15 @@ function addNote(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=do
 function addFollowup(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=document.getElementById('fu-text').value.trim();if(!text)return;l.followups=l.followups||[];l.followups.push({text,date:document.getElementById('fu-date').value,done:false});saveLeads();renderLeadModal(l);toast('Follow-up adicionado!');}
 function toggleFollowup(id,idx,done){const l=leads.find(x=>x.id===id);if(!l)return;l.followups[idx].done=done;saveLeads();if(done)toast('Follow-up concluído!');}
 function deleteFollowup(id,idx){const l=leads.find(x=>x.id===id);if(!l)return;l.followups.splice(idx,1);saveLeads();renderLeadModal(l);}
-function deleteLead(id){if(!confirm('Excluir este lead?'))return;const l=leads.find(x=>x.id===id);leads=leads.filter(x=>x.id!==id);saveLeads();addActivity(`Lead <strong>${l?.name}</strong> excluído.`);closeModal();renderKanban();toast('Lead excluído.');}
+function deleteLead(id){
+  if(!confirm('Excluir este lead?'))return;
+  const l=leads.find(x=>x.id===id);
+  leads=leads.filter(x=>x.id!==id);
+  updateStats();
+  fetch('/kanban/'+id,{method:'DELETE'}).catch(function(){});
+  addActivity('Lead <strong>'+(l?l.name:'')+'</strong> excluído.');
+  closeModal();renderKanban();toast('Lead excluído.');
+}
 
 // ─── RELATÓRIO DO DIA ───────────────────────────────────────────────
 function abrirRelatorio(){
@@ -2272,19 +2281,12 @@ function selecionarPerfil(perfil) {
 
 function sincronizarLeadsServidor() {
   fetch('/kanban').then(function(r){return r.json();}).then(function(data){
-    if(data && data.cards && data.cards.length > 0) {
-      var serverLeads = data.cards;
-      serverLeads.forEach(function(sl){
-        var idx = leads.findIndex(function(l){ return l.id === sl.id; });
-        if(idx < 0) {
-          leads.push(sl);
-        } else {
-          leads[idx] = Object.assign({}, leads[idx], sl);
-        }
-      });
-      save('crm-leads', leads);
+    if(data && data.cards) {
+      leads = data.cards;
       updateStats();
       if(typeof renderKanban === 'function') renderKanban();
+      if(typeof renderLeads === 'function') renderLeads();
+      if(typeof updateAgentFilters === 'function') updateAgentFilters();
     }
   }).catch(function(){});
 }
