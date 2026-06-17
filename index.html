@@ -685,10 +685,18 @@ function fmtValorStat(v){
   if(v>=1000) return 'R$'+(v/1000).toFixed(0)+'k';
   return 'R$'+Math.round(v);
 }
+function parseFrete(val){
+  if(!val && val!==0) return 0;
+  var s = val.toString().replace(/[R$\s]/g,'').trim();
+  if(s.indexOf(',') !== -1){
+    s = s.replace(/\./g,'').replace(',','.');
+  }
+  var n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
 function somaFrete(arr){
   return arr.reduce((s,l)=>{
-    const v=parseFloat((l.valorFrete||'0').replace(/\./g,'').replace(',','.'));
-    return s+(isNaN(v)?0:v);
+    return s + parseFrete(l.valorFrete||'0');
   },0);
 }
 function updateStats(){
@@ -1685,6 +1693,7 @@ function renderConvList(q=''){
           <span style="font-size:10px;color:var(--text3)">${fmtDateChat(g.lastTs)}</span>
         </div>
         <div style="font-size:11px;color:${cor};margin-bottom:3px;font-weight:600">${cliente?'● Cliente MF':'● Novo lead'}</div>
+        <div style="font-size:10px;color:var(--text3);">${g.msgs[0]&&g.msgs[0].instance?'📱 '+(g.msgs[0].instance==='mfenvios'?'Beatriz':'Davi'):''}</div>
         <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.lastText.slice(0,45)}</div>
       </div>
       <div style="width:8px;height:8px;border-radius:50%;background:${cor};flex-shrink:0"></div>
@@ -1788,7 +1797,11 @@ function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.add
     }catch(ex){loadWppMessages();}
   });es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
 conectarSSE();
-setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
+setInterval(()=>{
+  var _inst2=(typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
+  var _url2=WPP_SERVER+'/messages'+(_inst2?'?instance='+_inst2:'');
+  fetch(_url2).then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});
+},30000);
 
 
 // ═══════════════════════════════════════════
@@ -2304,6 +2317,8 @@ function aplicarPerfil() {
   updateStats();
   updateAgentFilters();
   atualizarSino();
+  // Recarregar WhatsApp com instância do perfil selecionado
+  if(typeof loadWppMessages === 'function') loadWppMessages();
 }
 
 function mostrarTrocaPerfil() {
