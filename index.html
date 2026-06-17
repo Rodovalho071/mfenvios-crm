@@ -96,6 +96,14 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 .dash-f-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}.dash-f-btn:hover{background:var(--surface2)}.dash-f-btn.active{background:#0a1931;color:#fff;border-color:var(--border2)}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none}.toast.show{opacity:1}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+#modal-cadastro::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: #0d1b2e;
+  z-index: -1;
+}
 </style>
 </head>
 <body>
@@ -1239,6 +1247,9 @@ function renderCadastro() {
   }).join('');
 }
 function abrirModalCadastro(id) {
+  document.body.style.overflow = 'hidden';
+  var bd = document.getElementById('modal-backdrop');
+  if(bd) bd.style.display = 'block';
   cadastroEditandoId=id;
   var modal=document.getElementById('modal-cadastro');if(!modal)return;
   ['cad-doc','cad-razao','cad-fantasia','cad-ie','cad-im','cad-cnae','cad-cel','cad-tel','cad-email','cad-email-cob','cad-cep','cad-estado','cad-cidade','cad-bairro','cad-logradouro','cad-numero','cad-comp','cad-obs'].forEach(function(f){var e=document.getElementById(f);if(e)e.value='';});
@@ -1254,7 +1265,10 @@ function abrirModalCadastro(id) {
   } else { document.getElementById('cad-modal-titulo').textContent='Novo Cliente'; }
   modal.style.display='flex';
 }
-function fecharModalCadastro(){var m=document.getElementById('modal-cadastro');if(m)m.style.display='none';}
+function fecharModalCadastro(){
+  document.body.style.overflow = '';
+  var bd = document.getElementById('modal-backdrop');
+  if(bd) bd.style.display = 'none';var m=document.getElementById('modal-cadastro');if(m)m.style.display='none';}
 function toggleCadTipo(){
   var pj=document.getElementById('cad-tipo-pj');
   var lb=document.getElementById('cad-doc-label');
@@ -2591,6 +2605,7 @@ function renderFinLeadsProntos() {
 </div>
 
 <!-- MODAL CADASTRO -->
+<div id="modal-backdrop" onclick="fecharModalCadastro()" style="display:none;position:fixed;inset:0;background:#0d1b2e;z-index:99998;"></div>
 <div id="modal-cadastro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:16px">
   <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)">
     <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1">
