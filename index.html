@@ -1990,7 +1990,7 @@ async function saveModalOp() {
   } else if(opModalMode==='frete') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta',perfil:getOpPerfil()})});
+    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta',rastreio:(document.getElementById('op-f-rastreio')||{}).value||'',comprovante:(document.getElementById('op-f-comprovante')||{}).value||'',perfil:getOpPerfil()})});
     closeModalOp(); loadFretes();
   } else if(opModalMode==='agenda') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
@@ -2031,6 +2031,8 @@ async function loadFretes() {
             <div style="font-size:13px;font-weight:600">${f.titulo}</div>
             ${f.origem?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${f.origem} → ${f.destino||'?'}</div>`:''}
             ${f.valor?`<div style="font-size:12px;color:var(--green);margin-top:4px">R$ ${f.valor}</div>`:''}
+            ${f.rastreio?`<div style="font-size:11px;color:var(--blue);margin-top:4px">📦 Rastreio: ${f.rastreio}</div>`:''}
+            ${f.comprovante?`<div style="margin-top:4px"><a href="${f.comprovante}" target="_blank" style="font-size:11px;color:var(--orange);text-decoration:none">🔗 Ver comprovante</a></div>`:''}
             <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
               ${FRETE_COLS.filter(c=>c!==col).map(c=>`<button onclick="moveFrete('${f.id}','${c}')" style="font-size:10px;padding:2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text3)">→ ${c.split(' ')[0]}</button>`).join('')}
               <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5;margin-left:auto">🗑</button>
@@ -2056,6 +2058,8 @@ function openAddFrete() {
           ${FRETE_COLS.map(c=>`<option value="${c}">${c}</option>`).join('')}
         </select>
       </div>
+      <div><label style="font-size:12px;color:var(--text3)">RASTREIO (AWB / Tracking)</label><input id="op-f-rastreio" class="form-input" placeholder="Ex: 123456789BR" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">COMPROVANTE (link)</label><input id="op-f-comprovante" class="form-input" placeholder="Link Google Drive, WhatsApp, etc." style="width:100%;margin-top:4px"></div>
     </div>`;
   document.getElementById('modal-op').style.display='flex';
 }
