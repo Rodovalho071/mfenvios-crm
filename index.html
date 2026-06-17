@@ -207,7 +207,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="tab" onclick="showView('clientes')" id="tab-clientes">👥 Clientes</div>
   <div class="tab" onclick="showView('cadastro')" id="tab-cadastro">📋 Cadastro</div>
   <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">📊 Dashboard</div>
-  <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
+  <div class="tab" onclick="showView('wpp')" id="tab-wpp" style="display:none">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
   <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
   <div class="tab" onclick="showView('operacional')" id="tab-operacional">⚙️ Operacional</div>
   <div class="tab" onclick="showView('financeiro')" id="tab-financeiro">💰 Financeiro</div>
@@ -892,6 +892,7 @@ function renderKanban(){
         ${lead.obs?`<div class="card-msg">${lead.obs.slice(0,55)}</div>`:''}
         <div class="card-tags">
           ${lead.source==='whatsapp'?'<span class="tag tag-wpp">WhatsApp</span>':''}
+          ${lead.tipoContato==='salvo'?'<span class="tag" style="background:rgba(34,197,94,.2);color:#22c55e">🟢 Salvo</span>':lead.tipoContato==='novo'?'<span class="tag" style="background:rgba(59,130,246,.2);color:#3b82f6">🔵 Novo</span>':''}
           ${hasFu?'<span class="tag tag-followup">Follow-up</span>':''}
           ${lead.hot?'<span class="tag tag-hot">🔥 Quente</span>':''}
           ${lead.urgencia==='Alta'?'<span class="tag tag-urgente">⚡ Urgente</span>':''}
@@ -1780,7 +1781,13 @@ async function analisarMsg(){
 function addFromIA(){
   if(!iaPreview)return;
   const rota=iaPreview.origem&&iaPreview.destino?iaPreview.origem+' → '+iaPreview.destino:'';
-  const lead={id:uid(),name:iaPreview.nome||'Desconhecido',tel:iaPreview.tel||'',material:iaPreview.material||'',origem:iaPreview.origem||'',destino:iaPreview.destino||'',rota,volumes:iaPreview.volumes||'',peso:iaPreview.peso||'',medidas:iaPreview.medidas||'',valorNF:iaPreview.valorNF||'',stage:iaPreview.etapa||'Primeiro contato',agent:agentName,source:'whatsapp',obs:iaPreview.obs||'',hot:false,ts:Date.now(),followups:[],history:[{text:`Captado via WhatsApp: ${iaPreview.obs}`,ts:Date.now(),agent:agentName}]};
+  var _nomeIA=(iaPreview.nome||'');
+  var _nomeEhNumeroIA=/^[\d\s\+\-\(\)]+$/.test(_nomeIA.trim());
+  var _tipoContatoIA=_nomeEhNumeroIA?'novo':'salvo';
+  var _palavrasQuentesIA=['urgente','urgência','hoje','agora','preciso','fechado','confirma','aceito','combinado'];
+  var _obsIA=(iaPreview.obs||'').toLowerCase();
+  var _isHotIA=_palavrasQuentesIA.some(function(p){return _obsIA.includes(p);});
+  const lead={id:uid(),name:_nomeIA||'Desconhecido',tel:iaPreview.tel||'',material:iaPreview.material||'',origem:iaPreview.origem||'',destino:iaPreview.destino||'',rota,volumes:iaPreview.volumes||'',peso:iaPreview.peso||'',medidas:iaPreview.medidas||'',valorNF:iaPreview.valorNF||'',stage:iaPreview.etapa||'Primeiro contato',agent:agentName,source:'whatsapp',obs:iaPreview.obs||'',hot:_isHotIA,tipoContato:_tipoContatoIA,ts:Date.now(),followups:[],history:[{text:`Captado via WhatsApp: ${iaPreview.obs}`,ts:Date.now(),agent:agentName}]};
   leads.push(lead);saveLeads();addActivity(`Lead <strong>${lead.name}</strong> captado via IA`);
   document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none';iaPreview=null;showView('kanban');toast('Lead adicionado!');
 }
@@ -1940,7 +1947,14 @@ async function wppToLead(id,name,phone,text){
     await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
     const exists=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
     // Sempre cria novo lead (permite múltiplos leads por contato em meses diferentes)
-    const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);
+    // Qualificação automática
+    var nomeEhNumero = /^[\d\s\+\-\(\)]+$/.test((name||'').trim());
+    var tipoContato = nomeEhNumero ? 'novo' : 'salvo';
+    var palavrasQuentes = ['urgente','urgência','hoje','agora','preciso','quanto custa','me passa','quanto fica','valor','fechado','confirma','aceito','pode ser','vamos','combinado'];
+    var textoLower = (text||'').toLowerCase();
+    var isHot = palavrasQuentes.some(function(p){return textoLower.includes(p);});
+    var nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:isHot,tipoContato:tipoContato,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};
+    leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`+(isHot?' 🔥':'')+(tipoContato==='salvo'?' (contato salvo)':' (número novo)'));
     toast('Lead adicionado ao funil!');showView('kanban');renderKanban();
   }catch(e){toast('Erro ao adicionar.');}
 }
