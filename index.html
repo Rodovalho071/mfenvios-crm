@@ -1533,7 +1533,6 @@ function usarDadosCNPJCad(d){
   if(typeof showToast==='function')showToast('Dados preenchidos!');
   else if(typeof toast==='function')toast('Dados preenchidos!');
 }
-}
 function buscarCNPJ(cnpj){
   cnpj=cnpj.replace(/\D/g,'');if(cnpj.length!==14)return;
   fetch('https://brasilapi.com.br/api/cnpj/v1/'+cnpj).then(function(r){return r.json();}).then(function(d){
@@ -2950,7 +2949,6 @@ function usarDadosCNPJ(leadId,d){
   if(d.municipio&&d.uf){l.origem=d.municipio+'/'+d.uf;var oel=document.getElementById('d-origem');if(oel)oel.value=l.origem;}
   if(d.ddd_telefone_1){l.tel=d.ddd_telefone_1.replace(/\D/g,'');var tel=document.getElementById('d-tel');if(tel)tel.value=l.tel;}
   saveLeads();toast('Dados preenchidos!');
-}
 }
 </script>
 
