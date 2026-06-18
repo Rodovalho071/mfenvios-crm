@@ -2161,12 +2161,13 @@ async function loadTarefas() {
         ${t.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${t.desc}</div>`:''}
         ${t.data?`<div style="font-size:11px;color:var(--text3);margin-top:4px">📅 ${t.data}</div>`:''}
       </div>
+      <button onclick="editTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--orange);font-size:16px;padding:4px">✏️</button>
       <button onclick="deleteTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
     </div>`).join('');
 }
 
 function openAddTarefa() {
-  opModalMode='tarefa'; opModalId=null;
+  opModalMode='tarefa'; opModalId=null; _tarefaCache=[];
   document.getElementById('modal-op-title').textContent='Nova Tarefa';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
@@ -2177,27 +2178,113 @@ function openAddTarefa() {
   document.getElementById('modal-op').style.display='flex';
 }
 
+
+// ── EDIT FUNCTIONS ─────────────────────────
+var _freteCache=[], _agendaCache=[], _tarefaCache=[], _docCache=[];
+
+async function editFrete(id) {
+  if(!_freteCache.length) _freteCache = await fetch(OP_API+'/fretes?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
+  const f = _freteCache.find(x=>x.id===id); if(!f) return;
+  opModalMode='frete'; opModalId=id;
+  document.getElementById('modal-op-title').textContent='Editar Frete';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">IDENTIFICAÇÃO *</label><input id="op-f-titulo" class="form-input" value="${f.titulo||''}" style="width:100%;margin-top:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:12px;color:var(--text3)">ORIGEM</label><input id="op-f-origem" class="form-input" value="${f.origem||''}" style="width:100%;margin-top:4px"></div>
+        <div><label style="font-size:12px;color:var(--text3)">DESTINO</label><input id="op-f-destino" class="form-input" value="${f.destino||''}" style="width:100%;margin-top:4px"></div>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">VALOR (R$)</label><input id="op-f-valor" class="form-input" value="${f.valor||''}" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">STATUS</label>
+        <select id="op-f-status" class="form-input" style="width:100%;margin-top:4px">
+          ${FRETE_COLS.map(c=>`<option value="${c}" ${f.status===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">RASTREIO</label><input id="op-f-rastreio" class="form-input" value="${f.rastreio||''}" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">COMPROVANTE (link)</label><input id="op-f-comprovante" class="form-input" value="${f.comprovante||''}" style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function editAgenda(id) {
+  if(!_agendaCache.length) _agendaCache = await fetch(OP_API+'/agenda?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
+  const e = _agendaCache.find(x=>x.id===id); if(!e) return;
+  opModalMode='agenda'; opModalId=id;
+  document.getElementById('modal-op-title').textContent='Editar Evento';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" value="${e.titulo||''}" style="width:100%;margin-top:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" value="${e.data||''}" style="width:100%;margin-top:4px"></div>
+        <div><label style="font-size:12px;color:var(--text3)">HORA</label><input id="op-f-hora" type="time" class="form-input" value="${e.hora||''}" style="width:100%;margin-top:4px"></div>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" value="${e.desc||''}" style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function editTarefa(id) {
+  if(!_tarefaCache.length) _tarefaCache = await fetch(OP_API+'/tarefas?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
+  const t = _tarefaCache.find(x=>x.id===id); if(!t) return;
+  opModalMode='tarefa'; opModalId=id;
+  document.getElementById('modal-op-title').textContent='Editar Tarefa';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" value="${t.titulo||''}" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" value="${t.desc||''}" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" value="${t.data||''}" style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
+async function editDoc(id) {
+  if(!_docCache.length) _docCache = await fetch(OP_API+'/documentos?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
+  const d = _docCache.find(x=>x.id===id); if(!d) return;
+  opModalMode='doc'; opModalId=id;
+  document.getElementById('modal-op-title').textContent='Editar Documento';
+  document.getElementById('modal-op-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" value="${d.titulo||''}" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">TIPO</label>
+        <select id="op-f-tipo" class="form-input" style="width:100%;margin-top:4px">
+          ${['Contrato','NF','Boleto','Proposta','Outro'].map(tp=>`<option value="${tp}" ${d.tipo===tp?'selected':''}>${tp}</option>`).join('')}
+        </select>
+      </div>
+      <div><label style="font-size:12px;color:var(--text3)">LINK</label><input id="op-f-link" class="form-input" value="${d.link||''}" style="width:100%;margin-top:4px"></div>
+      <div><label style="font-size:12px;color:var(--text3)">OBSERVAÇÃO</label><input id="op-f-desc" class="form-input" value="${d.obs||''}" style="width:100%;margin-top:4px"></div>
+    </div>`;
+  document.getElementById('modal-op').style.display='flex';
+}
+
 async function saveModalOp() {
   if(opModalMode==='tarefa') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,done:false,perfil:getOpPerfil()})});
-    closeModalOp(); loadTarefas();
+    const tarefaData = {titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,perfil:getOpPerfil()};
+    if(opModalId) await fetch(OP_API+'/tarefas/'+opModalId, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(tarefaData)});
+    else await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...tarefaData,done:false})});
+    _tarefaCache=[]; closeModalOp(); loadTarefas();
   } else if(opModalMode==='frete') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta',rastreio:(document.getElementById('op-f-rastreio')||{}).value||'',comprovante:(document.getElementById('op-f-comprovante')||{}).value||'',perfil:getOpPerfil()})});
-    closeModalOp(); loadFretes();
+    const freteData = {titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta',rastreio:(document.getElementById('op-f-rastreio')||{}).value||'',comprovante:(document.getElementById('op-f-comprovante')||{}).value||'',perfil:getOpPerfil()};
+    if(opModalId) await fetch(OP_API+'/fretes/'+opModalId, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(freteData)});
+    else await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(freteData)});
+    _freteCache=[]; closeModalOp(); loadFretes();
   } else if(opModalMode==='agenda') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value,perfil:getOpPerfil()})});
-    closeModalOp(); loadAgenda();
+    const agendaData = {titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value,perfil:getOpPerfil()};
+    if(opModalId) await fetch(OP_API+'/agenda/'+opModalId, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(agendaData)});
+    else await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(agendaData)});
+    _agendaCache=[]; closeModalOp(); loadAgenda();
   } else if(opModalMode==='doc') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value,perfil:getOpPerfil()})});
-    closeModalOp(); loadDocs();
+    const docData = {titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value,perfil:getOpPerfil()};
+    if(opModalId) await fetch(OP_API+'/documentos/'+opModalId, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(docData)});
+    else await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(docData)});
+    _docCache=[]; closeModalOp(); loadDocs();
   }
 }
 
@@ -2231,7 +2318,8 @@ async function loadFretes() {
             ${f.comprovante?`<div style="margin-top:4px"><a href="${f.comprovante}" target="_blank" style="font-size:11px;color:var(--orange);text-decoration:none">🔗 Ver comprovante</a></div>`:''}
             <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
               ${FRETE_COLS.filter(c=>c!==col).map(c=>`<button onclick="moveFrete('${f.id}','${c}')" style="font-size:10px;padding:2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text3)">→ ${c.split(' ')[0]}</button>`).join('')}
-              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5;margin-left:auto">🗑</button>
+              <button onclick="editFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(255,165,0,.15);border:1px solid rgba(255,165,0,.3);border-radius:4px;cursor:pointer;color:#fdba74;margin-left:auto">✏️</button>
+              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5">🗑</button>
             </div>
           </div>`).join('')}
       </div>
@@ -2239,7 +2327,7 @@ async function loadFretes() {
 }
 
 function openAddFrete() {
-  opModalMode='frete';
+  opModalMode='frete'; opModalId=null; _freteCache=[];
   document.getElementById('modal-op-title').textContent='Novo Frete';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
@@ -2286,12 +2374,13 @@ async function loadAgenda() {
         ${e.hora?`<div style="font-size:12px;color:var(--text3);margin-top:2px">⏰ ${e.hora}</div>`:''}
         ${e.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${e.desc}</div>`:''}
       </div>
+      <button onclick="editAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--orange);font-size:16px;padding:4px">✏️</button>
       <button onclick="deleteAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
     </div>`).join('');
 }
 
 function openAddAgenda() {
-  opModalMode='agenda';
+  opModalMode='agenda'; opModalId=null; _agendaCache=[];
   document.getElementById('modal-op-title').textContent='Novo Evento';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
@@ -2325,6 +2414,7 @@ async function loadDocs() {
         ${d.obs?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.obs}</div>`:''}
         ${d.link?`<a href="${d.link}" target="_blank" style="font-size:12px;color:var(--orange);margin-top:4px;display:block">🔗 Abrir link</a>`:''}
       </div>
+      <button onclick="editDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--orange);font-size:16px;padding:4px">✏️</button>
       <button onclick="deleteDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
     </div>`).join('');
 }
