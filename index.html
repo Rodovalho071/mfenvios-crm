@@ -785,9 +785,10 @@ function updateStats(){
     if(el('stat-total-label')) el('stat-total-label').textContent = nomeMes||'Total do mês';
   }
 
+  const _stagesGanhoCalc=['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
   const stagesNeg = typeof PERFIS !== 'undefined' && perfilAtivo && PERFIS[perfilAtivo]
-    ? PERFIS[perfilAtivo].stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido')
-    : ['Proposta enviada','Negociação','Qualificação','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal'];
+    ? PERFIS[perfilAtivo].stages.filter(s=>!_stagesGanhoCalc.includes(s)&&s!=='Perdido')
+    : ['Negociação','Primeiro contato','Novo'];
 
   const _stagesGanho=['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
   const ganhos = leadsMes.filter(l=>_stagesGanho.includes(l.stage));
