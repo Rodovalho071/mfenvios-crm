@@ -727,10 +727,8 @@ function fmtDateFull(ts){return new Date(ts).toLocaleString('pt-BR',{day:'2-digi
 function initials(name){return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';}
 
 function fmtValorStat(v){
-  if(!v||v===0) return 'R$ 0';
-  if(v>=1000000) return 'R$'+(v/1000000).toFixed(1)+'M';
-  if(v>=1000) return 'R$'+(v/1000).toFixed(0)+'k';
-  return 'R$'+Math.round(v);
+  if(!v||v===0) return 'R$ 0,00';
+  return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function parseFrete(val){
   if(!val && val!==0) return 0;
