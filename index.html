@@ -1015,6 +1015,39 @@ function renderDashboard(){
 }
 
 // ─── NOVO LEAD ───────────────────────────────────────────────
+function formatarCNPJNL(el){
+  var v=el.value.replace(/\D/g,'');
+  if(v.length>14)v=v.slice(0,14);
+  v=v.replace(/^(\d{2})(\d)/,'$1.$2');
+  v=v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3');
+  v=v.replace(/\.(\d{3})(\d)/,'.$1/$2');
+  v=v.replace(/(\d{4})(\d)/,'$1-$2');
+  el.value=v;
+}
+async function prospectAINL(){
+  var el=document.getElementById('nl-cnpj');
+  if(!el)return;
+  var cnpj=el.value.replace(/\D/g,'');
+  if(cnpj.length!==14){alert('CNPJ deve ter 14 dígitos');return;}
+  var btn=event.target;
+  btn.textContent='Analisando...';btn.disabled=true;
+  var res=document.getElementById('nl-cnpj-result');
+  if(res){res.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">⏳ Consultando Receita Federal e gerando análise com IA...</div>';res.style.display='block';}
+  try{
+    var r=await fetch('/prospect-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cnpj:cnpj})});
+    var d=await r.json();
+    if(!d.ok){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+(d.error||'desconhecido')+'</span>';return;}
+    renderProspectResult('nl-cnpj-result',d.analise,d.dados,null);
+    // Preenche nome e telefone automaticamente
+    if(d.dados){
+      var nm=document.getElementById('nl-name');
+      if(nm&&!nm.value&&d.dados.razao_social)nm.value=d.dados.razao_social;
+      var tel=document.getElementById('nl-tel');
+      if(tel&&!tel.value&&d.dados.ddd_telefone_1)tel.value=d.dados.ddd_telefone_1;
+    }
+  }catch(e){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+e.message+'</span>';}
+  finally{btn.textContent='🔍 ProspectAI';btn.disabled=false;}
+}
 function openNewLead(stage='Primeiro contato'){
   const stageOpts=STAGES.map(s=>`<option value="${s}" ${s===stage?'selected':''}>${s}</option>`).join('');
   showModal(`
@@ -1033,6 +1066,12 @@ function openNewLead(stage='Primeiro contato'){
         <div class="form-group"><label class="form-label">Origem</label><select id="nl-source"><option value="">—</option><option value="whatsapp">WhatsApp</option><option value="google">Google</option><option value="instagram">Instagram</option><option value="site">Site</option><option value="indicacao">Indicação</option><option value="outro">Outro</option></select></div>
         <div class="form-group"><label class="form-label">Urgência</label><select id="nl-urgencia"><option value="">Normal</option><option value="Alta">Alta</option><option value="Muito alta">Muito alta</option></select></div>
       </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex:1"><label class="form-label">CNPJ</label><input id="nl-cnpj" placeholder="00.000.000/0001-00" maxlength="18" oninput="formatarCNPJNL(this)"/></div>
+        <div class="form-group" style="display:flex;align-items:flex-end"><button type="button" onclick="prospectAINL()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">🔍 ProspectAI</button></div>
+      </div>
+      <div id="nl-cnpj-result" style="display:none;margin-bottom:12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px;max-height:400px;overflow-y:auto"></div>
 
       <div class="section-divider">📦 Dados do frete</div>
       <div class="form-row">
@@ -1081,6 +1120,7 @@ function saveLead(){
     peso:document.getElementById('nl-peso').value.trim(),
     medidas:document.getElementById('nl-medidas').value.trim(),
     obs:document.getElementById('nl-obs').value.trim(),
+    cnpj:(document.getElementById('nl-cnpj')||{value:''}).value.trim(),
     hot:document.getElementById('nl-hot').checked,
     ts:Date.now(),history:[],followups:[]
   };
