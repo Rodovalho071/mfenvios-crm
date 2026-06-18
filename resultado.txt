@@ -1,0 +1,35 @@
+1100   const fus=(l.followups||[]).map((f,i)=>`<div class="followup-item"><input type="checkbox" class="followup-check" ${f.done?'checked':''} onchange="toggleFollowup('${l.id}',${i},this.checked)"/><span class="followup-text ${f.done?'followup-done':''}"1101   showModal(`
+1102     <div class="modal-header">
+1103       <span class="modal-title">Detalhes do lead</span>
+1104       <div style="display:flex;gap:6px"><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')">Excluir</button><button class="modal-close" onclick="closeModal()">×</button></div>
+1105     </div>
+1106     <div class="modal-body">
+1107       <div class="detail-header">
+1108         <div class="avatar">${initials(l.name)}</div>
+1109         <div><div class="detail-name">${l.name}</div><div class="detail-sub">${l.tel||''}${l.rota?' · '+l.rota:''}</div></div>
+1110         ${l.tel?`<a href="https://wa.me/55${l.tel.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="margin-left:auto;background:var(--green-bg);color:var(--green);border-color:var(--green)">Abrir WhatsApp ↗</a>`:''}
+1111       </div>
+1112 
+1113       <div class="section-divider">📋 Dados do lead</div>
+1114       <div class="form-row">
+1115         <div class="form-group"><label class="form-label">Etapa</label><select id="d-stage" onchange="updateLeadStage('${l.id}',this.value)">${stageOpts}</select></div>
+1116         <div class="form-group"><label class="form-label">Responsável</label><input id="d-agent" value="${l.agent||''}" onblur="updateLeadField('${l.id}','agent',this.value)"/></div>
+1117       </div>
+1118       <div class="form-row">
+1119         <div class="form-group"><label class="form-label">Telefone</label><input id="d-tel" value="${l.tel||''}" onblur="updateLeadField('${l.id}','tel',this.value)"/></div>
+1120         <div class="form-group"><label class="form-label">Urgência</label><select id="d-urgencia" onchange="updateLeadField('${l.id}','urgencia',this.value)"><option value="" ${!l.urgencia?'selected':''}>Normal</option><option value="Alta" ${l.urgenc1121       </div>
+1122 
+1123       <div class="section-divider">📦 Dados do frete</div>
+1124       <div class="form-row">
+1125         <div class="form-group"><label class="form-label">Material / Produto</label><input id="d-material" value="${l.material||''}" onblur="updateLeadField('${l.id}','material',this.value)"/></div>
+1126         <div class="form-group"><label class="form-label">Valor da Nota Fiscal (R$)</label><input id="d-valorNF" value="${l.valorNF||''}" onblur="updateLeadField('${l.id}','valorNF',this.value)"/></div>
+1127       </div>
+1128       <div class="form-row">
+1129         <div class="form-group"><label class="form-label">Valor do Frete (R$)</label><input id="d-valorFrete" value="${l.valorFrete||''}" onblur="updateLeadField('${l.id}','valorFrete',this.value)" placeholder="Ex: 1.200,00"/></div>
+1130         <div class="form-group"><label class="form-label">Transportadora</label><select id="d-transportadora" onchange="updateLeadField('${l.id}','transportadora',this.value)"><option value="" ${!l.transportadora?'selected':''}>—</option><option valu1131       </div>
+1132       <div class="form-row">
+1133         <div class="form-group"><label class="form-label">Origem</label><input id="d-origem" value="${l.origem||''}" onblur="updateRotaField('${l.id}')"/></div>
+1134         <div class="form-group"><label class="form-label">Destino</label><input id="d-destino" value="${l.destino||''}" onblur="updateRotaField('${l.id}')"/></div>
+1135       </div>
+1136       <div class="form-row-3">
+1137         <div class="form-group"><label class="form-label">Volumes</label><input id="d-volumes" value="${l.volumes||''}" onblur="updateLeadField('${l.id}','volumes',this.value)"/></div>
