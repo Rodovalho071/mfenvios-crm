@@ -767,7 +767,8 @@ function updateStats(){
     });
     // Mini barra do outro perfil
     const stagesNegOutro = pOutro.stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido');
-    const ganhosOutro = leadsOutro.filter(l=>l.stage==='Fechado / Ganho');
+    const _stagesGanhoOutro=['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
+    const ganhosOutro = leadsOutro.filter(l=>_stagesGanhoOutro.includes(l.stage));
     const perdidosOutro = leadsOutro.filter(l=>l.stage==='Perdido');
     const negOutro = leadsOutro.filter(l=>stagesNegOutro.includes(l.stage));
     const srOutro = leadsOutro.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
@@ -788,7 +789,8 @@ function updateStats(){
     ? PERFIS[perfilAtivo].stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido')
     : ['Proposta enviada','Negociação','Qualificação','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal'];
 
-  const ganhos = leadsMes.filter(l=>l.stage==='Fechado / Ganho');
+  const _stagesGanho=['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
+  const ganhos = leadsMes.filter(l=>_stagesGanho.includes(l.stage));
   const perdidos = leadsMes.filter(l=>l.stage==='Perdido');
   const emNeg = leadsMes.filter(l=>stagesNeg.includes(l.stage));
   const semRetorno = leadsMes.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
