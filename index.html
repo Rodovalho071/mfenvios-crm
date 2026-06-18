@@ -1431,7 +1431,8 @@ function abrirModalCadastro(id) {
   document.body.style.overflow = 'hidden';
   cadastroEditandoId=id;
   var modal=document.getElementById('modal-cadastro');if(!modal)return;
-  ['cad-doc','cad-razao','cad-fantasia','cad-ie','cad-im','cad-cnae','cad-cel','cad-tel','cad-email','cad-email-cob','cad-cep','cad-estado','cad-cidade','cad-bairro','cad-logradouro','cad-numero','cad-comp','cad-obs'].forEach(function(f){var e=document.getElementById(f);if(e)e.value='';});
+  ['cad-doc','cad-razao','cad-fantasia','cad-ie','cad-im','cad-cnae','cad-cel','cad-tel','cad-email','cad-email-cob','cad-cep','cad-estado','cad-cidade','cad-bairro','cad-logradouro','cad-numero','cad-comp','cad-obs','cad-cnpj-prospect'].forEach(function(f){var e=document.getElementById(f);if(e)e.value='';});
+  var cr=document.getElementById('cad-cnpj-result');if(cr){cr.innerHTML='';cr.style.display='none';};
   document.getElementById('cad-tipo-pj').checked=true;toggleCadTipo();
   if(id){
     var x=cadastros.find(function(a){return a.id===id;});
@@ -1486,6 +1487,52 @@ function deletarCadastro(id){
   cadastros=cadastros.filter(function(a){return a.id!==id;});
   fetch('/clientes/'+id,{method:'DELETE'}).catch(function(){});
   localStorage.setItem('crm-cadastros',JSON.stringify(cadastros));renderCadastro();
+}
+function formatarCNPJCad(el){
+  var v=el.value.replace(/\D/g,'');
+  if(v.length>14)v=v.slice(0,14);
+  v=v.replace(/^(\d{2})(\d)/,'$1.$2');
+  v=v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3');
+  v=v.replace(/\.(\d{3})(\d)/,'.$1/$2');
+  v=v.replace(/(\d{4})(\d)/,'$1-$2');
+  el.value=v;
+}
+async function prospectAICad(){
+  var el=document.getElementById('cad-cnpj-prospect');
+  if(!el)return;
+  var cnpj=el.value.replace(/\D/g,'');
+  if(cnpj.length!==14){alert('CNPJ deve ter 14 dígitos');return;}
+  var btn=event.target;
+  btn.textContent='Analisando...';btn.disabled=true;
+  var res=document.getElementById('cad-cnpj-result');
+  if(res){res.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">⏳ Consultando Receita Federal e gerando análise com IA...</div>';res.style.display='block';}
+  try{
+    var r=await fetch('/prospect-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cnpj:cnpj})});
+    var d=await r.json();
+    if(!d.ok){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+(d.error||'desconhecido')+'</span>';return;}
+    renderProspectResult('cad-cnpj-result',d.analise,d.dados,null);
+    // Preenche campos automaticamente com dados da BrasilAPI
+    if(d.dados) usarDadosCNPJCad(d.dados);
+  }catch(e){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+e.message+'</span>';}
+  finally{btn.textContent='\uD83D\uDD0D ProspectAI';btn.disabled=false;}
+}
+function usarDadosCNPJCad(d){
+  var s=function(id,v){var e=document.getElementById(id);if(e&&v)e.value=v;};
+  s('cad-razao',d.razao_social);
+  s('cad-fantasia',d.nome_fantasia||'');
+  s('cad-cnae',d.cnae_fiscal||'');
+  s('cad-cep',(d.cep||'').replace(/\D/g,''));
+  s('cad-logradouro',d.logradouro||'');
+  s('cad-numero',d.numero||'');
+  s('cad-comp',d.complemento||'');
+  s('cad-bairro',d.bairro||'');
+  s('cad-cidade',d.municipio||'');
+  s('cad-estado',d.uf||'');
+  if(d.ddd_telefone_1){s('cad-cel',d.ddd_telefone_1);}
+  if(d.email){s('cad-email',d.email);}
+  if(typeof showToast==='function')showToast('Dados preenchidos!');
+  else if(typeof toast==='function')toast('Dados preenchidos!');
+}
 }
 function buscarCNPJ(cnpj){
   cnpj=cnpj.replace(/\D/g,'');if(cnpj.length!==14)return;
@@ -2862,39 +2909,48 @@ function formatCNPJ(el){
   v=v.replace(/(\/\d{4})(\d)/,'$1-$2');
   el.value=v;
 }
+function renderProspectResult(containerId, a, dados, leadId) {
+  var cor={'alto':'#22c55e','medio':'#f59e0b','baixo':'#ef4444'};
+  var corB={'positivo':'#22c55e','neutro':'#8492b4','negativo':'#ef4444'};
+  var ativo=dados&&dados.descricao_situacao_cadastral==='ATIVA';
+  var html='<div style="font-size:15px;font-weight:700;margin-bottom:2px">'+a.razao_social+'</div>';
+  html+='<div style="font-size:11px;color:var(--text3);margin-bottom:10px">Status: <span style="color:'+(ativo?'#22c55e':'#ef4444')+'">'+a.status+'</span> &middot; Conf: <span style="font-weight:700;color:'+(a.confianca==='ALTA'?'#22c55e':a.confianca==='MEDIA'?'#f59e0b':'#ef4444')+'">'+a.confianca+'</span> &middot; '+a.confianca_motivo+'</div>';
+  if(a.alertas&&a.alertas.length){a.alertas.forEach(function(al){var bg=al.tipo==='positivo'?'rgba(34,197,94,.08)':al.tipo==='alerta'?'rgba(239,68,68,.08)':'rgba(132,146,180,.08)';var ic=al.tipo==='positivo'?'✅':al.tipo==='alerta'?'⚠️':'🔸';html+='<div style="background:'+bg+';border-radius:6px;padding:8px 10px;margin-bottom:6px;font-size:12px;color:var(--text)">'+ic+' '+al.texto+'</div>';});}
+  if(a.termometro){var t=a.termometro;html+='<div style="background:var(--bg2);border-radius:8px;padding:12px;margin:10px 0"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🌡️ Termômetro — Fit</div><div style="display:flex;gap:6px;margin-bottom:8px">';['alto','medio','baixo'].forEach(function(n){var a2=t.nivel===n;var lbl={'alto':'Fit Alto','medio':'Fit Médio','baixo':'Fit Baixo'}[n];html+='<div style="flex:1;border-radius:6px;padding:6px 8px;border:1px solid '+(a2?cor[n]:'var(--border)')+';background:'+(a2?'rgba('+{'alto':'34,197,94','medio':'245,158,11','baixo':'239,68,68'}[n]+',.1)':'transparent')+'"><div style="font-size:11px;font-weight:700;color:'+(a2?cor[n]:'var(--text3)')+'">'+lbl+'</div></div>';});html+='</div><div style="font-size:12px;color:var(--text2);margin-bottom:8px">'+t.analise+'</div>';if(t.bant){html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';['budget','authority','need','timeline'].forEach(function(k){var b=t.bant[k];if(!b)return;html+='<div style="background:var(--bg3);border-radius:6px;padding:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:var(--text2)">'+k.toUpperCase()+'</span><span style="font-size:10px;font-weight:700;color:'+corB[b.status]+'">'+b.status.toUpperCase()+'</span></div><div style="font-size:11px;color:var(--text3)">'+b.texto+'</div></div>';});html+='</div>';}html+='</div>';}
+  if(a.ficha){var f=a.ficha;html+='<div style="background:var(--bg2);border-radius:8px;padding:12px;margin:10px 0"><div style="font-size:12px;font-weight:700;margin-bottom:8px">📋 Ficha Raio-X</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';[['Quem manda',f.quem_manda],['Porte',f.porte_estimado],['O que fazem',f.o_que_fazem],['Segmento',f.segmento],['Modelo',f.modelo]].forEach(function(p){html+='<div style="background:var(--bg3);border-radius:6px;padding:8px"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:3px">'+p[0]+'</div><div style="font-size:12px;color:var(--text)">'+(p[1]||'-')+'</div></div>';});html+='</div></div>';}
+  if(a.kit_abordagem){var k=a.kit_abordagem;html+='<div style="background:var(--bg2);border-radius:8px;padding:12px;margin:10px 0"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🎯 Kit de Abordagem</div>';if(k.icebreaker)html+='<div style="margin-bottom:8px"><div style="font-size:10px;color:var(--orange);font-weight:700;margin-bottom:3px">🧊 ICEBREAKER</div><div style="font-size:12px;color:var(--text);background:var(--bg3);border-left:3px solid var(--orange);padding:8px;border-radius:4px">'+k.icebreaker+'</div></div>';if(k.dor_provavel)html+='<div style="margin-bottom:8px"><div style="font-size:10px;color:#f59e0b;font-weight:700;margin-bottom:3px">⚠️ DOR PROVÁVEL</div><div style="font-size:12px;color:var(--text);background:var(--bg3);padding:8px;border-radius:4px">'+k.dor_provavel+'</div></div>';html+='<div style="margin-bottom:8px"><div style="font-size:10px;color:#8b5cf6;font-weight:700;margin-bottom:6px">💬 SCRIPT</div><div style="display:flex;gap:6px;margin-bottom:6px"><button onclick="prospectTab(this,\''+containerId+'\',\'whatsapp\')" style="padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--orange);color:white;font-size:11px;cursor:pointer">WhatsApp</button><button onclick="prospectTab(this,\''+containerId+'\',\'coldcall\')" style="padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;cursor:pointer">Cold Call</button><button onclick="prospectTab(this,\''+containerId+'\',\'email\')" style="padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;cursor:pointer">E-mail</button></div><div id="'+containerId+'-script-whatsapp" style="font-size:12px;background:var(--bg3);padding:8px;border-radius:4px;color:var(--text)">'+(k.script_whatsapp||'-')+'</div><div id="'+containerId+'-script-coldcall" style="display:none;font-size:12px;background:var(--bg3);padding:8px;border-radius:4px;color:var(--text)">'+(k.script_coldcall||'-')+'</div><div id="'+containerId+'-script-email" style="display:none;font-size:12px;background:var(--bg3);padding:8px;border-radius:4px;color:var(--text)">'+(k.script_email||'-')+'</div></div>';if(k.pergunta_discovery)html+='<div><div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:3px">🔍 DISCOVERY</div><div style="font-size:12px;color:var(--text);background:var(--bg3);padding:8px;border-radius:4px;font-style:italic">'+k.pergunta_discovery+'</div></div>';html+='</div>';}
+  if(leadId&&dados){html+='<button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="usarDadosCNPJ(\''+leadId+'\','+JSON.stringify(dados).replace(/\\/g,'\\\\').replace(/'/g,"\\'")+')">↙️ Usar dados no lead</button>';}
+  var el=document.getElementById(containerId);if(el){el.innerHTML=html;el.style.display='block';}
+}
+function prospectTab(btn,containerId,tipo){
+  ['whatsapp','coldcall','email'].forEach(function(t){var el=document.getElementById(containerId+'-script-'+t);if(el)el.style.display=t===tipo?'block':'none';});
+  var tabs=btn.parentElement.querySelectorAll('button');tabs.forEach(function(b){b.style.background='var(--bg3)';b.style.color='var(--text2)';});
+  btn.style.background='var(--orange)';btn.style.color='white';
+}
 async function prospectAI(leadId){
   var el=document.getElementById('d-cnpj');
   if(!el)return;
   var cnpj=el.value.replace(/\D/g,'');
-  if(cnpj.length!==14){alert('CNPJ deve ter 14 digitos');return;}
+  if(cnpj.length!==14){alert('CNPJ deve ter 14 dígitos');return;}
   var btn=event.target;
-  btn.textContent='Consultando...';btn.disabled=true;
+  btn.textContent='Analisando...';btn.disabled=true;
+  var res=document.getElementById('cnpj-result-'+leadId);
+  if(res){res.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">⏳ Consultando Receita Federal e gerando análise com IA...</div>';res.style.display='block';}
   try{
-    var r=await fetch('https://brasilapi.com.br/api/cnpj/v1/'+cnpj);
+    var r=await fetch('/prospect-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cnpj:cnpj})});
     var d=await r.json();
-    if(d.message){alert('CNPJ nao encontrado: '+d.message);return;}
-    var ok=d.descricao_situacao_cadastral==='ATIVA';
-    var html='<div class="cnpj-row"><span class="cnpj-label">Razao Social</span><span class="cnpj-val">'+( d.razao_social||'-')+'</span></div>'+
-      '<div class="cnpj-row"><span class="cnpj-label">Nome Fantasia</span><span class="cnpj-val">'+(d.nome_fantasia||'-')+'</span></div>'+
-      '<div class="cnpj-row"><span class="cnpj-label">Situacao</span><span class="cnpj-val '+(ok?'cnpj-status-ok':'cnpj-status-bad')+'">'+(d.descricao_situacao_cadastral||'-')+'</span></div>'+
-      '<div class="cnpj-row"><span class="cnpj-label">CNAE</span><span class="cnpj-val">'+(d.cnae_fiscal_descricao||'-')+'</span></div>'+
-      '<div class="cnpj-row"><span class="cnpj-label">Porte</span><span class="cnpj-val">'+(d.porte||'-')+'</span></div>'+
-      '<div class="cnpj-row"><span class="cnpj-label">Municipio/UF</span><span class="cnpj-val">'+(d.municipio||'-')+'/'+(d.uf||'-')+'</span></div>'+
-      '<div class="cnpj-row"><span class="cnpj-label">Telefone</span><span class="cnpj-val">'+(d.ddd_telefone_1||'-')+'</span></div>'+
-      '<div class="cnpj-row"><span class="cnpj-label">Email</span><span class="cnpj-val">'+(d.email||'-')+'</span></div>'+
-      '<div class="cnpj-row"><span class="cnpj-label">Endereco</span><span class="cnpj-val">'+(d.logradouro||'')+(d.numero?' '+d.numero:'')+'</span></div>'+
-      '<button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="usarDadosCNPJ(\''+leadId+'\','+JSON.stringify(d).replace(/'/g,"\\'")+')">&#8601;&#65039; Usar dados no lead</button>';
-    var res=document.getElementById('cnpj-result-'+leadId);
-    if(res){res.innerHTML=html;res.style.display='block';}
-  }catch(e){alert('Erro na consulta: '+e.message);}
+    if(!d.ok){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+(d.error||'desconhecido')+'</span>';return;}
+    renderProspectResult('cnpj-result-'+leadId,d.analise,d.dados,leadId);
+  }catch(e){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+e.message+'</span>';}
   finally{btn.textContent='\uD83D\uDD0D ProspectAI';btn.disabled=false;}
 }
 function usarDadosCNPJ(leadId,d){
-  var l=leads.find(x=>x.id===leadId);if(!l)return;
+  var l=leads.find(function(x){return x.id===leadId;});if(!l)return;
   if(d.razao_social){l.name=d.razao_social;var nel=document.getElementById('d-name');if(nel)nel.value=d.razao_social;}
   if(d.municipio&&d.uf){l.origem=d.municipio+'/'+d.uf;var oel=document.getElementById('d-origem');if(oel)oel.value=l.origem;}
   if(d.ddd_telefone_1){l.tel=d.ddd_telefone_1.replace(/\D/g,'');var tel=document.getElementById('d-tel');if(tel)tel.value=l.tel;}
   saveLeads();toast('Dados preenchidos!');
+}
 }
 </script>
 
@@ -3030,10 +3086,19 @@ function usarDadosCNPJ(leadId,d){
         </div>
       </div>
 
-      <!-- Observações -->
+      <!-- ProspectAI -->
       <div>
-        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Observações</label>
-        <textarea id="cad-obs" placeholder="Observações gerais sobre o cliente..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase">🔍 ProspectAI — Consulta CNPJ</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="cad-cnpj-prospect" type="text" placeholder="00.000.000/0001-00" maxlength="18"
+            oninput="formatarCNPJCad(this)"
+            style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          <button type="button" onclick="prospectAICad()"
+            style="background:var(--orange);color:white;border:none;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
+            🔍 ProspectAI
+          </button>
+        </div>
+        <div id="cad-cnpj-result" style="display:none;margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px"></div>
       </div>
 
       <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">
@@ -3158,10 +3223,19 @@ function usarDadosCNPJ(leadId,d){
         </div>
       </div>
 
-      <!-- Observações -->
+      <!-- ProspectAI -->
       <div>
-        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Observações</label>
-        <textarea id="cad-obs" placeholder="Observações gerais sobre o cliente..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase">🔍 ProspectAI — Consulta CNPJ</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="cad-cnpj-prospect" type="text" placeholder="00.000.000/0001-00" maxlength="18"
+            oninput="formatarCNPJCad(this)"
+            style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          <button type="button" onclick="prospectAICad()"
+            style="background:var(--orange);color:white;border:none;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
+            🔍 ProspectAI
+          </button>
+        </div>
+        <div id="cad-cnpj-result" style="display:none;margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px"></div>
       </div>
 
       <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">

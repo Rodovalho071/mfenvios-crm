@@ -350,6 +350,105 @@ app.delete('/vendas/:id',async function(req,res){
   res.json({ok:true});
 });
 
+// ── PROSPECT AI ──────────────────────────────────────────────────────────────
+app.post('/prospect-ai', async function(req, res) {
+  const { cnpj } = req.body;
+  if (!cnpj || cnpj.replace(/\D/g,'').length !== 14) {
+    return res.status(400).json({ ok: false, error: 'CNPJ inválido' });
+  }
+  const cnpjLimpo = cnpj.replace(/\D/g,'');
+  try {
+    // 1. Busca dados na BrasilAPI
+    const dadosBrapi = await new Promise(function(resolve, reject) {
+      https.get('https://brasilapi.com.br/api/cnpj/v1/' + cnpjLimpo, function(r) {
+        let d = '';
+        r.on('data', function(c){ d += c; });
+        r.on('end', function(){
+          try { resolve(JSON.parse(d)); } catch(e) { reject(e); }
+        });
+      }).on('error', reject);
+    });
+    if (dadosBrapi.message) return res.status(404).json({ ok: false, error: dadosBrapi.message });
+
+    // 2. Monta contexto para a IA
+    const empresa = dadosBrapi;
+    const contexto = `
+Você é um especialista em inteligência de vendas B2B para a empresa MF ENVIOS LTDA, uma transportadora/despachante de fretes (FedEx, DHL, GOLLOG) que vende serviços logísticos para empresas.
+
+Analise os dados da Receita Federal abaixo e gere um relatório de prospecção comercial completo em JSON (sem markdown, sem texto fora do JSON).
+
+DADOS DA EMPRESA PROSPECTADA:
+- Razão Social: ${empresa.razao_social || '-'}
+- Nome Fantasia: ${empresa.nome_fantasia || '-'}
+- CNPJ: ${cnpjLimpo}
+- Situação: ${empresa.descricao_situacao_cadastral || '-'}
+- Data Abertura: ${empresa.data_inicio_atividade || '-'}
+- CNAE Principal: ${empresa.cnae_fiscal_descricao || '-'} (${empresa.cnae_fiscal || '-'})
+- Porte: ${empresa.porte || '-'}
+- Capital Social: R$ ${empresa.capital_social || '-'}
+- Município/UF: ${empresa.municipio || '-'}/${empresa.uf || '-'}
+- Telefone: ${empresa.ddd_telefone_1 || '-'}
+- E-mail: ${empresa.email || '-'}
+- Logradouro: ${empresa.logradouro || ''} ${empresa.numero || ''}, ${empresa.bairro || ''}, ${empresa.municipio || ''}/${empresa.uf || ''}
+- Sócios/QSA: ${JSON.stringify((empresa.qsa || []).map(function(s){ return s.nome_socio + ' (' + s.qualificacao_socio + ')'; }))}
+- CNAEs Secundários: ${(empresa.cnaes_secundarios || []).slice(0,3).map(function(c){ return c.descricao; }).join(', ') || '-'}
+
+Responda SOMENTE com este JSON (sem markdown):
+{
+  "razao_social": "nome da empresa",
+  "status": "ativa|inativa",
+  "confianca": "ALTA|MEDIA|BAIXA",
+  "confianca_motivo": "motivo em 1 frase",
+  "alertas": [
+    { "tipo": "alerta|positivo|neutro", "texto": "texto do alerta" }
+  ],
+  "termometro": {
+    "nivel": "alto|medio|baixo",
+    "descricao": "frase curta",
+    "analise": "parágrafo explicando o fit",
+    "bant": {
+      "budget": { "status": "positivo|neutro|negativo", "texto": "análise de budget" },
+      "authority": { "status": "positivo|neutro|negativo", "texto": "análise de authority" },
+      "need": { "status": "positivo|neutro|negativo", "texto": "análise de need" },
+      "timeline": { "status": "positivo|neutro|negativo", "texto": "análise de timeline" }
+    }
+  },
+  "ficha": {
+    "quem_manda": "Nome do sócio principal e cargo",
+    "porte_estimado": "descrição do porte estimado",
+    "o_que_fazem": "descrição do negócio",
+    "segmento": "segmento de mercado",
+    "modelo": "B2B|B2C|B2B2C"
+  },
+  "kit_abordagem": {
+    "icebreaker": "mensagem de abertura personalizada mencionando algo específico da empresa",
+    "dor_provavel": "lista das 3-5 principais dores logísticas desta empresa",
+    "script_whatsapp": "script completo para WhatsApp, nível inicial, mencionando MF ENVIOS",
+    "script_coldcall": "script para ligação fria",
+    "script_email": "assunto e corpo do email",
+    "pergunta_discovery": "pergunta poderosa de discovery com explicação entre parênteses"
+  }
+}`;
+
+    // 3. Chama Groq
+    const resposta = await callGroq([{ role: 'user', content: contexto }], 2000);
+    if (!resposta) return res.status(500).json({ ok: false, error: 'Sem resposta da IA' });
+
+    // 4. Parse do JSON
+    let analise;
+    try {
+      const limpo = resposta.replace(/```json|```/g,'').trim();
+      analise = JSON.parse(limpo);
+    } catch(e) {
+      return res.status(500).json({ ok: false, error: 'Erro ao parsear resposta da IA', raw: resposta });
+    }
+
+    res.json({ ok: true, analise, dados: dadosBrapi });
+  } catch(e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 const PORT=process.env.PORT||3000;
 connectMongo().then(function(){
   app.listen(PORT,'0.0.0.0',function(){
