@@ -711,8 +711,8 @@ function finExcluir(id) {
 
 
 
-const STAGES=['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'];
-const STAGE_COLORS={'Primeiro contato':'#3b82f6','Qualificação':'#8b5cf6','Proposta enviada':'#f59e0b','Negociação':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'};
+const STAGES=['Primeiro contato','Negociação','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Fechado / Ganho','Perdido'];
+const STAGE_COLORS={'Primeiro contato':'#3b82f6','Negociação':'#f97316','Aguardando Retorno':'#f59e0b','Aguardando Coleta':'#06b6d4','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'};
 const STAGE_PILL={'Primeiro contato':'background:rgba(59,130,246,.25);color:#93c5fd','Qualificação':'background:rgba(139,92,246,.25);color:#c4b5fd','Proposta enviada':'background:rgba(245,158,11,.25);color:#fcd34d','Negociação':'background:rgba(249,115,22,.25);color:#fdba74','Fechado / Ganho':'background:rgba(34,197,94,.25);color:#86efac','Perdido':'background:rgba(239,68,68,.25);color:#fca5a5'};
 
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
@@ -1049,7 +1049,8 @@ async function prospectAINL(){
   finally{btn.textContent='🔍 ProspectAI';btn.disabled=false;}
 }
 function openNewLead(stage='Primeiro contato'){
-  const stageOpts=STAGES.map(s=>`<option value="${s}" ${s===stage?'selected':''}>${s}</option>`).join('');
+  const _stages=window.STAGES||STAGES;
+  const stageOpts=_stages.map(s=>`<option value="${s}" ${s===stage?'selected':''}>${s}</option>`).join('');
   showModal(`
     <div class="modal-header"><span class="modal-title">Novo lead</span><button class="modal-close" onclick="closeModal()">×</button></div>
     <div class="modal-body">
