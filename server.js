@@ -14,6 +14,11 @@ const EVOLUTION_URL = (process.env.EVOLUTION_URL || 'https://traps-ovary-sandy.n
 const EVOLUTION_KEY = (process.env.EVOLUTION_APIKEY || 'mfenvios2024').trim();
 const INSTANCE      = (process.env.EVOLUTION_INSTANCE || 'mfenvios').trim();
 
+const INSTANCE_PERFIL = {
+  'mfenvios': 'Beatriz',
+  'mfenvios-davi': 'Davi'
+};
+
 let db = null;
 let messagesCol = null, kanbanCol = null;
 let tarefasCol = null, fretesCol = null, agendaCol = null, docsCol = null;
@@ -89,6 +94,16 @@ async function upsertKanbanCard(card) {
 async function updateKanbanColuna(id,coluna) {
   if(kanbanCol) await kanbanCol.updateOne({id},{$set:{coluna}});
   else{ const card=memKanban.cards.find(c=>c.id===id); if(card) card.coluna=coluna; }
+}
+
+async function leadExistePorPhone(phone, perfil) {
+  if(kanbanCol) {
+    const found = await kanbanCol.findOne({phone: phone, perfil: perfil});
+    if(found) return true;
+    const found2 = await kanbanCol.findOne({tel: phone, agent: perfil});
+    return !!found2;
+  }
+  return memKanban.cards.some(function(c){ return (c.tel===phone||c.phone===phone)&&(c.agent===perfil||c.perfil===perfil); });
 }
 
 const sseClients=[];
@@ -171,12 +186,21 @@ app.post('/webhook',async function(req,res){
   if(b.event==='messages.upsert'&&b.data){
     const m=b.data;
     if(m.key&&!m.key.fromMe){
+      const instancia=b.instance||'';
+      const perfil=INSTANCE_PERFIL[instancia]||'Beatriz';
       const texto=m.message&&(m.message.conversation||m.message.extendedTextMessage&&m.message.extendedTextMessage.text)||'[midia]';
-      const msg={id:m.key.id||Date.now().toString(),name:m.pushName||'Desconhecido',phone:cleanPhone(m.key.remoteJid),text:texto,ts:Date.now(),instance:b.instance||''};
+      const msg={id:m.key.id||Date.now().toString(),name:m.pushName||'Desconhecido',phone:cleanPhone(m.key.remoteJid),text:texto,ts:Date.now(),instance:instancia,perfil:perfil};
       await saveMessage(msg);
       broadcast('nova-mensagem',msg);
-      console.log('[WH] Msg de',msg.name,':',msg.text.substring(0,60));
-      if(texto!=='[midia]'){
+      console.log('[WH] Inst:'+instancia+' Perfil:'+perfil+' Msg de',msg.name,':',msg.text.substring(0,60));
+      const jaExiste=await leadExistePorPhone(msg.phone,perfil);
+      if(!jaExiste){
+        const novoLead={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:msg.name,tel:msg.phone,phone:msg.phone,stage:'Primeiro contato',coluna:'Novo Lead',agent:perfil,perfil:perfil,instance:instancia,source:'whatsapp',ts:Date.now(),followups:[],history:[]};
+        if(kanbanCol){try{await kanbanCol.updateOne({id:novoLead.id},{'':novoLead},{upsert:true});}catch(e){console.error('[LEAD]',e.message);}}
+        broadcast('novo-lead',novoLead);
+        console.log('[WH] Novo lead criado:',msg.name,'perfil:',perfil);
+      }
+      if(instancia==='mfenvios'&&texto!=='[midia]'){
         try{
           const r=await callGroq([
             {role:'system',content:'Voce e Beatriz, atendente virtual da MF Envios, transportadora de fretes e logistica. Seja simpatica e objetiva. Quando pedirem cotacao pergunte: Peso, Medidas em cm, Volumes, Valor NF, CEP origem, CEP destino, coleta e urgencia. Responda em portugues sem markdown.'},
