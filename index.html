@@ -774,7 +774,9 @@ function updateStats(){
     });
     // Mini barra do outro perfil
     const stagesNegOutro = pOutro.stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido');
-    const _stagesGanhoOutro=['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
+    const _stagesGanhoOutro = pOutro.nome === 'Davi'
+      ? ['Fechado / Ganho']
+      : ['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
     const ganhosOutro = leadsOutro.filter(l=>_stagesGanhoOutro.includes(l.stage));
     const perdidosOutro = leadsOutro.filter(l=>l.stage==='Perdido');
     const negOutro = leadsOutro.filter(l=>stagesNegOutro.includes(l.stage));
@@ -792,12 +794,15 @@ function updateStats(){
     if(el('stat-total-label')) el('stat-total-label').textContent = nomeMes||'Total do mês';
   }
 
-  const _stagesGanhoCalc=['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
+  // Etapas "ganho" por perfil — só Fechado/Ganho + etapas pós-venda do perfil ativo
+  const _stagesGanhoCalc = perfilAtivo === 'davi'
+    ? ['Fechado / Ganho']
+    : ['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
   const stagesNeg = typeof PERFIS !== 'undefined' && perfilAtivo && PERFIS[perfilAtivo]
     ? PERFIS[perfilAtivo].stages.filter(s=>!_stagesGanhoCalc.includes(s)&&s!=='Perdido')
     : ['Negociação','Primeiro contato','Novo'];
 
-  const _stagesGanho=['Fechado / Ganho','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Cotação Enviada','Emissão','Coleta','Cobrança'];
+  const _stagesGanho = _stagesGanhoCalc;
   const ganhos = leadsMes.filter(l=>_stagesGanho.includes(l.stage));
   const perdidos = leadsMes.filter(l=>l.stage==='Perdido');
   const emNeg = leadsMes.filter(l=>stagesNeg.includes(l.stage));
