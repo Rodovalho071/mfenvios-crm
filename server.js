@@ -194,9 +194,10 @@ app.post('/webhook',async function(req,res){
       broadcast('nova-mensagem',msg);
       console.log('[WH] Inst:'+instancia+' Perfil:'+perfil+' Msg de',msg.name,':',msg.text.substring(0,60));
       const jaExiste=await leadExistePorPhone(msg.phone,perfil);
+      console.log('[WH] Phone:',msg.phone,'JaExiste:',jaExiste,'kanbanCol:',!!kanbanCol);
       if(!jaExiste){
         const novoLead={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:msg.name,tel:msg.phone,phone:msg.phone,stage:'Primeiro contato',coluna:'Novo Lead',agent:perfil,perfil:perfil,instance:instancia,source:'whatsapp',ts:Date.now(),followups:[],history:[]};
-        if(kanbanCol){try{await kanbanCol.insertOne(novoLead);}catch(e){console.error('[LEAD]',e.message);}}
+        if(kanbanCol){try{await kanbanCol.insertOne(novoLead);console.log('[WH] Lead inserido no MongoDB:',novoLead.name);}catch(e){console.error('[LEAD]',e.message);}}
         broadcast('novo-lead',novoLead);
         console.log('[WH] Novo lead criado:',msg.name,'perfil:',perfil);
       }
