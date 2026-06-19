@@ -775,7 +775,7 @@ function updateStats(){
     // Mini barra do outro perfil
     const stagesNegOutro = pOutro.stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido');
     const _stagesGanhoOutro = pOutro.nome === 'Davi'
-      ? ['Fechado / Ganho']
+      ? ['Emissão','Coleta','Cliente recorrente','Nota Fiscal','Fechado / Ganho']
       : ['Fechado / Ganho','Aguardando Coleta','Nota Fiscal'];
     const ganhosOutro = leadsOutro.filter(l=>_stagesGanhoOutro.includes(l.stage));
     const perdidosOutro = leadsOutro.filter(l=>l.stage==='Perdido');
@@ -796,7 +796,7 @@ function updateStats(){
 
   // Etapas "ganho" por perfil — só Fechado/Ganho + etapas pós-venda do perfil ativo
   const _stagesGanhoCalc = perfilAtivo === 'davi'
-    ? ['Fechado / Ganho']
+    ? ['Emissão','Coleta','Cliente recorrente','Nota Fiscal','Fechado / Ganho']
     : ['Fechado / Ganho','Aguardando Coleta','Nota Fiscal'];
   const stagesNeg = typeof PERFIS !== 'undefined' && perfilAtivo && PERFIS[perfilAtivo]
     ? PERFIS[perfilAtivo].stages.filter(s=>!_stagesGanhoCalc.includes(s)&&s!=='Perdido')
