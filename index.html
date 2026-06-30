@@ -5,43 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MF Envios CRM</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-/* Nourd via CDN não disponível — Inter como fallback fiel (mesma geometria) */
 :root {
-  /* === MF ENVIOS — Identidade Visual v2.0 === */
-  --bg:#0D0F1F;
-  --surface:#1E2456;
-  --surface2:#2A3070;
-  --border:rgba(255,255,255,0.10);
-  --border2:rgba(255,255,255,0.18);
-  --text:#FFFFFF;
-  --text2:#cbd5e1;
-  --text3:#8B8FA8;
-  --green:#22c55e;--green-bg:rgba(34,197,94,0.2);
-  --red:#ef4444;--red-bg:rgba(239,68,68,0.2);
-  --blue:#3b82f6;--blue-bg:rgba(59,130,246,0.2);
-  --amber:#f59e0b;--amber-bg:rgba(245,158,11,0.2);
-  --purple:#a78bfa;
-  --orange:#F97316;
-  --orange-hover:#EA6B10;
-  --orange-glow:rgba(249,115,22,0.35);
-  --orange-light:rgba(249,115,22,0.12);
-  --radius:12px;--radius-sm:8px;
-  --shadow:0 4px 12px rgba(0,0,0,.5);
-  --shadow-md:0 8px 32px rgba(0,0,0,.6);
-  --shadow-orange:0 0 20px rgba(249,115,22,0.35);
+  --bg:#0a1931;--surface:#102a50;--surface2:#183a6b;--border:#1e467a;--border2:#2c5a94;
+  --text:#ffffff;--text2:#cbd5e1;--text3:#94a3b8;--green:#22c55e;--green-bg:rgba(34,197,94,0.2);
+  --red:#ef4444;--red-bg:rgba(239,68,68,0.2);--blue:#3b82f6;--blue-bg:rgba(59,130,246,0.2);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,0.2);--purple:#a78bfa;--orange:#f97316;
+  --radius:10px;--radius-sm:6px;--shadow:0 4px 12px rgba(0,0,0,.5);--shadow-md:0 8px 24px rgba(0,0,0,.6);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter','Nourd','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.topbar{display:flex;align-items:center;gap:16px;padding:0 24px;height:60px;background:var(--surface);border-bottom:2px solid var(--orange);flex-shrink:0;box-shadow:0 2px 16px rgba(0,0,0,.4)}
+body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topbar{display:flex;align-items:center;gap:16px;padding:0 24px;height:56px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
 .logo{font-size:17px;font-weight:800}.logo .envios{color:var(--orange)}.logo .crm{color:var(--text3);font-weight:400;font-size:14px;margin-left:2px}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .wpp-status-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px}
 .wpp-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .agent-badge{font-size:12px;color:var(--text2);padding:5px 12px;background:var(--surface2);border-radius:20px;cursor:pointer;border:1px solid var(--border2)}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border2);background:var(--surface2);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text);cursor:pointer;transition:all .2s;white-space:nowrap}
-.btn:hover{background:var(--surface2);border-color:rgba(249,115,22,.4);box-shadow:var(--shadow-orange)}.btn-primary{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:var(--shadow-orange)}.btn-primary:hover{background:var(--orange-hover);box-shadow:0 0 28px rgba(249,115,22,.5)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--surface2);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text);cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--border)}.btn-primary{background:var(--text);color:var(--bg);border-color:var(--text)}.btn-primary:hover{background:var(--text2)}
 .btn-sm{padding:4px 10px;font-size:11px}.btn-danger{color:var(--red);border-color:var(--red-bg);background:var(--red-bg)}.btn-danger:hover{background:var(--red);color:#fff}
 .btn-report{background:var(--orange);color:#fff;border-color:var(--orange)}.btn-report:hover{background:#ea6c0a}
 .stats-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
@@ -63,7 +44,7 @@ body{font-family:'Inter','Nourd','Helvetica Neue',Arial,sans-serif;background:va
 .col-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}.col-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);flex:1}
 .col-count{font-size:12px;background:var(--surface2);border-radius:20px;padding:1px 8px;color:var(--text3)}
 .col-cards{overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;flex:1}
-.card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all .2s}.card:hover{border-color:rgba(249,115,22,.4);transform:translateY(-2px);box-shadow:var(--shadow-orange)}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all .15s}.card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow)}
 .card-name{font-size:13px;font-weight:700;margin-bottom:2px}.card-phone{font-size:11px;color:var(--text3);margin-bottom:4px}.card-route{font-size:11px;color:var(--blue);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-msg{font-size:12px;color:var(--text2);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-footer{display:flex;align-items:center;justify-content:space-between}.card-time{font-size:11px;color:var(--text3)}
@@ -92,7 +73,7 @@ td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;vertic
 .ia-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
 .ia-card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:12px}
 textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);resize:vertical;outline:none;transition:border .15s}textarea:focus{border-color:var(--border2)}
-input,select{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:rgba(255,255,255,0.06);outline:none;transition:all .2s;height:40px}input:focus,select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(249,115,22,0.15)}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border .15s}input:focus,select:focus{border-color:var(--border2)}
 select option{background:var(--surface);color:var(--text)}.form-label{font-size:12px;color:var(--text2);margin-bottom:4px;display:block}.form-group{margin-bottom:12px}
 .ia-result .field{margin-bottom:6px}.ia-result .field-label{font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);display:block;margin-bottom:1px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -115,28 +96,13 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 .dash-f-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}.dash-f-btn:hover{background:var(--surface2)}.dash-f-btn.active{background:#0a1931;color:#fff;border-color:var(--border2)}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none}.toast.show{opacity:1}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-
-#modal-cadastro::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: #0d1b2e;
-  z-index: -1;
-}
-
-.cnpj-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #2a3045;font-size:.75rem}
-.cnpj-label{color:#8492b4}
-.cnpj-val{color:#e8ecf5;font-weight:500;text-align:right;max-width:60%}
-.cnpj-status-ok{color:#22c55e;font-weight:600}
-.cnpj-status-bad{color:#ef4444;font-weight:600}
-.cnpj-result{background:var(--surface2);border-radius:8px;padding:10px;margin-top:8px;display:none}
 </style>
 </head>
 <body>
 <!-- SPLASH PERFIL -->
 <div id="splash-perfil" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center">
   <div style="text-align:center;max-width:480px;padding:32px">
-    <div style="margin-bottom:20px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 66" width="240" height="66" style="display:block;margin:0 auto"><defs><linearGradient id="ag2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f97316" stop-opacity="0.3"/><stop offset="50%" stop-color="#f97316"/><stop offset="100%" stop-color="#f97316" stop-opacity="0.3"/></linearGradient></defs><path d="M24 33 Q120 -5 216 33" fill="none" stroke="url(#ag2)" stroke-width="3" stroke-linecap="round"/><text x="120" y="56" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="28" font-weight="800" fill="white" letter-spacing="4">MF ENVIOS</text></svg></div>
+    <div style="font-size:28px;font-weight:800;margin-bottom:4px">MF <span style="color:var(--orange)">Envios</span> <span style="color:var(--text3);font-weight:400;font-size:18px">CRM</span></div>
     <div style="font-size:14px;color:var(--text3);margin-bottom:40px">Selecione seu perfil para continuar</div>
     <div style="display:flex;gap:16px;justify-content:center">
       <div onclick="selecionarPerfil('beatriz')" style="cursor:pointer;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:180px;transition:all .2s" onmouseover="this.style.borderColor='var(--orange)';this.style.background='var(--surface2)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
@@ -157,24 +123,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 </div>
 
 <div class="topbar">
-  <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 50" width="155" height="42">
-  <defs>
-    <linearGradient id="arco2" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="#F97316" stop-opacity="0.1"/>
-      <stop offset="20%"  stop-color="#F97316" stop-opacity="0.8"/>
-      <stop offset="50%"  stop-color="#F97316" stop-opacity="1"/>
-      <stop offset="80%"  stop-color="#F97316" stop-opacity="0.8"/>
-      <stop offset="100%" stop-color="#F97316" stop-opacity="0.1"/>
-    </linearGradient>
-    <filter id="glow2" x="-20%" y="-100%" width="140%" height="400%">
-      <feGaussianBlur stdDeviation="1.2" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
-  <!-- Arco: extremidades saem de dentro das letras M e S -->
-  <path d="M22 34 Q90 2 158 34" fill="none" stroke="url(#arco2)" stroke-width="1.8" stroke-linecap="round" filter="url(#glow2)"/>
-  <text x="90" y="47" text-anchor="middle" font-family="Inter,Nourd,Helvetica Neue,Arial,sans-serif" font-size="19" font-weight="800" fill="#FFFFFF" letter-spacing="3.5">MF ENVIOS</text>
-</svg></div>
+  <div class="logo">MF <span class="envios">Envios</span><span class="crm"> CRM</span></div>
   <div class="topbar-right">
     <div class="wpp-status-badge"><span class="wpp-dot" id="wpp-dot"></span><span id="wpp-status-text">Verificando...</span></div>
     <span class="agent-badge" onclick="mostrarTrocaPerfil()" id="agent-label" style="cursor:pointer">👤 Carregando...</span>
@@ -214,7 +163,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
   <div class="tab" onclick="showView('clientes')" id="tab-clientes">👥 Clientes</div>
   <div class="tab" onclick="showView('cadastro')" id="tab-cadastro">📋 Cadastro</div>
   <div class="tab" onclick="showView('dashboard')" id="tab-dashboard">📊 Dashboard</div>
-  <div class="tab" onclick="showView('wpp')" id="tab-wpp" style="display:none">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
+  <div class="tab" onclick="showView('wpp')" id="tab-wpp">💬 WhatsApp <span class="tab-badge" id="wpp-badge" style="display:none">0</span></div>
   <div class="tab" onclick="showView('ia')" id="tab-ia">🤖 Analisar IA</div>
   <div class="tab" onclick="showView('operacional')" id="tab-operacional">⚙️ Operacional</div>
   <div class="tab" onclick="showView('financeiro')" id="tab-financeiro">💰 Financeiro</div>
@@ -228,18 +177,8 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
       <span id="mes-label" style="font-size:13px;font-weight:600;min-width:110px;text-align:center"></span>
       <button onclick="navMes(1)" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0 4px">&#9654;</button>
     </div>
-    <!-- Abas de perfil — só aparece para Beatriz -->
-    <div id="kanban-abas" style="display:none;gap:4px">
-      <button id="aba-beatriz" onclick="selecionarAbaKanban('beatriz')" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--orange);color:#fff;font-size:12px;font-weight:700;cursor:pointer">👩‍💼 Beatriz</button>
-      <button id="aba-davi" onclick="selecionarAbaKanban('davi')" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer">👨‍💼 Davi</button>
-      <button id="aba-todos" onclick="selecionarAbaKanban('todos')" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer">👥 Todos</button>
-    </div>
     <div class="search-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="Buscar lead..." id="kanban-search" oninput="renderKanban()"/></div>
     <select class="filter-select" id="kanban-agent" onchange="renderKanban()"><option value="">Todos os responsáveis</option></select>
-    <div style="margin-left:auto;display:flex;gap:6px">
-      <button onclick="document.getElementById('kanban-board').scrollBy({left:-300,behavior:'smooth'})" style="background:var(--orange);border:none;border-radius:6px;padding:4px 12px;color:white;font-size:16px;cursor:pointer;font-weight:700">◀</button>
-      <button onclick="document.getElementById('kanban-board').scrollBy({left:300,behavior:'smooth'})" style="background:var(--orange);border:none;border-radius:6px;padding:4px 12px;color:white;font-size:16px;cursor:pointer;font-weight:700">▶</button>
-    </div>
   </div>
   <div class="kanban-board" id="kanban-board"></div>
 </div>
@@ -252,7 +191,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <span style="margin-left:auto;font-size:12px;color:var(--text3)" id="leads-count"></span>
   </div>
   <div class="leads-content">
-    <table><thead><tr><th>Nome</th><th>Tipo</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>Responsável</th><th>Horário</th></tr></thead><tbody id="leads-tbody"></tbody></table>
+    <table><thead><tr><th>Nome</th><th>Rota</th><th>Etapa</th><th>Valor NF</th><th>Responsável</th><th>Horário</th><th>Follow-up</th></tr></thead><tbody id="leads-tbody"></tbody></table>
   </div>
 </div>
 
@@ -441,12 +380,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
 // ═══════════════════════════════════════════════════════
 var vendas = [];
 var vendaEditando = null;
-function salvarVendas() {
-  // Persistir todas as vendas no MongoDB
-  vendas.forEach(function(v) {
-    fetch('/vendas', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(v)}).catch(function(){});
-  });
-}
+function salvarVendas() {}
 function carregarVendas() {
   return fetch('/vendas').then(function(r){return r.json();}).then(function(data){
     vendas = (Array.isArray(data) ? data : []).map(function(v){
@@ -472,11 +406,9 @@ function calcVencimento(dias) {
 }
 
 function formatMoeda(v) {
-  if(typeof v==='number'){if(isNaN(v))return 'R$ 0,00';return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
-  var s=(v||'0').toString().replace(/[R$\s]/g,'').trim();
-  var n;if(s.indexOf(',')!==-1){n=parseFloat(s.replace(/\./g,'').replace(',','.'));}else{n=parseFloat(s);}
-  if(isNaN(n))return 'R$ 0,00';
-  return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  var n = parseFloat((v||'0').toString().replace(/\./g,'').replace(',','.'));
+  if(isNaN(n)) return 'R$ 0,00';
+  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
 function parseMoeda(v) {
@@ -620,19 +552,27 @@ function finAtualizarVencimento() { /* prazo agora é select de atalho */ }
 
 function autoPreencherClienteFin(nome) {
   if(!nome) return;
+  // Buscar no cadastro local ou em window.clientesFin
   var fontes = (window.clientesFin||[]);
+  if(typeof clientes !== 'undefined') fontes = fontes.concat(clientes);
   var cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'') === nome; });
-  if(!cli) cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'').toLowerCase().includes(nome.toLowerCase()); });
+  if(!cli) {
+    // Tentar busca parcial
+    cli = fontes.find(function(c){ return (c.nome||c.razao||c.fantasia||'').toLowerCase().includes(nome.toLowerCase()); });
+  }
   if(!cli) return;
   var cnpj = document.getElementById('fin-cnpj');
   if(cnpj && (cli.cnpj||cli.cpf)) cnpj.value = cli.cnpj||cli.cpf||'';
+  // Montar endereco
   var end = '';
   if(cli.logradouro) {
     end = (cli.logradouro||'') + (cli.numero?', '+cli.numero:'') +
           (cli.comp?' '+cli.comp:'') + (cli.bairro?' - '+cli.bairro:'') +
           (cli.cidade?' - '+cli.cidade:'') + (cli.estado?' / '+cli.estado:'') +
           (cli.cep?' CEP: '+cli.cep:'');
-  } else if(cli.endereco) { end = cli.endereco; }
+  } else if(cli.endereco) {
+    end = cli.endereco;
+  }
   var endEl = document.getElementById('fin-endereco');
   if(endEl && end) endEl.value = end.trim();
 }
@@ -705,6 +645,7 @@ function finEditar(id) {
   document.getElementById('fin-descricao').value = v.descricao || '';
   document.getElementById('fin-obs').value = v.obs || '';
   document.getElementById('fin-lead-id').value = v.leadId || '';
+  document.getElementById('fin-prazo-noop').value = '0';
   document.getElementById('modal-financeiro').style.display = 'flex';
 }
 
@@ -715,18 +656,19 @@ function finExcluir(id) {
 
 
 
-const STAGES=['Primeiro contato','Cotação Enviada','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Fechado / Ganho','Perdido'];
-const STAGE_COLORS={'Primeiro contato':'#3b82f6','Negociação':'#f97316','Aguardando Retorno':'#f59e0b','Aguardando Coleta':'#06b6d4','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'};
+const STAGES=['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'];
+const STAGE_COLORS={'Primeiro contato':'#3b82f6','Qualificação':'#8b5cf6','Proposta enviada':'#f59e0b','Negociação':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'};
 const STAGE_PILL={'Primeiro contato':'background:rgba(59,130,246,.25);color:#93c5fd','Qualificação':'background:rgba(139,92,246,.25);color:#c4b5fd','Proposta enviada':'background:rgba(245,158,11,.25);color:#fcd34d','Negociação':'background:rgba(249,115,22,.25);color:#fdba74','Fechado / Ganho':'background:rgba(34,197,94,.25);color:#86efac','Perdido':'background:rgba(239,68,68,.25);color:#fca5a5'};
 
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
 function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
-let leads=[],activity=load('crm-activity',[]),agentName=load('crm-agent',''),iaKey=load('crm-ia-key',''),iaPreview=null;
+let leads=load('crm-leads',[]),activity=load('crm-activity',[]),agentName=load('crm-agent',''),iaKey=load('crm-ia-key',''),iaPreview=null;
 function saveLeads(){
+  save('crm-leads',leads);
   updateStats();
-  // Salvar cada lead no MongoDB via PUT (upsert seguro)
+  // Sincronizar cada lead com MongoDB
   leads.forEach(function(lead){
-    fetch('/kanban/'+lead.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(function(){});
+    fetch('/kanban-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(function(){});
   });
 }
 function saveActivity(){save('crm-activity',activity.slice(0,100));}
@@ -738,21 +680,15 @@ function fmtDateFull(ts){return new Date(ts).toLocaleString('pt-BR',{day:'2-digi
 function initials(name){return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';}
 
 function fmtValorStat(v){
-  if(!v||v===0) return 'R$ 0,00';
-  return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-function parseFrete(val){
-  if(!val && val!==0) return 0;
-  var s = val.toString().replace(/[R$\s]/g,'').trim();
-  if(s.indexOf(',') !== -1){
-    s = s.replace(/\./g,'').replace(',','.');
-  }
-  var n = parseFloat(s);
-  return isNaN(n) ? 0 : n;
+  if(!v||v===0) return 'R$ 0';
+  if(v>=1000000) return 'R$'+(v/1000000).toFixed(1)+'M';
+  if(v>=1000) return 'R$'+(v/1000).toFixed(0)+'k';
+  return 'R$'+Math.round(v);
 }
 function somaFrete(arr){
   return arr.reduce((s,l)=>{
-    return s + parseFrete(l.valorFrete||'0');
+    const v=parseFloat((l.valorFrete||'0').replace(/\./g,'').replace(',','.'));
+    return s+(isNaN(v)?0:v);
   },0);
 }
 function updateStats(){
@@ -778,10 +714,7 @@ function updateStats(){
     });
     // Mini barra do outro perfil
     const stagesNegOutro = pOutro.stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido');
-    const _stagesGanhoOutro = pOutro.nome === 'Davi'
-      ? ['Emissão','Coleta','Cliente recorrente','Nota Fiscal','Fechado / Ganho']
-      : ['Fechado / Ganho','Aguardando Coleta','Nota Fiscal'];
-    const ganhosOutro = leadsOutro.filter(l=>_stagesGanhoOutro.includes(l.stage));
+    const ganhosOutro = leadsOutro.filter(l=>l.stage==='Fechado / Ganho');
     const perdidosOutro = leadsOutro.filter(l=>l.stage==='Perdido');
     const negOutro = leadsOutro.filter(l=>stagesNegOutro.includes(l.stage));
     const srOutro = leadsOutro.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
@@ -798,16 +731,11 @@ function updateStats(){
     if(el('stat-total-label')) el('stat-total-label').textContent = nomeMes||'Total do mês';
   }
 
-  // Etapas "ganho" por perfil — só Fechado/Ganho + etapas pós-venda do perfil ativo
-  const _stagesGanhoCalc = perfilAtivo === 'davi'
-    ? ['Emissão','Coleta','Cliente recorrente','Nota Fiscal','Fechado / Ganho']
-    : ['Fechado / Ganho','Aguardando Coleta','Nota Fiscal'];
   const stagesNeg = typeof PERFIS !== 'undefined' && perfilAtivo && PERFIS[perfilAtivo]
-    ? PERFIS[perfilAtivo].stages.filter(s=>!_stagesGanhoCalc.includes(s)&&s!=='Perdido')
-    : ['Negociação','Primeiro contato','Novo'];
+    ? PERFIS[perfilAtivo].stages.filter(s=>s!=='Fechado / Ganho'&&s!=='Perdido')
+    : ['Proposta enviada','Negociação','Qualificação','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal'];
 
-  const _stagesGanho = _stagesGanhoCalc;
-  const ganhos = leadsMes.filter(l=>_stagesGanho.includes(l.stage));
+  const ganhos = leadsMes.filter(l=>l.stage==='Fechado / Ganho');
   const perdidos = leadsMes.filter(l=>l.stage==='Perdido');
   const emNeg = leadsMes.filter(l=>stagesNeg.includes(l.stage));
   const semRetorno = leadsMes.filter(l=>!l.followups||l.followups.filter(f=>!f.done).length===0);
@@ -824,12 +752,7 @@ function showView(v){
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   const t=document.getElementById('tab-'+v);if(t)t.classList.add('active');
-  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();});}if(v==='operacional'){
-    var opAbas=document.getElementById('op-abas-perfil');
-    if(opAbas) opAbas.style.display=perfilAtivo==='beatriz'?'flex':'none';
-    if(perfilAtivo==='beatriz') opPerfilAtivo='beatriz';
-    opTab('tarefas');
-  }
+  if(v==='kanban')renderKanban();if(v==='clientes')renderLeads();if(v==='dashboard')renderDashboard();if(v==='wpp')loadWppMessages();if(v==='ia')renderIAHistory();if(v==='cadastro'){carregarCadastro();}if(v==='financeiro'){carregarVendas().then(function(){renderFinanceiro();})}if(v==='operacional'){opTab('tarefas');};}
   updateAgentFilters();
 }
 
@@ -849,43 +772,16 @@ function renderKanban(){
   const leadsMes=getLeadsMes();
   const stagesAtivos = window.STAGES || STAGES;
   const stageColorsAtivos = window.STAGE_COLORS || STAGE_COLORS;
-  // Filtrar por perfil ativo e aba selecionada
+  // Filtrar por perfil ativo
   let leadsPerfilMes;
-  if(perfilAtivo === 'beatriz') {
-    // Beatriz: respeita aba selecionada
-    if(kanbanAbaAtiva === 'todos') {
-      leadsPerfilMes = leadsMes;
-      window.STAGES = [...new Set([...PERFIS.beatriz.stages, ...PERFIS.davi.stages])];
-      window.STAGE_COLORS = Object.assign({}, PERFIS.beatriz.stageColors, PERFIS.davi.stageColors);
-    } else if(kanbanAbaAtiva === 'davi') {
-      const pDavi = PERFIS.davi;
-      leadsPerfilMes = leadsMes.filter(l => {
-        if(l.agent && l.agent !== '') return l.agent === pDavi.nome;
-        return pDavi.stages.includes(l.stage);
-      });
-      window.STAGES = pDavi.stages;
-      window.STAGE_COLORS = pDavi.stageColors;
-    } else {
-      // 'beatriz' ou 'proprio' — mostrar leads da Beatriz
-      const pBeatriz = PERFIS.beatriz;
-      leadsPerfilMes = leadsMes.filter(l => {
-        if(l.agent && l.agent !== '') return l.agent === pBeatriz.nome;
-        return pBeatriz.stages.includes(l.stage);
-      });
-      window.STAGES = pBeatriz.stages;
-      window.STAGE_COLORS = pBeatriz.stageColors;
-    }
-  } else if(perfilAtivo === 'davi') {
-    // Davi: sempre vê só os leads dele
-    const pDavi = PERFIS.davi;
-    leadsPerfilMes = leadsMes.filter(l => {
-      if(l.agent && l.agent !== '') return l.agent === pDavi.nome;
-      return pDavi.stages.includes(l.stage);
-    });
-    window.STAGES = pDavi.stages;
-    window.STAGE_COLORS = pDavi.stageColors;
-  } else {
+  if(verTodos || !perfilAtivo) {
     leadsPerfilMes = leadsMes;
+  } else {
+    const pAtivo = PERFIS[perfilAtivo];
+    leadsPerfilMes = pAtivo ? leadsMes.filter(l => {
+      if(l.agent && l.agent !== '') return l.agent === pAtivo.nome;
+      return pAtivo.stages.includes(l.stage);
+    }) : leadsMes;
   }
   stagesAtivos.forEach(stage=>{
     let cards=leadsPerfilMes.filter(l=>l.stage===stage);
@@ -898,7 +794,7 @@ function renderKanban(){
     cards.sort((a,b)=>b.ts-a.ts).forEach(lead=>{
       const hasFu=lead.followups?.some(f=>!f.done);
       const textoObs=(lead.obs||'').toLowerCase();
-      const palavrasCotacao=['cotacao','cotacao','anuncio','anuncio','tabela','quanto fica','quanto custa','me passa','me manda','preciso enviar','quero enviar','valor do frete','preco do frete'];
+      const palavrasCotacao=['cotação','cotacao','anuncio','anúncio','tabela','quanto fica','quanto custa','me passa','me manda','preciso enviar','quero enviar','valor do frete','preço do frete'];
       const isAnuncio=palavrasCotacao.some(function(p){return textoObs.includes(p);});
       const card=document.createElement('div');card.className='card';
       if(isAnuncio) card.style.borderColor='var(--red)';
@@ -909,7 +805,6 @@ function renderKanban(){
         ${lead.obs?`<div class="card-msg">${lead.obs.slice(0,55)}</div>`:''}
         <div class="card-tags">
           ${lead.source==='whatsapp'?'<span class="tag tag-wpp">WhatsApp</span>':''}
-          ${lead.tipoContato==='salvo'?'<span class="tag" style="background:rgba(34,197,94,.2);color:#22c55e">🟢 Salvo</span>':lead.tipoContato==='novo'?'<span class="tag" style="background:rgba(59,130,246,.2);color:#3b82f6">🔵 Novo</span>':''}
           ${hasFu?'<span class="tag tag-followup">Follow-up</span>':''}
           ${lead.hot?'<span class="tag tag-hot">🔥 Quente</span>':''}
           ${lead.urgencia==='Alta'?'<span class="tag tag-urgente">⚡ Urgente</span>':''}
@@ -936,15 +831,14 @@ function renderLeads(){
   const tbody=document.getElementById('leads-tbody');
   tbody.innerHTML=filtered.length?filtered.map(l=>{
     const fu=l.followups?.find(f=>!f.done);
-    const tipoTag=l.tipoContato==='salvo'?'<span style="background:rgba(34,197,94,.2);color:#22c55e;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">🟢 Salvo</span>':l.tipoContato==='novo'?'<span style="background:rgba(59,130,246,.2);color:#3b82f6;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">🔵 Novo</span>':'<span style="color:var(--text3);font-size:11px">—</span>';
     return `<tr onclick="openLead('${l.id}')">
-      <td><strong>${l.name}</strong>${l.hot?' 🔥':''}</td>
-      <td>${tipoTag}</td>
+      <td><strong>${l.name}</strong></td>
       <td style="color:var(--blue);font-size:12px">${l.rota||l.prod||'—'}</td>
       <td><span class="stage-pill" style="${STAGE_PILL[l.stage]||''}">${l.stage}</span></td>
       <td style="color:var(--green)">${l.valorNF?'R$ '+l.valorNF:'—'}</td>
       <td style="color:var(--text2)">${l.agent||'—'}</td>
       <td style="color:var(--text3)">${fmtTime(l.ts)}</td>
+      <td style="color:${fu?'var(--amber)':'var(--text3)'}">${fu?fu.text:'—'}</td>
     </tr>`;
   }).join(''):`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text3)">Nenhum lead encontrado.</td></tr>`;
 }
@@ -1024,42 +918,8 @@ function renderDashboard(){
 }
 
 // ─── NOVO LEAD ───────────────────────────────────────────────
-function formatarCNPJNL(el){
-  var v=el.value.replace(/\D/g,'');
-  if(v.length>14)v=v.slice(0,14);
-  v=v.replace(/^(\d{2})(\d)/,'$1.$2');
-  v=v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3');
-  v=v.replace(/\.(\d{3})(\d)/,'.$1/$2');
-  v=v.replace(/(\d{4})(\d)/,'$1-$2');
-  el.value=v;
-}
-async function prospectAINL(){
-  var el=document.getElementById('nl-cnpj');
-  if(!el)return;
-  var cnpj=el.value.replace(/\D/g,'');
-  if(cnpj.length!==14){alert('CNPJ deve ter 14 dígitos');return;}
-  var btn=event.target;
-  btn.textContent='Analisando...';btn.disabled=true;
-  var res=document.getElementById('nl-cnpj-result');
-  if(res){res.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">⏳ Consultando Receita Federal e gerando análise com IA...</div>';res.style.display='block';}
-  try{
-    var r=await fetch('/prospect-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cnpj:cnpj})});
-    var d=await r.json();
-    if(!d.ok){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+(d.error||'desconhecido')+'</span>';return;}
-    renderProspectResult('nl-cnpj-result',d.analise,d.dados,null);
-    // Preenche nome e telefone automaticamente
-    if(d.dados){
-      var nm=document.getElementById('nl-name');
-      if(nm&&!nm.value&&d.dados.razao_social)nm.value=d.dados.razao_social;
-      var tel=document.getElementById('nl-tel');
-      if(tel&&!tel.value&&d.dados.ddd_telefone_1)tel.value=d.dados.ddd_telefone_1;
-    }
-  }catch(e){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+e.message+'</span>';}
-  finally{btn.textContent='🔍 ProspectAI';btn.disabled=false;}
-}
 function openNewLead(stage='Primeiro contato'){
-  const _stages=window.STAGES||STAGES;
-  const stageOpts=_stages.map(s=>`<option value="${s}" ${s===stage?'selected':''}>${s}</option>`).join('');
+  const stageOpts=STAGES.map(s=>`<option value="${s}" ${s===stage?'selected':''}>${s}</option>`).join('');
   showModal(`
     <div class="modal-header"><span class="modal-title">Novo lead</span><button class="modal-close" onclick="closeModal()">×</button></div>
     <div class="modal-body">
@@ -1070,18 +930,12 @@ function openNewLead(stage='Primeiro contato'){
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Etapa</label><select id="nl-stage">${stageOpts}</select></div>
-        <div class="form-group"><label class="form-label">Responsável</label><input id="nl-agent" value="${perfilAtivo&&PERFIS[perfilAtivo]?PERFIS[perfilAtivo].nome:agentName}" placeholder="Seu nome" ${perfilAtivo?"readonly style=\"opacity:0.7\"":""}  /></div>
+        <div class="form-group"><label class="form-label">Responsável</label><input id="nl-agent" value="${agentName}" placeholder="Seu nome"/></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Origem</label><select id="nl-source"><option value="">—</option><option value="whatsapp">WhatsApp</option><option value="google">Google</option><option value="instagram">Instagram</option><option value="site">Site</option><option value="indicacao">Indicação</option><option value="outro">Outro</option></select></div>
         <div class="form-group"><label class="form-label">Urgência</label><select id="nl-urgencia"><option value="">Normal</option><option value="Alta">Alta</option><option value="Muito alta">Muito alta</option></select></div>
       </div>
-
-      <div class="form-row">
-        <div class="form-group" style="flex:1"><label class="form-label">CNPJ</label><input id="nl-cnpj" placeholder="00.000.000/0001-00" maxlength="18" oninput="formatarCNPJNL(this)"/></div>
-        <div class="form-group" style="display:flex;align-items:flex-end"><button type="button" onclick="prospectAINL()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">🔍 ProspectAI</button></div>
-      </div>
-      <div id="nl-cnpj-result" style="display:none;margin-bottom:12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px;max-height:400px;overflow-y:auto"></div>
 
       <div class="section-divider">📦 Dados do frete</div>
       <div class="form-row">
@@ -1130,7 +984,6 @@ function saveLead(){
     peso:document.getElementById('nl-peso').value.trim(),
     medidas:document.getElementById('nl-medidas').value.trim(),
     obs:document.getElementById('nl-obs').value.trim(),
-    cnpj:(document.getElementById('nl-cnpj')||{value:''}).value.trim(),
     hot:document.getElementById('nl-hot').checked,
     ts:Date.now(),history:[],followups:[]
   };
@@ -1149,10 +1002,7 @@ function saveLead(){
 function openLead(id){const l=leads.find(x=>x.id===id);if(!l)return;renderLeadModal(l);}
 
 function renderLeadModal(l){
-  // Mostrar todas as etapas dos dois perfis juntas
-  var _allStages=[...new Set([...PERFIS.beatriz.stages,...PERFIS.davi.stages])];
-  if(l.stage && !_allStages.includes(l.stage)) _allStages=[l.stage,..._allStages];
-  const stageOpts=_allStages.map(s=>`<option value="${s}" ${s===l.stage?'selected':''}>${s}</option>`).join('');
+  const stageOpts=STAGES.map(s=>`<option value="${s}" ${s===l.stage?'selected':''}>${s}</option>`).join('');
   const history=(l.history||[]).slice().reverse().map(h=>`<div class="history-item"><div class="history-dot"></div><div><div class="history-bubble">${h.text}</div><div class="history-meta">${fmtDateFull(h.ts)}${h.agent?' · '+h.agent:''}</div></div></div>`).join('');
   const fus=(l.followups||[]).map((f,i)=>`<div class="followup-item"><input type="checkbox" class="followup-check" ${f.done?'checked':''} onchange="toggleFollowup('${l.id}',${i},this.checked)"/><span class="followup-text ${f.done?'followup-done':''}">${f.text}</span><span class="followup-date">${f.date||''}</span><button class="btn btn-sm btn-danger" onclick="deleteFollowup('${l.id}',${i})">×</button></div>`).join('');
   showModal(`
@@ -1174,14 +1024,6 @@ function renderLeadModal(l){
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Telefone</label><input id="d-tel" value="${l.tel||''}" onblur="updateLeadField('${l.id}','tel',this.value)"/></div>
-        <div class="form-group" style="grid-column:1/-1">
-          <label class="form-label">CNPJ</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input id="d-cnpj" value="${l.cnpj||''}" placeholder="00.000.000/0001-00" style="flex:1" oninput="formatCNPJ(this)" onblur="updateLeadField('${l.id}','cnpj',this.value)"/>
-            <button class="btn btn-primary" type="button" onclick="prospectAI('${l.id}')" style="white-space:nowrap;padding:6px 12px">&#128269; ProspectAI</button>
-          </div>
-          <div id="cnpj-result-${l.id}" class="cnpj-result"></div>
-        </div>
         <div class="form-group"><label class="form-label">Urgência</label><select id="d-urgencia" onchange="updateLeadField('${l.id}','urgencia',this.value)"><option value="" ${!l.urgencia?'selected':''}>Normal</option><option value="Alta" ${l.urgencia==='Alta'?'selected':''}>Alta</option><option value="Muito alta" ${l.urgencia==='Muito alta'?'selected':''}>Muito alta</option></select></div>
       </div>
 
@@ -1238,132 +1080,59 @@ function addNote(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=do
 function addFollowup(id){const l=leads.find(x=>x.id===id);if(!l)return;const text=document.getElementById('fu-text').value.trim();if(!text)return;l.followups=l.followups||[];l.followups.push({text,date:document.getElementById('fu-date').value,done:false});saveLeads();renderLeadModal(l);toast('Follow-up adicionado!');}
 function toggleFollowup(id,idx,done){const l=leads.find(x=>x.id===id);if(!l)return;l.followups[idx].done=done;saveLeads();if(done)toast('Follow-up concluído!');}
 function deleteFollowup(id,idx){const l=leads.find(x=>x.id===id);if(!l)return;l.followups.splice(idx,1);saveLeads();renderLeadModal(l);}
-function deleteLead(id){
-  if(!confirm('Excluir este lead?'))return;
-  const l=leads.find(x=>x.id===id);
-  leads=leads.filter(x=>x.id!==id);
-  updateStats();
-  fetch('/kanban/'+id,{method:'DELETE'}).catch(function(){});
-  addActivity('Lead <strong>'+(l?l.name:'')+'</strong> excluído.');
-  closeModal();renderKanban();toast('Lead excluído.');
-}
+function deleteLead(id){if(!confirm('Excluir este lead?'))return;const l=leads.find(x=>x.id===id);leads=leads.filter(x=>x.id!==id);saveLeads();addActivity(`Lead <strong>${l?.name}</strong> excluído.`);closeModal();renderKanban();toast('Lead excluído.');}
 
 // ─── RELATÓRIO DO DIA ───────────────────────────────────────────────
 function abrirRelatorio(){
   const hoje=new Date();hoje.setHours(0,0,0,0);
   const leadsHoje=leads.filter(l=>new Date(l.ts)>=hoje).sort((a,b)=>a.ts-b.ts);
   const dataStr=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
-  const diaSemana=new Date().toLocaleDateString('pt-BR',{weekday:'long'});
   const novos=leadsHoje.filter(l=>l.stage==='Primeiro contato').length;
   const proposta=leadsHoje.filter(l=>l.stage==='Proposta enviada').length;
   const negociacao=leadsHoje.filter(l=>l.stage==='Negociação').length;
   const qualificacao=leadsHoje.filter(l=>l.stage==='Qualificação').length;
   const perdidos=leadsHoje.filter(l=>l.stage==='Perdido').length;
   const followupsPendentes=leads.flatMap(l=>(l.followups||[]).filter(f=>!f.done).map(f=>({...f,leadName:l.name,leadTel:l.tel,leadId:l.id,valor:l.valorNF,rota:l.rota})));
-  // Financeiro do dia
-  const vendasHoje=vendas.filter(v=>{var d=new Date(v.ts||0);d.setHours(0,0,0,0);return d>=hoje;});
-  const faturadoHoje=vendasHoje.reduce((s,v)=>s+(parseFloat(v.valor)||0),0);
-  const recebidoHoje=vendasHoje.filter(v=>v.pago).reduce((s,v)=>s+(parseFloat(v.valor)||0),0);
-  const aReceberHoje=faturadoHoje-recebidoHoje;
-  const fmt=v=>'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório MF Envios — ${dataStr}</title>
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório ${dataStr}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Inter','Helvetica Neue',Arial,sans-serif;background:#F4F5FA;color:#1E2456;font-size:13px}
-    .page{max-width:900px;margin:0 auto;padding:32px 24px}
-    /* HEADER */
-    .header{background:#1E2456;border-radius:12px;padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden}
-    .header::before{content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:500px;height:100px;border-radius:50%;border:2px solid rgba(249,115,22,0.6);box-shadow:0 0 20px rgba(249,115,22,0.3)}
-    .header-logo{font-size:22px;font-weight:800;color:#fff;letter-spacing:3px;margin-bottom:4px}
-    .header-logo span{color:#F97316}
-    .header-sub{font-size:12px;color:rgba(255,255,255,0.6);letter-spacing:0.05em;text-transform:uppercase}
-    .header-date{font-size:13px;color:rgba(255,255,255,0.8);margin-top:12px}
-    .header-right{position:absolute;right:32px;top:50%;transform:translateY(-50%);text-align:right}
-    .header-agent{font-size:12px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.05em}
-    .header-agent-name{font-size:16px;font-weight:700;color:#F97316}
-    /* SEÇÃO FINANCEIRO */
-    .fin-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
-    .fin-card{background:#fff;border-radius:10px;padding:16px 20px;border-left:4px solid #F97316;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-    .fin-card.green{border-left-color:#22c55e}.fin-card.blue{border-left-color:#3b82f6}
-    .fin-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#8B8FA8;margin-bottom:6px}
-    .fin-val{font-size:24px;font-weight:800;color:#1E2456}
-    .fin-val.orange{color:#F97316}.fin-val.green{color:#22c55e}.fin-val.blue{color:#3b82f6}
-    /* CONTADORES LEADS */
-    .counters{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
-    .counter{background:#fff;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-    .counter-val{font-size:28px;font-weight:800;color:#F97316;line-height:1}
-    .counter-label{font-size:10px;color:#8B8FA8;text-transform:uppercase;letter-spacing:0.05em;margin-top:4px}
-    /* SECTION */
-    .section-title{font-size:12px;font-weight:800;color:#1E2456;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #F97316;display:flex;align-items:center;gap:8px}
-    .section-block{margin-bottom:28px}
-    /* LEAD CARD */
-    .lead-card{background:#fff;border-radius:10px;padding:16px 20px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid #F97316;page-break-inside:avoid}
-    .lead-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .lead-name{font-size:15px;font-weight:700;color:#1E2456}
-    .lead-stage{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
-    .lead-phone{font-size:12px;color:#8B8FA8;margin-bottom:10px}
-    .lead-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
-    .lead-field label{font-size:10px;color:#8B8FA8;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:2px;font-weight:600}
-    .lead-field span{font-size:13px;color:#1E2456;font-weight:500}
-    .lead-obs{font-size:12px;color:#555;background:#F4F5FA;padding:10px 12px;border-radius:6px;line-height:1.6;margin-top:8px;border-left:3px solid #F97316}
-    .lead-horario{font-size:11px;color:#8B8FA8;margin-bottom:6px}
-    /* VENDA CARD */
-    .venda-card{background:#fff;border-radius:10px;padding:14px 18px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:space-between}
-    .venda-cliente{font-size:14px;font-weight:700;color:#1E2456}
-    .venda-desc{font-size:12px;color:#8B8FA8;margin-top:2px}
-    .venda-valor{font-size:16px;font-weight:800;color:#22c55e}
-    .venda-status{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
-    .venda-pago{background:#dcfce7;color:#166534}.venda-pendente{background:#fef3c7;color:#92400e}.venda-atrasado{background:#fee2e2;color:#991b1b}
-    /* FOLLOWUP */
-    .rec-item{display:flex;gap:12px;padding:12px 14px;background:#fff;border-radius:8px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,0.05);align-items:flex-start}
-    .rec-num{width:24px;height:24px;border-radius:50%;background:#F97316;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-    .rec-text{font-size:13px;color:#1E2456;line-height:1.5}
-    /* STAGE PILLS */
+    body{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:32px;background:#fff;color:#1a1a2e;font-size:13px}
+    .header{margin-bottom:24px}.header h1{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+    .header p{color:#666;font-size:13px}
+    .counters{display:flex;gap:0;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:28px}
+    .counter{flex:1;padding:16px;text-align:center;border-right:1px solid #e2e8f0}.counter:last-child{border-right:none}
+    .counter-val{font-size:28px;font-weight:700;color:#f97316;line-height:1}.counter-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+    .section-title{font-size:14px;font-weight:700;color:#1a1a2e;margin:24px 0 14px;padding-bottom:8px;border-bottom:2px solid #f97316}
+    .lead-card{border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;page-break-inside:avoid}
+    .lead-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .lead-name{font-size:15px;font-weight:700;color:#1a1a2e}.lead-stage{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+    .lead-phone{font-size:12px;color:#666;margin-bottom:10px}
+    .lead-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+    .lead-field label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px}
+    .lead-field span{font-size:13px;color:#1a1a2e;font-weight:500}
+    .lead-obs{font-size:12px;color:#444;background:#f8fafc;padding:10px;border-radius:6px;line-height:1.6}
+    .lead-horario{font-size:11px;color:#888;margin-bottom:8px}
+    .recomendacoes{margin-top:28px}
+    .rec-item{display:flex;gap:12px;padding:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px}
+    .rec-num{width:24px;height:24px;border-radius:50%;background:#f97316;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .rec-text{font-size:13px;color:#1a1a2e;line-height:1.5}
+    .footer{margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#888;text-align:center}
     .stage-proposta{background:#fef3c7;color:#92400e}.stage-negociacao{background:#fee2e2;color:#991b1b}
     .stage-qualificacao{background:#ede9fe;color:#5b21b6}.stage-novo{background:#dbeafe;color:#1e40af}
     .stage-fechado{background:#dcfce7;color:#166534}.stage-perdido{background:#fee2e2;color:#991b1b}
-    /* FOOTER */
-    .footer{margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#8B8FA8;text-align:center}
-    @media print{body{background:#fff}.page{padding:16px}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}.fin-card,.counter,.lead-card,.venda-card,.rec-item{box-shadow:none}}
-  </style></head><body><div class="page">
+    @media print{body{padding:16px}}
+  </style></head><body>
   <div class="header">
-    <div class="header-logo">MF <span>ENVIOS</span></div>
-    <div class="header-sub">Relatório Diário de Operações</div>
-    <div class="header-date">${diaSemana.charAt(0).toUpperCase()+diaSemana.slice(1)}, ${dataStr}</div>
-    <div class="header-right">
-      <div class="header-agent">Atendente</div>
-      <div class="header-agent-name">${agentName||'MF Envios'}</div>
-    </div>
+    <h1>Leads novos — ${dataStr}</h1>
+    <p>${dataStr} &nbsp;·&nbsp; Atendente: ${agentName||'MF Envios'} &nbsp;·&nbsp; MF Envios · Clientes captados via Google / WhatsApp</p>
   </div>
-  <!-- FINANCEIRO DO DIA -->
-  <div class="section-block">
-    <div class="section-title">💰 Financeiro do Dia</div>
-    <div class="fin-cards">
-      <div class="fin-card"><div class="fin-label">Faturado hoje</div><div class="fin-val orange">${fmt(faturadoHoje)}</div></div>
-      <div class="fin-card green"><div class="fin-label">Recebido hoje</div><div class="fin-val green">${fmt(recebidoHoje)}</div></div>
-      <div class="fin-card blue"><div class="fin-label">A receber hoje</div><div class="fin-val blue">${fmt(aReceberHoje)}</div></div>
-    </div>
-    ${vendasHoje.length?vendasHoje.map(v=>{
-      const hoje2=new Date();hoje2.setHours(0,0,0,0);
-      const venc=v.vencimento?new Date(v.vencimento+'T00:00:00'):null;
-      const atrasado=venc&&venc<hoje2&&!v.pago;
-      const stClass=v.pago?'venda-pago':atrasado?'venda-atrasado':'venda-pendente';
-      const stText=v.pago?'Recebido':atrasado?'Atrasado':'Pendente';
-      return `<div class="venda-card"><div><div class="venda-cliente">${v.cliente||'—'}</div><div class="venda-desc">${v.descricao||v.formaPag||''}</div></div><div style="text-align:right"><div class="venda-valor">${fmt(parseFloat(v.valor)||0)}</div><div class="venda-status ${stClass}">${stText}</div></div></div>`;
-    }).join(''):'<div style="color:#8B8FA8;font-size:13px;padding:12px 0">Nenhuma venda registrada hoje.</div>'}
+  <div class="counters">
+    <div class="counter"><div class="counter-val">${leadsHoje.length}</div><div class="counter-label">Leads novos</div></div>
+    <div class="counter"><div class="counter-val">${proposta}</div><div class="counter-label">Proposta enviada</div></div>
+    <div class="counter"><div class="counter-val">${negociacao}</div><div class="counter-label">Negociação</div></div>
+    <div class="counter"><div class="counter-val">${qualificacao}</div><div class="counter-label">Qualificação</div></div>
+    <div class="counter"><div class="counter-val">${perdidos}</div><div class="counter-label">Perdidos</div></div>
   </div>
-  <!-- LEADS -->
-  <div class="section-block">
-    <div class="section-title">📋 Leads do Dia</div>
-    <div class="counters">
-      <div class="counter"><div class="counter-val">${leadsHoje.length}</div><div class="counter-label">Total</div></div>
-      <div class="counter"><div class="counter-val">${novos}</div><div class="counter-label">Novos</div></div>
-      <div class="counter"><div class="counter-val">${proposta}</div><div class="counter-label">Proposta</div></div>
-      <div class="counter"><div class="counter-val">${negociacao}</div><div class="counter-label">Negociação</div></div>
-      <div class="counter"><div class="counter-val">${perdidos}</div><div class="counter-label">Perdidos</div></div>
-    </div>
   <div class="section-title">LEADS DO DIA</div>
   ${leadsHoje.length?leadsHoje.map(l=>{
     const stageClass={'Proposta enviada':'stage-proposta','Negociação':'stage-negociacao','Qualificação':'stage-qualificacao','Primeiro contato':'stage-novo','Fechado / Ganho':'stage-fechado','Perdido':'stage-perdido'}[l.stage]||'';
@@ -1409,7 +1178,131 @@ function abrirRelatorio(){
 </div>
 
 <!-- MODAL CADASTRO -->
+<div id="modal-cadastro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1">
+      <div id="cad-modal-titulo" style="font-size:16px;font-weight:700">Novo Cliente</div>
+      <button onclick="fecharModalCadastro()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px">&times;</button>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
 
+      <!-- Tipo -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Tipo de Pessoa</div>
+        <div style="display:flex;gap:20px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pj" id="cad-tipo-pj" checked onchange="toggleCadTipo()"> Pessoa Jurídica
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+            <input type="radio" name="cad-tipo" value="pf" id="cad-tipo-pf" onchange="toggleCadTipo()"> Pessoa Física
+          </label>
+        </div>
+      </div>
+
+      <!-- Dados Básicos -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Dados Básicos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label id="cad-doc-label" style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNPJ</label>
+            <input id="cad-doc" type="text" placeholder="00.000.000/0000-00" onblur="buscarCNPJ(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Razão Social / Nome</label>
+            <input id="cad-razao" type="text" placeholder="Razão social ou nome completo" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Nome Fantasia</label>
+            <input id="cad-fantasia" type="text" placeholder="Nome fantasia (opcional)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Estadual</label>
+            <input id="cad-ie" type="text" placeholder="Inscrição estadual" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Municipal</label>
+            <input id="cad-im" type="text" placeholder="Inscrição municipal" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNAE</label>
+            <input id="cad-cnae" type="text" placeholder="Código CNAE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contato -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Informações de Contato</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Celular</label>
+            <input id="cad-cel" type="text" placeholder="(00) 00000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Comercial</label>
+            <input id="cad-tel" type="text" placeholder="(00) 0000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail</label>
+            <input id="cad-email" type="email" placeholder="email@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail Cobrança</label>
+            <input id="cad-email-cob" type="email" placeholder="cobranca@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- Endereço -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Endereço</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CEP</label>
+            <input id="cad-cep" type="text" placeholder="00000-000" onblur="buscarCEP(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Estado</label>
+            <input id="cad-estado" type="text" placeholder="UF" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Cidade</label>
+            <input id="cad-cidade" type="text" placeholder="Cidade" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Bairro</label>
+            <input id="cad-bairro" type="text" placeholder="Bairro" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Logradouro</label>
+            <input id="cad-logradouro" type="text" placeholder="Rua, Av..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Número</label>
+              <input id="cad-numero" type="text" placeholder="Nº" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Compl.</label>
+              <input id="cad-comp" type="text" placeholder="Apto..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div>
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Observações</label>
+        <textarea id="cad-obs" placeholder="Observações gerais sobre o cliente..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">
+        <button onclick="fecharModalCadastro()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button>
+        <button onclick="salvarCadastro()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer">Salvar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body></html>`;
 
@@ -1443,167 +1336,8 @@ function getClienteNomes() {
   return clientesFin.map(function(c){ return c.nome; });
 }
 
-
-// MÓDULO CADASTRO
-var cadastros = [];
-var cadastroEditandoId = null;
-function carregarCadastro() {
-  fetch('/clientes').then(function(r){return r.json();}).then(function(d){
-    cadastros=Array.isArray(d)?d:[];window.clientesFin=cadastros;renderCadastro();
-  }).catch(function(){cadastros=JSON.parse(localStorage.getItem('crm-cadastros')||'[]');window.clientesFin=cadastros;renderCadastro();});
-}
-function renderCadastro() {
-  var busca=((document.getElementById('cad-busca')||{}).value||'').toLowerCase();
-  var tipo=(document.getElementById('cad-tipo-filter')||{}).value||'';
-  var lista=cadastros.filter(function(x){
-    return (!busca||(x.razao||'').toLowerCase().includes(busca)||(x.cnpj||'').includes(busca)||(x.cidade||'').toLowerCase().includes(busca))&&(!tipo||x.tipo===tipo);
-  });
-  var el=document.getElementById('cadastro-lista');if(!el)return;
-  if(!lista.length){el.innerHTML='<div style="text-align:center;padding:48px;color:var(--text3)">Nenhum cliente cadastrado.<br><br><button onclick="abrirModalCadastro(null)" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer">+ Cadastrar primeiro cliente</button></div>';return;}
-  el.innerHTML=lista.map(function(x){
-    var doc=x.tipo==='pf'?(x.cpf||''):(x.cnpj||'');
-    var cid=[x.cidade,x.estado].filter(Boolean).join(' / ');
-    return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:10px;cursor:pointer" onclick="abrirModalCadastro(\''+x.id+'\')">'+
-      '<div style="width:44px;height:44px;border-radius:50%;background:var(--blue-bg);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">'+
-        (x.razao||x.fantasia||'?')[0].toUpperCase()+
-      '</div><div style="flex:1;min-width:0">'+
-        '<div style="font-size:14px;font-weight:700">'+(x.razao||x.fantasia||'Sem nome')+'</div>'+
-        (x.fantasia&&x.razao?'<div style="font-size:12px;color:var(--text3)">'+x.fantasia+'</div>':'')+
-        '<div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap">'+
-          (doc?'<span style="font-size:11px;color:var(--text3)">📄 '+doc+'</span>':'')+
-          (cid?'<span style="font-size:11px;color:var(--text3)">📍 '+cid+'</span>':'')+
-        '</div></div>'+
-      '<button onclick="event.stopPropagation();deletarCadastro(\''+x.id+'\');" style="background:var(--red-bg);color:var(--red);border:1px solid var(--red-bg);border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer">🗑</button>'+
-    '</div>';
-  }).join('');
-}
-function abrirModalCadastro(id) {
-  document.body.style.overflow = 'hidden';
-  cadastroEditandoId=id;
-  var modal=document.getElementById('modal-cadastro');if(!modal)return;
-  ['cad-doc','cad-razao','cad-fantasia','cad-ie','cad-im','cad-cnae','cad-cel','cad-tel','cad-email','cad-email-cob','cad-cep','cad-estado','cad-cidade','cad-bairro','cad-logradouro','cad-numero','cad-comp','cad-obs','cad-cnpj-prospect'].forEach(function(f){var e=document.getElementById(f);if(e)e.value='';});
-  var cr=document.getElementById('cad-cnpj-result');if(cr){cr.innerHTML='';cr.style.display='none';};
-  document.getElementById('cad-tipo-pj').checked=true;toggleCadTipo();
-  if(id){
-    var x=cadastros.find(function(a){return a.id===id;});
-    if(x){
-      document.getElementById('cad-modal-titulo').textContent='Editar Cliente';
-      if(x.tipo==='pf'){document.getElementById('cad-tipo-pf').checked=true;toggleCadTipo();}
-      var s=function(f,v){var e=document.getElementById(f);if(e&&v)e.value=v;};
-      s('cad-doc',x.cnpj||x.cpf);s('cad-razao',x.razao);s('cad-fantasia',x.fantasia);s('cad-ie',x.ie);s('cad-im',x.im);s('cad-cnae',x.cnae);s('cad-cel',x.cel);s('cad-tel',x.tel);s('cad-email',x.email);s('cad-email-cob',x.emailCob);s('cad-cep',x.cep);s('cad-estado',x.estado);s('cad-cidade',x.cidade);s('cad-bairro',x.bairro);s('cad-logradouro',x.logradouro);s('cad-numero',x.numero);s('cad-comp',x.comp);s('cad-obs',x.obs);
-    }
-  } else { document.getElementById('cad-modal-titulo').textContent='Novo Cliente'; }
-  modal.style.display='flex';
-}
-function fecharModalCadastro(){
-  document.body.style.overflow = '';
-  var bd = document.getElementById('modal-backdrop');
-  if(bd) bd.style.display = 'none';var m=document.getElementById('modal-cadastro');if(m)m.style.display='none';}
-function toggleCadTipo(){
-  var pj=document.getElementById('cad-tipo-pj');
-  var lb=document.getElementById('cad-doc-label');
-  var ip=document.getElementById('cad-doc');
-  if(!pj||!lb||!ip)return;
-  if(pj.checked){lb.textContent='CNPJ';ip.placeholder='00.000.000/0000-00';}
-  else{lb.textContent='CPF';ip.placeholder='000.000.000-00';}
-}
-function salvarCadastro(){
-  var tipo=document.getElementById('cad-tipo-pj').checked?'pj':'pf';
-  var razao=(document.getElementById('cad-razao')||{}).value||'';
-  if(!razao.trim()){alert('Preencha a Razão Social / Nome.');return;}
-  var obj={id:cadastroEditandoId||(Date.now().toString(36)+Math.random().toString(36).slice(2,6)),tipo:tipo,
-    cnpj:tipo==='pj'?(document.getElementById('cad-doc')||{}).value||'':'',
-    cpf:tipo==='pf'?(document.getElementById('cad-doc')||{}).value||'':'',
-    razao:razao.trim(),nome:razao.trim(),
-    fantasia:(document.getElementById('cad-fantasia')||{}).value||'',
-    ie:(document.getElementById('cad-ie')||{}).value||'',im:(document.getElementById('cad-im')||{}).value||'',
-    cnae:(document.getElementById('cad-cnae')||{}).value||'',cel:(document.getElementById('cad-cel')||{}).value||'',
-    tel:(document.getElementById('cad-tel')||{}).value||'',email:(document.getElementById('cad-email')||{}).value||'',
-    emailCob:(document.getElementById('cad-email-cob')||{}).value||'',cep:(document.getElementById('cad-cep')||{}).value||'',
-    estado:(document.getElementById('cad-estado')||{}).value||'',cidade:(document.getElementById('cad-cidade')||{}).value||'',
-    bairro:(document.getElementById('cad-bairro')||{}).value||'',logradouro:(document.getElementById('cad-logradouro')||{}).value||'',
-    numero:(document.getElementById('cad-numero')||{}).value||'',comp:(document.getElementById('cad-comp')||{}).value||'',
-    obs:(document.getElementById('cad-obs')||{}).value||'',ts:Date.now()};
-  var idx=cadastros.findIndex(function(a){return a.id===obj.id;});
-  if(idx>=0){cadastros[idx]=obj;fetch('/clientes/'+obj.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){});}
-  else{cadastros.unshift(obj);fetch('/clientes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}).catch(function(){});}
-  localStorage.setItem('crm-cadastros',JSON.stringify(cadastros));window.clientesFin=cadastros;
-  fecharModalCadastro();renderCadastro();
-  if(typeof showToast==='function')showToast('Cliente salvo — '+obj.razao);else if(typeof toast==='function')toast('Cliente salvo — '+obj.razao);
-}
-function deletarCadastro(id){
-  var x=cadastros.find(function(a){return a.id===id;});
-  if(!x||!confirm('Excluir "'+x.razao+'"?'))return;
-  cadastros=cadastros.filter(function(a){return a.id!==id;});
-  fetch('/clientes/'+id,{method:'DELETE'}).catch(function(){});
-  localStorage.setItem('crm-cadastros',JSON.stringify(cadastros));renderCadastro();
-}
-function formatarCNPJCad(el){
-  var v=el.value.replace(/\D/g,'');
-  if(v.length>14)v=v.slice(0,14);
-  v=v.replace(/^(\d{2})(\d)/,'$1.$2');
-  v=v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3');
-  v=v.replace(/\.(\d{3})(\d)/,'.$1/$2');
-  v=v.replace(/(\d{4})(\d)/,'$1-$2');
-  el.value=v;
-}
-async function prospectAICad(){
-  var el=document.getElementById('cad-cnpj-prospect');
-  if(!el)return;
-  var cnpj=el.value.replace(/\D/g,'');
-  if(cnpj.length!==14){alert('CNPJ deve ter 14 dígitos');return;}
-  var btn=event.target;
-  btn.textContent='Analisando...';btn.disabled=true;
-  var res=document.getElementById('cad-cnpj-result');
-  if(res){res.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">⏳ Consultando Receita Federal e gerando análise com IA...</div>';res.style.display='block';}
-  try{
-    var r=await fetch('/prospect-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cnpj:cnpj})});
-    var d=await r.json();
-    if(!d.ok){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+(d.error||'desconhecido')+'</span>';return;}
-    renderProspectResult('cad-cnpj-result',d.analise,d.dados,null);
-    // Preenche campos automaticamente com dados da BrasilAPI
-    if(d.dados) usarDadosCNPJCad(d.dados);
-  }catch(e){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+e.message+'</span>';}
-  finally{btn.textContent='\uD83D\uDD0D ProspectAI';btn.disabled=false;}
-}
-function usarDadosCNPJCad(d){
-  var s=function(id,v){var e=document.getElementById(id);if(e&&v)e.value=v;};
-  s('cad-razao',d.razao_social);
-  s('cad-fantasia',d.nome_fantasia||'');
-  s('cad-cnae',d.cnae_fiscal||'');
-  s('cad-cep',(d.cep||'').replace(/\D/g,''));
-  s('cad-logradouro',d.logradouro||'');
-  s('cad-numero',d.numero||'');
-  s('cad-comp',d.complemento||'');
-  s('cad-bairro',d.bairro||'');
-  s('cad-cidade',d.municipio||'');
-  s('cad-estado',d.uf||'');
-  if(d.ddd_telefone_1){s('cad-cel',d.ddd_telefone_1);}
-  if(d.email){s('cad-email',d.email);}
-  if(typeof showToast==='function')showToast('Dados preenchidos!');
-  else if(typeof toast==='function')toast('Dados preenchidos!');
-}
-function buscarCNPJ(cnpj){
-  cnpj=cnpj.replace(/\D/g,'');if(cnpj.length!==14)return;
-  fetch('https://brasilapi.com.br/api/cnpj/v1/'+cnpj).then(function(r){return r.json();}).then(function(d){
-    if(d.razao_social){
-      var s=function(id,v){var e=document.getElementById(id);if(e&&v)e.value=v;};
-      s('cad-razao',d.razao_social);s('cad-fantasia',d.nome_fantasia||'');s('cad-cnae',d.cnae_fiscal||'');
-      s('cad-cep',(d.cep||'').replace(/\D/g,''));s('cad-logradouro',d.logradouro||'');s('cad-numero',d.numero||'');
-      s('cad-comp',d.complemento||'');s('cad-bairro',d.bairro||'');s('cad-cidade',d.municipio||'');s('cad-estado',d.uf||'');
-      if(typeof showToast==='function')showToast('CNPJ encontrado!');
-    }
-  }).catch(function(){});
-}
-function buscarCEP(cep){
-  cep=cep.replace(/\D/g,'');if(cep.length!==8)return;
-  fetch('https://viacep.com.br/ws/'+cep+'/json/').then(function(r){return r.json();}).then(function(d){
-    if(!d.erro){var s=function(id,v){var e=document.getElementById(id);if(e&&v)e.value=v;};
-      s('cad-logradouro',d.logradouro||'');s('cad-bairro',d.bairro||'');s('cad-cidade',d.localidade||'');s('cad-estado',d.uf||'');}
-  }).catch(function(){});
-}
-
 </script>
+
 
 
 <!-- OPERACIONAL VIEW -->
@@ -1633,12 +1367,7 @@ function buscarCEP(cep){
 <div class="view" id="view-operacional" style="padding:20px;max-width:1100px;margin:0 auto;overflow-y:auto;">
 
   <!-- Sub-tabs -->
-  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0;flex-wrap:wrap;align-items:center">
-    <!-- Abas perfil operacional -->
-    <div id="op-abas-perfil" style="display:none;gap:4px;margin-right:8px">
-      <button id="op-aba-beatriz" onclick="selecionarOpPerfil('beatriz')" style="padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--orange);color:#fff;font-size:11px;font-weight:700;cursor:pointer">👩‍💼 Beatriz</button>
-      <button id="op-aba-davi" onclick="selecionarOpPerfil('davi')" style="padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer">👨‍💼 Davi</button>
-    </div>
+  <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
     <div class="tab active" id="op-tab-tarefas" onclick="opTab('tarefas')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">✅ Tarefas</div>
     <div class="tab" id="op-tab-fretes" onclick="opTab('fretes')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">🚚 Fretes</div>
     <div class="tab" id="op-tab-agenda" onclick="opTab('agenda')" style="border-bottom:3px solid transparent;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600">📅 Agenda</div>
@@ -1897,15 +1626,7 @@ async function analisarMsg(){
 function addFromIA(){
   if(!iaPreview)return;
   const rota=iaPreview.origem&&iaPreview.destino?iaPreview.origem+' → '+iaPreview.destino:'';
-  var _nomeIA=(iaPreview.nome||'');
-  var _nomeEhNumeroIA=/^[\d\s\+\-\(\)]+$/.test(_nomeIA.trim());
-  var _palavrasNaoSalvoIA=['telefone','celular','número','numero','contato','unknown','desconhecido','sem nome'];
-  var _nomeDesconhecidoIA=_palavrasNaoSalvoIA.some(function(p){return _nomeIA.toLowerCase().includes(p);});
-  var _tipoContatoIA=(_nomeEhNumeroIA||_nomeDesconhecidoIA)?'novo':'salvo';
-  var _palavrasQuentesIA=['urgente','urgência','hoje','agora','preciso','fechado','confirma','aceito','combinado'];
-  var _obsIA=(iaPreview.obs||'').toLowerCase();
-  var _isHotIA=_palavrasQuentesIA.some(function(p){return _obsIA.includes(p);});
-  const lead={id:uid(),name:_nomeIA||'Desconhecido',tel:iaPreview.tel||'',material:iaPreview.material||'',origem:iaPreview.origem||'',destino:iaPreview.destino||'',rota,volumes:iaPreview.volumes||'',peso:iaPreview.peso||'',medidas:iaPreview.medidas||'',valorNF:iaPreview.valorNF||'',stage:iaPreview.etapa||'Primeiro contato',agent:agentName,source:'whatsapp',obs:iaPreview.obs||'',hot:_isHotIA,tipoContato:_tipoContatoIA,ts:Date.now(),followups:[],history:[{text:`Captado via WhatsApp: ${iaPreview.obs}`,ts:Date.now(),agent:agentName}]};
+  const lead={id:uid(),name:iaPreview.nome||'Desconhecido',tel:iaPreview.tel||'',material:iaPreview.material||'',origem:iaPreview.origem||'',destino:iaPreview.destino||'',rota,volumes:iaPreview.volumes||'',peso:iaPreview.peso||'',medidas:iaPreview.medidas||'',valorNF:iaPreview.valorNF||'',stage:iaPreview.etapa||'Primeiro contato',agent:agentName,source:'whatsapp',obs:iaPreview.obs||'',hot:false,ts:Date.now(),followups:[],history:[{text:`Captado via WhatsApp: ${iaPreview.obs}`,ts:Date.now(),agent:agentName}]};
   leads.push(lead);saveLeads();addActivity(`Lead <strong>${lead.name}</strong> captado via IA`);
   document.getElementById('ia-msg').value='';document.getElementById('ia-output').style.display='none';iaPreview=null;showView('kanban');toast('Lead adicionado!');
 }
@@ -1929,7 +1650,7 @@ let chatAtivo=null;
 let enviando=false;
 
 // Contatos conhecidos da MF Envios (clientes com contato salvo)
-var CONTATOS_MF = []; try { CONTATOS_MF = JSON.parse(localStorage.getItem('crm-contatos-mf')||'[]'); } catch(e) {}
+const CONTATOS_MF = load('crm-contatos-mf', []);
 
 function isClienteMF(phone){ return leads.some(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,'')); }
 
@@ -1975,7 +1696,6 @@ function renderConvList(q=''){
           <span style="font-size:10px;color:var(--text3)">${fmtDateChat(g.lastTs)}</span>
         </div>
         <div style="font-size:11px;color:${cor};margin-bottom:3px;font-weight:600">${cliente?'● Cliente MF':'● Novo lead'}</div>
-        <div style="font-size:10px;color:var(--text3);">${g.msgs[0]&&g.msgs[0].instance?'📱 '+(g.msgs[0].instance==='mfenvios'?'Beatriz':'Davi'):''}</div>
         <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.lastText.slice(0,45)}</div>
       </div>
       <div style="width:8px;height:8px;border-radius:50%;background:${cor};flex-shrink:0"></div>
@@ -2065,17 +1785,7 @@ async function wppToLead(id,name,phone,text){
     await fetch(WPP_SERVER+'/funil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messageId:id})});
     const exists=leads.find(l=>l.tel&&l.tel.replace(/\D/g,'')===phone.replace(/\D/g,''));
     // Sempre cria novo lead (permite múltiplos leads por contato em meses diferentes)
-    // Qualificação automática
-    var _nome = (name||'').trim();
-    var _nomeEhNumero = /^[\d\s\+\-\(\)]+$/.test(_nome);
-    var _palavrasNaoSalvo = ['telefone','celular','número','numero','contato','unknown','desconhecido','sem nome','whatsapp'];
-    var _nomeEhDesconhecido = _palavrasNaoSalvo.some(function(p){return _nome.toLowerCase().includes(p);});
-    var tipoContato = (_nomeEhNumero || _nomeEhDesconhecido) ? 'novo' : 'salvo';
-    var palavrasQuentes = ['urgente','urgência','hoje','agora','preciso','quanto custa','me passa','quanto fica','valor','fechado','confirma','aceito','pode ser','vamos','combinado'];
-    var textoLower = (text||'').toLowerCase();
-    var isHot = palavrasQuentes.some(function(p){return textoLower.includes(p);});
-    var nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:isHot,tipoContato:tipoContato,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};
-    leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`+(isHot?' 🔥':'')+(tipoContato==='salvo'?' (contato salvo)':' (número novo)'));
+    const nl={id:uid(),name,tel:phone,material:'',origem:'',destino:'',rota:'',volumes:'',peso:'',medidas:'',valorNF:'',stage:'Primeiro contato',agent:agentName||'',source:'whatsapp',obs:text,hot:false,ts:Date.now(),followups:[],history:[{text:'Lead captado via WhatsApp.',ts:Date.now(),agent:agentName||''}]};leads.unshift(nl);saveLeads();addActivity(`Lead <strong>${name}</strong> adicionado via WhatsApp`);
     toast('Lead adicionado ao funil!');showView('kanban');renderKanban();
   }catch(e){toast('Erro ao adicionar.');}
 }
@@ -2089,11 +1799,7 @@ function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.add
     }catch(ex){loadWppMessages();}
   });es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
 conectarSSE();
-setInterval(()=>{
-  var _inst2=(typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
-  var _url2=WPP_SERVER+'/messages'+(_inst2?'?instance='+_inst2:'');
-  fetch(_url2).then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});
-},30000);
+setInterval(()=>{fetch(WPP_SERVER+'/messages').then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});},30000);
 
 
 // ═══════════════════════════════════════════
@@ -2103,27 +1809,9 @@ const OP_API = window.location.origin;
 let opCurrentTab = 'tarefas';
 let opModalMode = null, opModalId = null;
 
-var opPerfilAtivo = 'beatriz'; // aba ativa no operacional
-
-function selecionarOpPerfil(p) {
-  opPerfilAtivo = p;
-  ['beatriz','davi'].forEach(function(x){
-    var btn = document.getElementById('op-aba-'+x);
-    if(!btn) return;
-    if(x===p){ btn.style.background=x==='davi'?'var(--blue)':'var(--orange)'; btn.style.color='#fff'; }
-    else{ btn.style.background='var(--surface2)'; btn.style.color='var(--text2)'; }
-  });
-  opTab(document.querySelector('.op-tab-btn.active')?.dataset?.tab||'tarefas');
-}
-
-function getOpPerfil() {
-  // Beatriz pode ver qualquer aba; Davi sempre o próprio
-  if(perfilAtivo==='davi') return 'davi';
-  return opPerfilAtivo;
-}
-
 function opTab(tab) {
   opCurrentTab = tab;
+  // Esconder todos os paineis
   ['tarefas','fretes','agenda','docs'].forEach(function(t){
     var v=document.getElementById('op-view-'+t);
     if(v) v.style.display='none';
@@ -2136,6 +1824,7 @@ function opTab(tab) {
     var el=document.getElementById('op-tab-'+t);
     if(el){el.style.borderBottomColor='transparent';el.style.color='var(--text2)';}
   });
+  // Mostrar painel ativo
   if(['tarefas','fretes','agenda','docs'].indexOf(tab)>=0){
     var v=document.getElementById('op-view-'+tab);
     if(v) v.style.display='block';
@@ -2154,7 +1843,7 @@ function opTab(tab) {
 
 // ── TAREFAS ─────────────────────────────────
 async function loadTarefas() {
-  const res = await fetch(OP_API+'/tarefas?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
+  const res = await fetch(OP_API+'/tarefas').then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('tarefas-list');
   if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhuma tarefa ainda.</div>'; return; }
   list.innerHTML = res.map(t => `
@@ -2165,13 +1854,12 @@ async function loadTarefas() {
         ${t.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${t.desc}</div>`:''}
         ${t.data?`<div style="font-size:11px;color:var(--text3);margin-top:4px">📅 ${t.data}</div>`:''}
       </div>
-      <button onclick="editTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--orange);font-size:16px;padding:4px">✏️</button>
       <button onclick="deleteTarefa('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
     </div>`).join('');
 }
 
 function openAddTarefa() {
-  opModalMode='tarefa'; opModalId=null; _tarefaCache=[];
+  opModalMode='tarefa'; opModalId=null;
   document.getElementById('modal-op-title').textContent='Nova Tarefa';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
@@ -2182,113 +1870,27 @@ function openAddTarefa() {
   document.getElementById('modal-op').style.display='flex';
 }
 
-
-// ── EDIT FUNCTIONS ─────────────────────────
-var _freteCache=[], _agendaCache=[], _tarefaCache=[], _docCache=[];
-
-async function editFrete(id) {
-  if(!_freteCache.length) _freteCache = await fetch(OP_API+'/fretes?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
-  const f = _freteCache.find(x=>x.id===id); if(!f) return;
-  opModalMode='frete'; opModalId=id;
-  document.getElementById('modal-op-title').textContent='Editar Frete';
-  document.getElementById('modal-op-body').innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div><label style="font-size:12px;color:var(--text3)">IDENTIFICAÇÃO *</label><input id="op-f-titulo" class="form-input" value="${f.titulo||''}" style="width:100%;margin-top:4px"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div><label style="font-size:12px;color:var(--text3)">ORIGEM</label><input id="op-f-origem" class="form-input" value="${f.origem||''}" style="width:100%;margin-top:4px"></div>
-        <div><label style="font-size:12px;color:var(--text3)">DESTINO</label><input id="op-f-destino" class="form-input" value="${f.destino||''}" style="width:100%;margin-top:4px"></div>
-      </div>
-      <div><label style="font-size:12px;color:var(--text3)">VALOR (R$)</label><input id="op-f-valor" class="form-input" value="${f.valor||''}" style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">STATUS</label>
-        <select id="op-f-status" class="form-input" style="width:100%;margin-top:4px">
-          ${FRETE_COLS.map(c=>`<option value="${c}" ${f.status===c?'selected':''}>${c}</option>`).join('')}
-        </select>
-      </div>
-      <div><label style="font-size:12px;color:var(--text3)">RASTREIO</label><input id="op-f-rastreio" class="form-input" value="${f.rastreio||''}" style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">COMPROVANTE (link)</label><input id="op-f-comprovante" class="form-input" value="${f.comprovante||''}" style="width:100%;margin-top:4px"></div>
-    </div>`;
-  document.getElementById('modal-op').style.display='flex';
-}
-
-async function editAgenda(id) {
-  if(!_agendaCache.length) _agendaCache = await fetch(OP_API+'/agenda?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
-  const e = _agendaCache.find(x=>x.id===id); if(!e) return;
-  opModalMode='agenda'; opModalId=id;
-  document.getElementById('modal-op-title').textContent='Editar Evento';
-  document.getElementById('modal-op-body').innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" value="${e.titulo||''}" style="width:100%;margin-top:4px"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" value="${e.data||''}" style="width:100%;margin-top:4px"></div>
-        <div><label style="font-size:12px;color:var(--text3)">HORA</label><input id="op-f-hora" type="time" class="form-input" value="${e.hora||''}" style="width:100%;margin-top:4px"></div>
-      </div>
-      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" value="${e.desc||''}" style="width:100%;margin-top:4px"></div>
-    </div>`;
-  document.getElementById('modal-op').style.display='flex';
-}
-
-async function editTarefa(id) {
-  if(!_tarefaCache.length) _tarefaCache = await fetch(OP_API+'/tarefas?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
-  const t = _tarefaCache.find(x=>x.id===id); if(!t) return;
-  opModalMode='tarefa'; opModalId=id;
-  document.getElementById('modal-op-title').textContent='Editar Tarefa';
-  document.getElementById('modal-op-body').innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" value="${t.titulo||''}" style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">DESCRIÇÃO</label><input id="op-f-desc" class="form-input" value="${t.desc||''}" style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">DATA</label><input id="op-f-data" type="date" class="form-input" value="${t.data||''}" style="width:100%;margin-top:4px"></div>
-    </div>`;
-  document.getElementById('modal-op').style.display='flex';
-}
-
-async function editDoc(id) {
-  if(!_docCache.length) _docCache = await fetch(OP_API+'/documentos?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
-  const d = _docCache.find(x=>x.id===id); if(!d) return;
-  opModalMode='doc'; opModalId=id;
-  document.getElementById('modal-op-title').textContent='Editar Documento';
-  document.getElementById('modal-op-body').innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div><label style="font-size:12px;color:var(--text3)">TÍTULO *</label><input id="op-f-titulo" class="form-input" value="${d.titulo||''}" style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">TIPO</label>
-        <select id="op-f-tipo" class="form-input" style="width:100%;margin-top:4px">
-          ${['Contrato','NF','Boleto','Proposta','Outro'].map(tp=>`<option value="${tp}" ${d.tipo===tp?'selected':''}>${tp}</option>`).join('')}
-        </select>
-      </div>
-      <div><label style="font-size:12px;color:var(--text3)">LINK</label><input id="op-f-link" class="form-input" value="${d.link||''}" style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">OBSERVAÇÃO</label><input id="op-f-desc" class="form-input" value="${d.obs||''}" style="width:100%;margin-top:4px"></div>
-    </div>`;
-  document.getElementById('modal-op').style.display='flex';
-}
-
 async function saveModalOp() {
   if(opModalMode==='tarefa') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    const tarefaData = {titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,perfil:getOpPerfil()};
-    if(opModalId) await fetch(OP_API+'/tarefas/'+opModalId, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(tarefaData)});
-    else await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...tarefaData,done:false})});
-    _tarefaCache=[]; closeModalOp(); loadTarefas();
+    await fetch(OP_API+'/tarefas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,desc:document.getElementById('op-f-desc').value,data:document.getElementById('op-f-data').value,done:false})});
+    closeModalOp(); loadTarefas();
   } else if(opModalMode==='frete') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    const freteData = {titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta',rastreio:(document.getElementById('op-f-rastreio')||{}).value||'',comprovante:(document.getElementById('op-f-comprovante')||{}).value||'',perfil:getOpPerfil()};
-    if(opModalId) await fetch(OP_API+'/fretes/'+opModalId, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(freteData)});
-    else await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(freteData)});
-    _freteCache=[]; closeModalOp(); loadFretes();
+    await fetch(OP_API+'/fretes', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,origem:document.getElementById('op-f-origem').value,destino:document.getElementById('op-f-destino').value,valor:document.getElementById('op-f-valor').value,status:document.getElementById('op-f-status').value||'Aguardando coleta'})});
+    closeModalOp(); loadFretes();
   } else if(opModalMode==='agenda') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    const agendaData = {titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value,perfil:getOpPerfil()};
-    if(opModalId) await fetch(OP_API+'/agenda/'+opModalId, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(agendaData)});
-    else await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(agendaData)});
-    _agendaCache=[]; closeModalOp(); loadAgenda();
+    await fetch(OP_API+'/agenda', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,data:document.getElementById('op-f-data').value,hora:document.getElementById('op-f-hora').value,desc:document.getElementById('op-f-desc').value})});
+    closeModalOp(); loadAgenda();
   } else if(opModalMode==='doc') {
     const titulo = document.getElementById('op-f-titulo').value.trim();
     if(!titulo) return alert('Título obrigatório');
-    const docData = {titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value,perfil:getOpPerfil()};
-    if(opModalId) await fetch(OP_API+'/documentos/'+opModalId, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(docData)});
-    else await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(docData)});
-    _docCache=[]; closeModalOp(); loadDocs();
+    await fetch(OP_API+'/documentos', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo,tipo:document.getElementById('op-f-tipo').value,link:document.getElementById('op-f-link').value,obs:document.getElementById('op-f-desc').value})});
+    closeModalOp(); loadDocs();
   }
 }
 
@@ -2307,7 +1909,7 @@ const FRETE_COLS = ['Aguardando coleta','Em trânsito','Entregue','Problema'];
 const FRETE_COLORS = {'Aguardando coleta':'#f59e0b','Em trânsito':'#3b82f6','Entregue':'#22c55e','Problema':'#ef4444'};
 
 async function loadFretes() {
-  const res = await fetch(OP_API+'/fretes?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
+  const res = await fetch(OP_API+'/fretes').then(r=>r.json()).catch(()=>[]);
   const kb = document.getElementById('fretes-kanban');
   kb.innerHTML = FRETE_COLS.map(col => `
     <div style="min-width:220px;flex:1;background:var(--surface2);border-radius:var(--radius);padding:12px">
@@ -2318,12 +1920,9 @@ async function loadFretes() {
             <div style="font-size:13px;font-weight:600">${f.titulo}</div>
             ${f.origem?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${f.origem} → ${f.destino||'?'}</div>`:''}
             ${f.valor?`<div style="font-size:12px;color:var(--green);margin-top:4px">R$ ${f.valor}</div>`:''}
-            ${f.rastreio?`<div style="font-size:11px;color:var(--blue);margin-top:4px">📦 Rastreio: ${f.rastreio}</div>`:''}
-            ${f.comprovante?`<div style="margin-top:4px"><a href="${f.comprovante}" target="_blank" style="font-size:11px;color:var(--orange);text-decoration:none">🔗 Ver comprovante</a></div>`:''}
             <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
               ${FRETE_COLS.filter(c=>c!==col).map(c=>`<button onclick="moveFrete('${f.id}','${c}')" style="font-size:10px;padding:2px 6px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text3)">→ ${c.split(' ')[0]}</button>`).join('')}
-              <button onclick="editFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(255,165,0,.15);border:1px solid rgba(255,165,0,.3);border-radius:4px;cursor:pointer;color:#fdba74;margin-left:auto">✏️</button>
-              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5">🗑</button>
+              <button onclick="deleteFrete('${f.id}')" style="font-size:10px;padding:2px 6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;cursor:pointer;color:#fca5a5;margin-left:auto">🗑</button>
             </div>
           </div>`).join('')}
       </div>
@@ -2331,7 +1930,7 @@ async function loadFretes() {
 }
 
 function openAddFrete() {
-  opModalMode='frete'; opModalId=null; _freteCache=[];
+  opModalMode='frete';
   document.getElementById('modal-op-title').textContent='Novo Frete';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
@@ -2346,8 +1945,6 @@ function openAddFrete() {
           ${FRETE_COLS.map(c=>`<option value="${c}">${c}</option>`).join('')}
         </select>
       </div>
-      <div><label style="font-size:12px;color:var(--text3)">RASTREIO (AWB / Tracking)</label><input id="op-f-rastreio" class="form-input" placeholder="Ex: 123456789BR" style="width:100%;margin-top:4px"></div>
-      <div><label style="font-size:12px;color:var(--text3)">COMPROVANTE (link)</label><input id="op-f-comprovante" class="form-input" placeholder="Link Google Drive, WhatsApp, etc." style="width:100%;margin-top:4px"></div>
     </div>`;
   document.getElementById('modal-op').style.display='flex';
 }
@@ -2364,7 +1961,7 @@ async function deleteFrete(id) {
 
 // ── AGENDA ──────────────────────────────────
 async function loadAgenda() {
-  const res = await fetch(OP_API+'/agenda?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
+  const res = await fetch(OP_API+'/agenda').then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('agenda-list');
   if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum evento ainda.</div>'; return; }
   const sorted = [...res].sort((a,b)=>{ if(!a.data) return 1; if(!b.data) return -1; return a.data.localeCompare(b.data); });
@@ -2378,13 +1975,12 @@ async function loadAgenda() {
         ${e.hora?`<div style="font-size:12px;color:var(--text3);margin-top:2px">⏰ ${e.hora}</div>`:''}
         ${e.desc?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${e.desc}</div>`:''}
       </div>
-      <button onclick="editAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--orange);font-size:16px;padding:4px">✏️</button>
       <button onclick="deleteAgenda('${e.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
     </div>`).join('');
 }
 
 function openAddAgenda() {
-  opModalMode='agenda'; opModalId=null; _agendaCache=[];
+  opModalMode='agenda';
   document.getElementById('modal-op-title').textContent='Novo Evento';
   document.getElementById('modal-op-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px">
@@ -2406,7 +2002,7 @@ async function deleteAgenda(id) {
 
 // ── DOCUMENTOS ──────────────────────────────
 async function loadDocs() {
-  const res = await fetch(OP_API+'/documentos?perfil='+getOpPerfil()).then(r=>r.json()).catch(()=>[]);
+  const res = await fetch(OP_API+'/documentos').then(r=>r.json()).catch(()=>[]);
   const list = document.getElementById('docs-list');
   if(!res.length){ list.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:32px">Nenhum documento ainda.</div>'; return; }
   list.innerHTML = res.map(d => `
@@ -2418,7 +2014,6 @@ async function loadDocs() {
         ${d.obs?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.obs}</div>`:''}
         ${d.link?`<a href="${d.link}" target="_blank" style="font-size:12px;color:var(--orange);margin-top:4px;display:block">🔗 Abrir link</a>`:''}
       </div>
-      <button onclick="editDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--orange);font-size:16px;padding:4px">✏️</button>
       <button onclick="deleteDoc('${d.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:4px">🗑</button>
     </div>`).join('');
 }
@@ -2457,36 +2052,6 @@ const _origShowView = typeof showView === 'function' ? showView : null;
 // ─── FUNIL POR MÊS ───────────────────────────────────────────
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 let kanbanMesOffset = 0; // 0 = mes atual, -1 = mes anterior, etc.
-let kanbanAbaAtiva = 'proprio'; // 'proprio', 'beatriz', 'davi', 'todos'
-
-function selecionarAbaKanban(aba) {
-  kanbanAbaAtiva = aba;
-  // Atualizar visual dos botões
-  ['beatriz','davi','todos'].forEach(function(a) {
-    var btn = document.getElementById('aba-'+a);
-    if(!btn) return;
-    if(a === aba) {
-      btn.style.background = a==='davi' ? 'var(--blue)' : a==='todos' ? 'var(--text)' : 'var(--orange)';
-      btn.style.color = a==='todos' ? 'var(--bg)' : '#fff';
-    } else {
-      btn.style.background = 'var(--surface2)';
-      btn.style.color = 'var(--text2)';
-    }
-  });
-  renderKanban();
-  updateStats();
-}
-
-function atualizarAbasKanban() {
-  var abas = document.getElementById('kanban-abas');
-  if(!abas) return;
-  // Mostrar abas só para Beatriz
-  if(perfilAtivo === 'beatriz') {
-    abas.style.display = 'flex';
-  } else {
-    abas.style.display = 'none';
-  }
-}
 
 function getMesAtual() {
   const d = new Date();
@@ -2680,8 +2245,8 @@ const PERFIS = {
     cor: 'var(--orange)',
     instancia: 'mfenvios',
     apikey: 'mfenvios2024',
-    stages: ['Primeiro contato','Cotação Enviada','Aguardando Retorno','Aguardando Coleta','Nota Fiscal','Fechado / Ganho','Perdido'],
-    stageColors: {'Primeiro contato':'#3b82f6','Cotação Enviada':'#f97316','Aguardando Retorno':'#f59e0b','Aguardando Coleta':'#06b6d4','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
+    stages: ['Primeiro contato','Qualificação','Proposta enviada','Negociação','Fechado / Ganho','Perdido'],
+    stageColors: {'Primeiro contato':'#3b82f6','Qualificação':'#8b5cf6','Proposta enviada':'#f59e0b','Negociação':'#f97316','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
   },
   davi: {
     nome: 'Davi',
@@ -2689,31 +2254,17 @@ const PERFIS = {
     cor: 'var(--blue)',
     instancia: 'mfenvios-davi',
     apikey: 'mfenvios2024',
-    stages: ['Primeiro contato','Aguardando Retorno','Cotação Enviada','Emissão','Coleta','Cliente recorrente','Parceiros','Cobrança','Nota Fiscal','Fechado / Ganho','Perdido'],
-    stageColors: {'Primeiro contato':'#3b82f6','Aguardando Retorno':'#f59e0b','Cotação Enviada':'#8b5cf6','Emissão':'#f97316','Coleta':'#06b6d4','Cliente recorrente':'#10b981','Parceiros':'#ec4899','Cobrança':'#ec4899','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
+    stages: ['Novo','Aguardando Retorno','Cotação Enviada','Emissão','Coleta','Cobrança','Nota Fiscal','Fechado / Ganho','Perdido'],
+    stageColors: {'Novo':'#3b82f6','Aguardando Retorno':'#f59e0b','Cotação Enviada':'#8b5cf6','Emissão':'#f97316','Coleta':'#06b6d4','Cobrança':'#ec4899','Nota Fiscal':'#84cc16','Fechado / Ganho':'#22c55e','Perdido':'#ef4444'}
   }
 };
 
-var perfilAtivo = localStorage.getItem('crm-perfil') || null;
-// Se já tem perfil salvo, entrar direto sem mostrar splash
-if(perfilAtivo && PERFIS[perfilAtivo]) {
-  document.addEventListener('DOMContentLoaded', function() {
-    var splash = document.getElementById('splash-perfil');
-    if(splash) splash.style.display = 'none';
-    agentName = PERFIS[perfilAtivo].nome;
-    save('crm-agent', agentName);
-    aplicarPerfil();
-    sincronizarLeadsServidor();
-  });
-}
-var verTodos = false;
+let perfilAtivo = localStorage.getItem('crm-perfil') || null;
+let verTodos = false;
 
 function selecionarPerfil(perfil) {
   perfilAtivo = perfil;
   localStorage.setItem('crm-perfil', perfil);
-  // Definir agentName automaticamente pelo perfil
-  agentName = PERFIS[perfil].nome;
-  save('crm-agent', agentName);
   document.getElementById('splash-perfil').style.display = 'none';
   aplicarPerfil();
   sincronizarLeadsServidor();
@@ -2721,12 +2272,20 @@ function selecionarPerfil(perfil) {
 
 function sincronizarLeadsServidor() {
   fetch('/kanban').then(function(r){return r.json();}).then(function(data){
-    if(data && data.cards) {
-      leads = data.cards;
+    if(data && data.cards && data.cards.length > 0) {
+      var serverLeads = data.cards;
+      // Servidor e fonte de verdade: mesclar favorecendo dados do servidor
+      serverLeads.forEach(function(sl){
+        var idx = leads.findIndex(function(l){ return l.id === sl.id; });
+        if(idx < 0) {
+          leads.push(sl);
+        } else {
+          leads[idx] = Object.assign({}, leads[idx], sl);
+        }
+      });
+      save('crm-leads', leads);
       updateStats();
       if(typeof renderKanban === 'function') renderKanban();
-      if(typeof renderLeads === 'function') renderLeads();
-      if(typeof updateAgentFilters === 'function') updateAgentFilters();
     }
   }).catch(function(){});
 }
@@ -2755,19 +2314,10 @@ function aplicarPerfil() {
   window.WPP_INSTANCE = p.instancia;
   window.WPP_APIKEY = p.apikey;
   
-  // Resetar aba kanban ao trocar perfil
-  if(perfilAtivo === 'davi') {
-    kanbanAbaAtiva = 'proprio';
-  } else {
-    kanbanAbaAtiva = 'beatriz';
-  }
-  atualizarAbasKanban();
   renderKanban();
   updateStats();
   updateAgentFilters();
   atualizarSino();
-  // Recarregar WhatsApp com instância do perfil selecionado
-  if(typeof loadWppMessages === 'function') loadWppMessages();
 }
 
 function mostrarTrocaPerfil() {
@@ -2829,7 +2379,13 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   if(perfilAtivo) { var el=document.getElementById('splash-perfil'); if(el) el.style.display='none'; aplicarPerfil(); }
 });
-// leads carregados do MongoDB via sincronizarLeadsServidor()
+if(!leads.length){
+  const demo=[
+    {id:uid(),name:'Wanderley Cruz',tel:'5513992062157',material:'Caixas',origem:'Tijucas/SC',destino:'Macapá/AP',rota:'Tijucas/SC → Macapá/AP',volumes:'1 volume',peso:'33kg',medidas:'82x52x64cm',valorNF:'80.948,57',stage:'Proposta enviada',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 8.212,96 · 2 a 3 dias úteis. Intermediário — aguardando retorno.',urgencia:'',hot:false,ts:Date.now()-3600000,followups:[{text:'Confirmar fechamento',date:'',done:false}],history:[{text:'Lead captado via WhatsApp.',ts:Date.now()-3600000,agent:'Beatriz'}]},
+    {id:uid(),name:'Isabella Guarnier',tel:'5511982517687',material:'Volumes',origem:'São Paulo/SP',destino:'Itacoatiara/AM',rota:'São Paulo/SP → Itacoatiara/AM',volumes:'2 volumes',peso:'42kg',medidas:'47x47x50cm',valorNF:'3.258,75',stage:'Negociação',agent:agentName||'Beatriz',source:'whatsapp',obs:'Proposta: R$ 1.717,00 · 6 dias úteis. Lead disse "Perfeito. Obrigada!" Aguardando confirmação.',urgencia:'',hot:true,ts:Date.now()-7200000,followups:[{text:'Confirmar fechamento — R$ 1.717,00',date:'',done:false}],history:[{text:'Proposta enviada.',ts:Date.now()-7200000,agent:'Beatriz'}]},
+  ];
+  leads=demo;saveLeads();activity=[{msg:'Lead <strong>Wanderley Cruz</strong> em proposta',ts:Date.now()-3600000},{msg:'Lead <strong>Isabella Guarnier</strong> em negociação 🔥',ts:Date.now()-7200000}];saveActivity();updateAgentFilters();updateStats();
+}
 renderKanban();
 
 
@@ -2839,7 +2395,7 @@ var nfseTipoPessoa = 'juridica';
 var nfseLeadAtual = null;
 var nfseEmitidas = JSON.parse(localStorage.getItem('crm-nfse-emitidas') || '[]');
 
-// opTab duplicado removido
+// opTab duplicado removido — usar apenas a função opTab definida acima
 
 function renderNFSeLeads() {
   var lista = document.getElementById('nfse-leads-lista');
@@ -3039,57 +2595,6 @@ function renderFinLeadsProntos() {
 
 
 
-
-function formatCNPJ(el){
-  var v=el.value.replace(/\D/g,'').substring(0,14);
-  v=v.replace(/(\d{2})(\d)/,'$1.$2');
-  v=v.replace(/(\d{3})(\d)/,'$1.$2');
-  v=v.replace(/(\d{3})(\/)(\d)/,'$1/$3');
-  v=v.replace(/(\/\d{4})(\d)/,'$1-$2');
-  el.value=v;
-}
-function renderProspectResult(containerId, a, dados, leadId) {
-  var cor={'alto':'#22c55e','medio':'#f59e0b','baixo':'#ef4444'};
-  var corB={'positivo':'#22c55e','neutro':'#8492b4','negativo':'#ef4444'};
-  var ativo=dados&&dados.descricao_situacao_cadastral==='ATIVA';
-  var html='<div style="font-size:15px;font-weight:700;margin-bottom:2px">'+a.razao_social+'</div>';
-  html+='<div style="font-size:11px;color:var(--text3);margin-bottom:10px">Status: <span style="color:'+(ativo?'#22c55e':'#ef4444')+'">'+a.status+'</span> &middot; Conf: <span style="font-weight:700;color:'+(a.confianca==='ALTA'?'#22c55e':a.confianca==='MEDIA'?'#f59e0b':'#ef4444')+'">'+a.confianca+'</span> &middot; '+a.confianca_motivo+'</div>';
-  if(a.alertas&&a.alertas.length){a.alertas.forEach(function(al){var bg=al.tipo==='positivo'?'rgba(34,197,94,.08)':al.tipo==='alerta'?'rgba(239,68,68,.08)':'rgba(132,146,180,.08)';var ic=al.tipo==='positivo'?'✅':al.tipo==='alerta'?'⚠️':'🔸';html+='<div style="background:'+bg+';border-radius:6px;padding:8px 10px;margin-bottom:6px;font-size:12px;color:var(--text)">'+ic+' '+al.texto+'</div>';});}
-  if(a.termometro){var t=a.termometro;html+='<div style="background:var(--bg2);border-radius:8px;padding:12px;margin:10px 0"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🌡️ Termômetro — Fit</div><div style="display:flex;gap:6px;margin-bottom:8px">';['alto','medio','baixo'].forEach(function(n){var a2=t.nivel===n;var lbl={'alto':'Fit Alto','medio':'Fit Médio','baixo':'Fit Baixo'}[n];html+='<div style="flex:1;border-radius:6px;padding:6px 8px;border:1px solid '+(a2?cor[n]:'var(--border)')+';background:'+(a2?'rgba('+{'alto':'34,197,94','medio':'245,158,11','baixo':'239,68,68'}[n]+',.1)':'transparent')+'"><div style="font-size:11px;font-weight:700;color:'+(a2?cor[n]:'var(--text3)')+'">'+lbl+'</div></div>';});html+='</div><div style="font-size:12px;color:var(--text2);margin-bottom:8px">'+t.analise+'</div>';if(t.bant){html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';['budget','authority','need','timeline'].forEach(function(k){var b=t.bant[k];if(!b)return;html+='<div style="background:var(--bg3);border-radius:6px;padding:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:var(--text2)">'+k.toUpperCase()+'</span><span style="font-size:10px;font-weight:700;color:'+corB[b.status]+'">'+b.status.toUpperCase()+'</span></div><div style="font-size:11px;color:var(--text3)">'+b.texto+'</div></div>';});html+='</div>';}html+='</div>';}
-  if(a.ficha){var f=a.ficha;html+='<div style="background:var(--bg2);border-radius:8px;padding:12px;margin:10px 0"><div style="font-size:12px;font-weight:700;margin-bottom:8px">📋 Ficha Raio-X</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';[['Quem manda',f.quem_manda],['Porte',f.porte_estimado],['O que fazem',f.o_que_fazem],['Segmento',f.segmento],['Modelo',f.modelo]].forEach(function(p){html+='<div style="background:var(--bg3);border-radius:6px;padding:8px"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:3px">'+p[0]+'</div><div style="font-size:12px;color:var(--text)">'+(p[1]||'-')+'</div></div>';});html+='</div></div>';}
-  if(a.kit_abordagem){var k=a.kit_abordagem;html+='<div style="background:var(--bg2);border-radius:8px;padding:12px;margin:10px 0"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🎯 Kit de Abordagem</div>';if(k.icebreaker)html+='<div style="margin-bottom:8px"><div style="font-size:10px;color:var(--orange);font-weight:700;margin-bottom:3px">🧊 ICEBREAKER</div><div style="font-size:12px;color:var(--text);background:var(--bg3);border-left:3px solid var(--orange);padding:8px;border-radius:4px">'+k.icebreaker+'</div></div>';if(k.dor_provavel)html+='<div style="margin-bottom:8px"><div style="font-size:10px;color:#f59e0b;font-weight:700;margin-bottom:3px">⚠️ DOR PROVÁVEL</div><div style="font-size:12px;color:var(--text);background:var(--bg3);padding:8px;border-radius:4px">'+k.dor_provavel+'</div></div>';html+='<div style="margin-bottom:8px"><div style="font-size:10px;color:#8b5cf6;font-weight:700;margin-bottom:6px">💬 SCRIPT</div><div style="display:flex;gap:6px;margin-bottom:6px"><button onclick="prospectTab(this,\''+containerId+'\',\'whatsapp\')" style="padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--orange);color:white;font-size:11px;cursor:pointer">WhatsApp</button><button onclick="prospectTab(this,\''+containerId+'\',\'coldcall\')" style="padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;cursor:pointer">Cold Call</button><button onclick="prospectTab(this,\''+containerId+'\',\'email\')" style="padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;cursor:pointer">E-mail</button></div><div id="'+containerId+'-script-whatsapp" style="font-size:12px;background:var(--bg3);padding:8px;border-radius:4px;color:var(--text)">'+(k.script_whatsapp||'-')+'</div><div id="'+containerId+'-script-coldcall" style="display:none;font-size:12px;background:var(--bg3);padding:8px;border-radius:4px;color:var(--text)">'+(k.script_coldcall||'-')+'</div><div id="'+containerId+'-script-email" style="display:none;font-size:12px;background:var(--bg3);padding:8px;border-radius:4px;color:var(--text)">'+(k.script_email||'-')+'</div></div>';if(k.pergunta_discovery)html+='<div><div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:3px">🔍 DISCOVERY</div><div style="font-size:12px;color:var(--text);background:var(--bg3);padding:8px;border-radius:4px;font-style:italic">'+k.pergunta_discovery+'</div></div>';html+='</div>';}
-  if(leadId&&dados){html+='<button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="usarDadosCNPJ(\''+leadId+'\','+JSON.stringify(dados).replace(/\\/g,'\\\\').replace(/'/g,"\\'")+')">↙️ Usar dados no lead</button>';}
-  var el=document.getElementById(containerId);if(el){el.innerHTML=html;el.style.display='block';}
-}
-function prospectTab(btn,containerId,tipo){
-  ['whatsapp','coldcall','email'].forEach(function(t){var el=document.getElementById(containerId+'-script-'+t);if(el)el.style.display=t===tipo?'block':'none';});
-  var tabs=btn.parentElement.querySelectorAll('button');tabs.forEach(function(b){b.style.background='var(--bg3)';b.style.color='var(--text2)';});
-  btn.style.background='var(--orange)';btn.style.color='white';
-}
-async function prospectAI(leadId){
-  var el=document.getElementById('d-cnpj');
-  if(!el)return;
-  var cnpj=el.value.replace(/\D/g,'');
-  if(cnpj.length!==14){alert('CNPJ deve ter 14 dígitos');return;}
-  var btn=event.target;
-  btn.textContent='Analisando...';btn.disabled=true;
-  var res=document.getElementById('cnpj-result-'+leadId);
-  if(res){res.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">⏳ Consultando Receita Federal e gerando análise com IA...</div>';res.style.display='block';}
-  try{
-    var r=await fetch('/prospect-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cnpj:cnpj})});
-    var d=await r.json();
-    if(!d.ok){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+(d.error||'desconhecido')+'</span>';return;}
-    renderProspectResult('cnpj-result-'+leadId,d.analise,d.dados,leadId);
-  }catch(e){if(res)res.innerHTML='<span style="color:#ef4444">Erro: '+e.message+'</span>';}
-  finally{btn.textContent='\uD83D\uDD0D ProspectAI';btn.disabled=false;}
-}
-function usarDadosCNPJ(leadId,d){
-  var l=leads.find(function(x){return x.id===leadId;});if(!l)return;
-  if(d.razao_social){l.name=d.razao_social;var nel=document.getElementById('d-name');if(nel)nel.value=d.razao_social;}
-  if(d.municipio&&d.uf){l.origem=d.municipio+'/'+d.uf;var oel=document.getElementById('d-origem');if(oel)oel.value=l.origem;}
-  if(d.ddd_telefone_1){l.tel=d.ddd_telefone_1.replace(/\D/g,'');var tel=document.getElementById('d-tel');if(tel)tel.value=l.tel;}
-  saveLeads();toast('Dados preenchidos!');
-}
 </script>
 
 <div class="view" id="view-cadastro" style="padding:20px;max-width:900px;margin:0 auto">
@@ -3224,156 +2729,10 @@ function usarDadosCNPJ(leadId,d){
         </div>
       </div>
 
-      <!-- ProspectAI -->
+      <!-- Observações -->
       <div>
-        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase">🔍 ProspectAI — Consulta CNPJ</label>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input id="cad-cnpj-prospect" type="text" placeholder="00.000.000/0001-00" maxlength="18"
-            oninput="formatarCNPJCad(this)"
-            style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          <button type="button" onclick="prospectAICad()"
-            style="background:var(--orange);color:white;border:none;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
-            🔍 ProspectAI
-          </button>
-        </div>
-        <div id="cad-cnpj-result" style="display:none;margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px"></div>
-      </div>
-
-      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">
-        <button onclick="fecharModalCadastro()" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button>
-        <button onclick="salvarCadastro()" style="background:var(--orange);color:white;border:none;border-radius:6px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer">Salvar Cliente</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- MODAL CADASTRO -->
-<div id="modal-cadastro" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;background:rgba(0,0,0,0.15);z-index:999999;align-items:center;justify-content:center;padding:20px;overflow-y:auto">
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)">
-    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1">
-      <div id="cad-modal-titulo" style="font-size:16px;font-weight:700">Novo Cliente</div>
-      <button onclick="fecharModalCadastro()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px">&times;</button>
-    </div>
-    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
-
-      <!-- Tipo -->
-      <div>
-        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Tipo de Pessoa</div>
-        <div style="display:flex;gap:20px">
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
-            <input type="radio" name="cad-tipo" value="pj" id="cad-tipo-pj" checked onchange="toggleCadTipo()"> Pessoa Jurídica
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
-            <input type="radio" name="cad-tipo" value="pf" id="cad-tipo-pf" onchange="toggleCadTipo()"> Pessoa Física
-          </label>
-        </div>
-      </div>
-
-      <!-- Dados Básicos -->
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Dados Básicos</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div>
-            <label id="cad-doc-label" style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNPJ</label>
-            <input id="cad-doc" type="text" placeholder="00.000.000/0000-00" onblur="buscarCNPJ(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Razão Social / Nome</label>
-            <input id="cad-razao" type="text" placeholder="Razão social ou nome completo" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Nome Fantasia</label>
-            <input id="cad-fantasia" type="text" placeholder="Nome fantasia (opcional)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Estadual</label>
-            <input id="cad-ie" type="text" placeholder="Inscrição estadual" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Insc. Municipal</label>
-            <input id="cad-im" type="text" placeholder="Inscrição municipal" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CNAE</label>
-            <input id="cad-cnae" type="text" placeholder="Código CNAE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-        </div>
-      </div>
-
-      <!-- Contato -->
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Informações de Contato</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Celular</label>
-            <input id="cad-cel" type="text" placeholder="(00) 00000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Comercial</label>
-            <input id="cad-tel" type="text" placeholder="(00) 0000-0000" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail</label>
-            <input id="cad-email" type="email" placeholder="email@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">E-mail Cobrança</label>
-            <input id="cad-email-cob" type="email" placeholder="cobranca@empresa.com.br" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-        </div>
-      </div>
-
-      <!-- Endereço -->
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Endereço</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">CEP</label>
-            <input id="cad-cep" type="text" placeholder="00000-000" onblur="buscarCEP(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Estado</label>
-            <input id="cad-estado" type="text" placeholder="UF" maxlength="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Cidade</label>
-            <input id="cad-cidade" type="text" placeholder="Cidade" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Bairro</label>
-            <input id="cad-bairro" type="text" placeholder="Bairro" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Logradouro</label>
-            <input id="cad-logradouro" type="text" placeholder="Rua, Av..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div>
-              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Número</label>
-              <input id="cad-numero" type="text" placeholder="Nº" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-            </div>
-            <div>
-              <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Compl.</label>
-              <input id="cad-comp" type="text" placeholder="Apto..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ProspectAI -->
-      <div>
-        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase">🔍 ProspectAI — Consulta CNPJ</label>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input id="cad-cnpj-prospect" type="text" placeholder="00.000.000/0001-00" maxlength="18"
-            oninput="formatarCNPJCad(this)"
-            style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box">
-          <button type="button" onclick="prospectAICad()"
-            style="background:var(--orange);color:white;border:none;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
-            🔍 ProspectAI
-          </button>
-        </div>
-        <div id="cad-cnpj-result" style="display:none;margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px"></div>
+        <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase">Observações</label>
+        <textarea id="cad-obs" placeholder="Observações gerais sobre o cliente..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;resize:vertical"></textarea>
       </div>
 
       <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px">
