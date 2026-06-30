@@ -283,7 +283,7 @@ app.post('/analisar',async function(req,res){
   const mensagem=req.body.mensagem;
   if(!mensagem) return res.status(400).json({error:'vazio'});
   try{
-    const txt=await callGroq([{role:'user',content:'Analise esta mensagem de frete e responda APENAS JSON sem markdown:{nome,tel,material,origem,destino,volumes,peso,medidas,valorNF,etapa,obs}. Etapa:Primeiro contato/Qualificacao/Proposta enviada/Negociacao/Fechado/Ganho/Perdido. Msg:'+mensagem}],500);
+    const txt=await callGroq([{role:'user',content:'Analise esta mensagem de frete e responda APENAS JSON sem markdown:{nome,tel,material,origem,destino,volumes,peso,medidas,valorNF,etapa,obs}. Etapa:Primeiro contato/Qualificacao/Proposta enviada/Negociacao/Fechado MF/Fechado Novo/Perdido. Msg:'+mensagem}],500);
     const m=txt.match(/\{[\s\S]*\}/);
     if(!m) return res.status(500).json({error:'sem JSON'});
     res.json({ok:true,dados:JSON.parse(m[0])});
