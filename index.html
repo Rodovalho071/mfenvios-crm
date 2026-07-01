@@ -179,6 +179,7 @@ select option{background:var(--surface);color:var(--text)}.form-label{font-size:
     <div class="wpp-status-badge"><span class="wpp-dot" id="wpp-dot"></span><span id="wpp-status-text">Verificando...</span></div>
     <span class="agent-badge" onclick="mostrarTrocaPerfil()" id="agent-label" style="cursor:pointer">👤 Carregando...</span>
     <button class="btn btn-report btn-sm" onclick="abrirRelatorio()">📄 Relatório do Dia</button>
+    <button class="btn btn-report btn-sm" onclick="abrirRelatorioMensal()">📊 Fechamento do Mês</button>
     <div style="position:relative;display:inline-flex">
       <button class="btn btn-sm" onclick="toggleLembretes()" id="btn-sino" title="Lembretes">🔔</button>
       <span id="sino-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1">0</span>
@@ -1412,6 +1413,125 @@ function abrirRelatorio(){
 
 
 </body></html>`;
+
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+// ═══════════════════════════════════════════
+// RELATÓRIO DE FECHAMENTO DO MÊS (Cliente Novo / MF / Recorrente)
+// ═══════════════════════════════════════════
+function abrirRelatorioMensal(){
+  const mes = getMesAtual();
+  const nomeMes = MESES[mes.getMonth()]+' '+mes.getFullYear();
+  const fmt = v => 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+  // Leads do mês navegado no kanban (respeita o mês selecionado em "Mês anterior/Próximo")
+  const leadsMes = getLeadsMes();
+
+  // Filtrar pelo perfil ativo, mesma regra usada no kanban/dashboard
+  let leadsPerfil = leadsMes;
+  if(typeof perfilAtivo !== 'undefined' && perfilAtivo && typeof PERFIS !== 'undefined' && !verTodos){
+    const p = PERFIS[perfilAtivo];
+    leadsPerfil = leadsMes.filter(l=>{
+      if(l.agent && l.agent !== '') return l.agent === p.nome;
+      return p.stages.includes(l.stage);
+    });
+  }
+
+  const cliNovo = leadsPerfil.filter(l=>l.stage==='Fechado Novo').sort((a,b)=>b.ts-a.ts);
+  const mf      = leadsPerfil.filter(l=>l.stage==='Fechado MF').sort((a,b)=>b.ts-a.ts);
+  const rec     = leadsPerfil.filter(l=>l.stage==='Cliente recorrente').sort((a,b)=>b.ts-a.ts);
+
+  const totalCliNovo = somaFrete(cliNovo);
+  const totalMf = somaFrete(mf);
+  const totalRec = somaFrete(rec);
+  const totalGeral = totalCliNovo+totalMf+totalRec;
+  const qtdGeral = cliNovo.length+mf.length+rec.length;
+
+  function dataFechamento(l){
+    if(l.history && l.history.length){
+      const alvo = '→ <strong>'+l.stage+'</strong>';
+      const h = l.history.slice().reverse().find(x=>x.text && x.text.indexOf(alvo)!==-1);
+      if(h) return fmtDateFull(h.ts);
+    }
+    return fmtDateFull(l.ts);
+  }
+
+  function linhaCliente(l){
+    const v = l.valorFrete ? parseFrete(l.valorFrete) : 0;
+    return `<tr>
+      <td>${l.name||'—'}</td>
+      <td>${l.tel||'—'}</td>
+      <td>${l.rota||'—'}</td>
+      <td style="text-align:right;color:#22c55e;font-weight:700">${v?fmt(v):'—'}</td>
+      <td>${dataFechamento(l)}</td>
+    </tr>`;
+  }
+
+  function blocoCategoria(titulo, cor, arr, total){
+    return `<div class="section-block">
+      <div class="section-title" style="border-bottom-color:${cor};display:flex;justify-content:space-between;align-items:center">
+        <span>${titulo} <span style="color:#8B8FA8;font-weight:600;text-transform:none;letter-spacing:0">(${arr.length})</span></span>
+        <span style="color:${cor}">${fmt(total)}</span>
+      </div>
+      ${arr.length ? `<table class="tabela-cat" style="width:100%;border-collapse:collapse">
+        <thead><tr style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#8B8FA8">
+          <th style="padding:6px 8px">Cliente</th><th style="padding:6px 8px">Telefone</th><th style="padding:6px 8px">Rota</th><th style="padding:6px 8px;text-align:right">Valor Frete</th><th style="padding:6px 8px">Fechamento</th>
+        </tr></thead>
+        <tbody>${arr.map(linhaCliente).join('')}</tbody>
+      </table>` : `<div style="color:#8B8FA8;font-size:13px;padding:12px 0">Nenhum cliente nesta categoria em ${nomeMes}.</div>`}
+    </div>`;
+  }
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Fechamento do Mês — ${nomeMes}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter','Helvetica Neue',Arial,sans-serif;background:#F4F5FA;color:#1E2456;font-size:13px}
+    .page{max-width:900px;margin:0 auto;padding:32px 24px}
+    .header{background:#1E2456;border-radius:12px;padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden}
+    .header::before{content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:500px;height:100px;border-radius:50%;border:2px solid rgba(249,115,22,0.6);box-shadow:0 0 20px rgba(249,115,22,0.3)}
+    .header-logo{font-size:22px;font-weight:800;color:#fff;letter-spacing:3px;margin-bottom:4px}
+    .header-logo span{color:#F97316}
+    .header-sub{font-size:12px;color:rgba(255,255,255,0.6);letter-spacing:0.05em;text-transform:uppercase}
+    .header-date{font-size:13px;color:rgba(255,255,255,0.8);margin-top:12px}
+    .header-right{position:absolute;right:32px;top:50%;transform:translateY(-50%);text-align:right}
+    .header-agent{font-size:12px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.05em}
+    .header-agent-name{font-size:16px;font-weight:700;color:#F97316}
+    .fin-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+    .fin-card{background:#fff;border-radius:10px;padding:16px 20px;border-left:4px solid #F97316;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    .fin-card.green{border-left-color:#22c55e}.fin-card.teal{border-left-color:#10b981}.fin-card.dark{border-left-color:#1E2456}
+    .fin-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#8B8FA8;margin-bottom:6px}
+    .fin-val{font-size:22px;font-weight:800;color:#1E2456}
+    .fin-val.orange{color:#F97316}.fin-val.green{color:#22c55e}.fin-val.teal{color:#10b981}
+    .section-title{font-size:12px;font-weight:800;color:#1E2456;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #F97316}
+    .section-block{margin-bottom:28px;background:#fff;border-radius:10px;padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    .tabela-cat tbody tr{border-top:1px solid #F0F1F6}
+    .tabela-cat td{padding:8px}
+    .footer{margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#8B8FA8;text-align:center}
+    @media print{body{background:#fff}.page{padding:16px}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}.fin-card,.section-block{box-shadow:none}}
+  </style></head><body><div class="page">
+  <div class="header">
+    <div class="header-logo">MF <span>ENVIOS</span></div>
+    <div class="header-sub">Fechamento do Mês</div>
+    <div class="header-date">${nomeMes}</div>
+    <div class="header-right">
+      <div class="header-agent">Atendente</div>
+      <div class="header-agent-name">${agentName||'MF Envios'}</div>
+    </div>
+  </div>
+  <div class="fin-cards">
+    <div class="fin-card teal"><div class="fin-label">Cliente Novo</div><div class="fin-val teal">${fmt(totalCliNovo)}</div></div>
+    <div class="fin-card green"><div class="fin-label">MF</div><div class="fin-val green">${fmt(totalMf)}</div></div>
+    <div class="fin-card teal"><div class="fin-label">Recorrente</div><div class="fin-val teal">${fmt(totalRec)}</div></div>
+    <div class="fin-card dark"><div class="fin-label">Total Geral (${qtdGeral})</div><div class="fin-val orange">${fmt(totalGeral)}</div></div>
+  </div>
+  ${blocoCategoria('🆕 Cliente Novo', '#10b981', cliNovo, totalCliNovo)}
+  ${blocoCategoria('📦 MF', '#22c55e', mf, totalMf)}
+  ${blocoCategoria('🔁 Recorrente', '#10b981', rec, totalRec)}
+  <div class="footer">Gerado automaticamente · MF Envios · ${fmtDateFull(Date.now())}</div>
+</div></body></html>`;
 
   const w=window.open('','_blank');w.document.write(html);w.document.close();
   setTimeout(()=>w.print(),500);
