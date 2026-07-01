@@ -2201,19 +2201,51 @@ async function wppToLead(id,name,phone,text){
 }
 
 async function deleteWppMsg(id){try{await fetch(WPP_SERVER+'/messages/'+id,{method:'DELETE'});loadWppMessages();}catch(e){}}
-function conectarSSE(){try{const es=new EventSource(WPP_SERVER+'/events');es.addEventListener('nova-mensagem',function(e){
-    try{
-      var d=JSON.parse(e.data);
-      var inst=(typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
-      if(!inst||!d.instance||d.instance===inst) loadWppMessages();
-    }catch(ex){loadWppMessages();}
-  });es.onerror=()=>{es.close();setTimeout(conectarSSE,5000)};}catch(e){}}
+var _sseInstance=null;
+function conectarSSE(){
+  try{
+    if(_sseInstance){try{_sseInstance.close();}catch(_e){}}
+    const es=new EventSource(WPP_SERVER+'/events');
+    _sseInstance=es;
+    es.addEventListener('nova-mensagem',function(e){
+      try{
+        var d=JSON.parse(e.data);
+        var inst=(typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
+        if(!inst||!d.instance||d.instance===inst){loadWppMessages();sincronizarLeadsServidor();}
+      }catch(ex){loadWppMessages();sincronizarLeadsServidor();}
+    });
+    es.addEventListener('novo-lead',function(e){
+      try{
+        var d=JSON.parse(e.data);
+        var inst=(typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
+        if(!inst||!d.instance||d.instance===inst){sincronizarLeadsServidor();toast('Novo lead recebido!');}
+      }catch(ex){sincronizarLeadsServidor();}
+    });
+    es.onerror=function(){es.close();if(_sseInstance===es)_sseInstance=null;setTimeout(conectarSSE,5000);};
+  }catch(e){setTimeout(conectarSSE,5000);}
+}
 conectarSSE();
+
+// Reconecta e resincroniza sempre que a aba volta a ficar visivel/ativa
+// (evita ficar com a conexao de eventos "morta" depois de horas em segundo plano)
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'){
+    if(!_sseInstance||_sseInstance.readyState===2){conectarSSE();}
+    sincronizarLeadsServidor();
+    loadWppMessages();
+  }
+});
+window.addEventListener('online',function(){conectarSSE();sincronizarLeadsServidor();loadWppMessages();});
+
 setInterval(()=>{
   var _inst2=(typeof perfilAtivo!=='undefined'&&perfilAtivo&&typeof PERFIS!=='undefined'&&PERFIS[perfilAtivo])?PERFIS[perfilAtivo].instancia:'';
   var _url2=WPP_SERVER+'/messages'+(_inst2?'?instance='+_inst2:'');
   fetch(_url2).then(r=>r.json()).then(msgs=>{wppMsgs=msgs;const b=document.getElementById('wpp-badge');if(msgs.length>0){b.style.display='inline';b.textContent=msgs.length;}else b.style.display='none';if(chatAtivo)renderConvList();}).catch(()=>{});
 },30000);
+
+// Sincronizacao de seguranca: garante que o funil se atualize mesmo se o
+// canal de eventos (SSE) cair silenciosamente sem disparar erro
+setInterval(()=>{sincronizarLeadsServidor();},60000);
 
 
 // ═══════════════════════════════════════════
